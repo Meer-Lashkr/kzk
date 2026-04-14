@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}
+    Contribute — Koma Zmanî Kurdî
+{% endblock title %}
+{% block content %}
+    <div class="container page-container">
+        <div class="section-header">
+            <h1>Data Contribution</h1>
+            <p>Help build the largest Kurdish linguistic dataset. Every contribution matters.</p>
+        </div>
+        <div class="cards-grid">
+            <div class="feature-card">
+                <div class="feature-icon">✏️</div>
+                <h3>Correct This</h3>
+                <p>Submit incorrect→correct sentence pairs to build grammar correction training data.</p>
+                <a href="{% url 'correct_this' %}" class="btn btn-primary">Start Contributing</a>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔀</div>
+                <h3>Parallel Text</h3>
+                <p>Submit aligned bilingual or bidialectal text pairs for translation research.</p>
+                <a href="{% url 'parallel_text' %}" class="btn btn-primary">Start Contributing</a>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🚩</div>
+                <h3>Sentence Flagging</h3>
+                <p>Label Kurdish sentences as grammatically correct or incorrect. Fast, simple, impactful.</p>
+                <a href="{% url 'is_this_correct' %}" class="btn btn-primary">Start Contributing</a>
+            </div>
+        </div>
+        {% if user.is_authenticated %}
+            <div class="cta-secondary">
+                <a href="{% url 'my_submissions' %}" class="btn btn-outline">📋 View My Submissions</a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock content %}

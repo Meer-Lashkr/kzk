@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block title %}Datasets - Koma Zmanî Kurdî{% endblock %}
+{% block content %}
+    <section id="page-datasets-home" class="page-section active">
+        <!-- Feature Showcase styled as Datasets Hub -->
+        <div class="py-32 px-6">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-24 reveal-up">
+                    <h1 class="text-4xl md:text-6xl font-semibold tracking-tight mb-6">Contribute to Kurdish Datasets</h1>
+                    <p class="text-xl text-white/50">Choose a workflow below to add or validate linguistic data for NLP models.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Correct This -->
+                    <div class="reveal-up" data-delay="0">
+                        <a href="{% url 'correction_list' %}"
+                           class="block group relative p-12 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer overflow-hidden backdrop-blur-xl h-full flex flex-col">
+                            <div class="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity group-hover:scale-110 duration-500">
+                                <i data-lucide="edit-2" class="text-[#4DA8FF] w-32 h-32"></i>
+                            </div>
+                            <div class="mb-8 w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center border border-white/10">
+                                <i data-lucide="edit-2" class="text-[#4DA8FF] w-8 h-8"></i>
+                            </div>
+                            <h3 class="text-2xl font-semibold mb-4 text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-white/60 transition-all">
+                                Correct This
+                            </h3>
+                            <p class="text-white/50 text-lg leading-relaxed flex-grow">
+                                Fix incorrect Kurdish sentences to build grammar correction models.
+                            </p>
+                            <div class="mt-8 flex items-center gap-2 text-sm font-medium text-[#4DA8FF] group-hover:translate-x-2 transition-all">
+                                Start Correcting <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </div>
+                        </a>
+                    </div>
+                    <!-- Parallel Text -->
+                    <div class="reveal-up" data-delay="100">
+                        <div class="group relative p-12 rounded-3xl bg-white/5 border border-white/10 transition-all overflow-hidden backdrop-blur-xl h-full flex flex-col">
+                            <div class="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity group-hover:scale-110 duration-500">
+                                <i data-lucide="layout" class="text-[#A78BFA] w-32 h-32"></i>
+                            </div>
+                            <div class="mb-8 w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center border border-white/10">
+                                <i data-lucide="layout" class="text-[#A78BFA] w-8 h-8"></i>
+                            </div>
+                            <h3 class="text-2xl font-semibold mb-4 text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-white/60 transition-all">
+                                Parallel Text
+                            </h3>
+                            <p class="text-white/50 text-lg leading-relaxed flex-grow">
+                                Submit bilingual text pairs to improve machine translation.
+                            </p>
+                            <div class="mt-8 flex flex-col gap-3 relative z-10">
+                                <a href="{% url 'parallel_submit' %}"
+                                   class="w-full text-center py-3 rounded-full bg-[#A78BFA]/20 text-[#A78BFA] font-medium hover:bg-[#A78BFA]/30 transition-colors border border-[#A78BFA]/30">
+                                    Submit Text
+                                </a>
+                                <a href="{% url 'parallel_list' %}"
+                                   class="w-full text-center py-3 rounded-full bg-white/5 text-white/80 font-medium hover:bg-white/10 transition-colors border border-white/10">
+                                    View Entries
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Validation -->
+                    <div class="reveal-up" data-delay="200">
+                        <a href="{% url 'validation_list' %}"
+                           class="block group relative p-12 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer overflow-hidden backdrop-blur-xl h-full flex flex-col">
+                            <div class="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity group-hover:scale-110 duration-500">
+                                <i data-lucide="check-circle" class="text-[#7CFFB2] w-32 h-32"></i>
+                            </div>
+                            <div class="mb-8 w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center border border-white/10">
+                                <i data-lucide="check-circle" class="text-[#7CFFB2] w-8 h-8"></i>
+                            </div>
+                            <h3 class="text-2xl font-semibold mb-4 text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-white/60 transition-all">
+                                Is This Correct?
+                            </h3>
+                            <p class="text-white/50 text-lg leading-relaxed flex-grow">
+                                Vote on the correctness of sentences to build classification datasets.
+                            </p>
+                            <div class="mt-8 flex items-center gap-2 text-sm font-medium text-[#7CFFB2] group-hover:translate-x-2 transition-all">
+                                Start Validating <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

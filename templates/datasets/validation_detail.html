@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Review Sentence - Datasets{% endblock %}
+{% block content %}
+    <section id="page-validate" class="page-section active">
+        <!-- Form errors if any -->
+        {% if form.errors %}
+            <div class="max-w-4xl mx-auto px-6 pt-24 text-red-400">Please correct the errors below.</div>
+        {% endif %}
+        <div class="max-w-4xl mx-auto px-6 pt-24 md:pt-32 pb-20 min-h-[85vh] flex flex-col items-center justify-center">
+            <div class="reveal-up w-full text-center mb-8">
+                <div class="mb-4 text-left">
+                    <a href="{% url 'validation_list' %}"
+                       class="inline-flex items-center gap-2 text-white/50 hover:text-white transition-colors">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to List
+                    </a>
+                </div>
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#7CFFB2]/10 text-[#7CFFB2] text-sm font-medium border border-[#7CFFB2]/20 mb-6">
+                    <i data-lucide="check-circle" class="w-4 h-4"></i> Data Validation Queue
+                </div>
+                <h1 class="text-3xl font-medium text-white/50">Is this sentence entirely correct?</h1>
+            </div>
+            <div class="reveal-up w-full" data-delay="100">
+                <div class="bg-gradient-to-b from-white/10 to-white/5 border border-white/20 rounded-[2.5rem] p-8 md:p-12 lg:p-16 backdrop-blur-2xl shadow-2xl relative overflow-hidden group">
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-white/5 rounded-full filter blur-[100px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none">
+                    </div>
+                    <div class="relative z-10">
+                        <div class="text-center mb-16">
+                            <span class="text-sm font-medium text-white/40 uppercase tracking-wider block mb-4">Sentence (Dialect: {{ task.get_dialect_display }})</span>
+                            <p class="text-3xl md:text-4xl lg:text-5xl font-medium text-white leading-tight">"{{ task.sentence }}"</p>
+                        </div>
+                        <form method="post" id="validation-form">
+                            {% csrf_token %}
+                            <!-- Hidden inputs derived from crispy form -->
+                            <div class="hidden">{{ form.vote }}</div>
+                            <div class="mb-12">
+                                <label class="text-xs font-medium text-white/40 uppercase tracking-wider block mb-4 text-center">Optional Notes</label>
+                                <div class="custom-textarea-wrapper max-w-lg mx-auto">{{ form.notes }}</div>
+                            </div>
+                            <div class="flex justify-center flex-wrap gap-6 md:gap-8">
+                                <button type="button"
+                                        onclick="submitVote('down')"
+                                        class="w-20 h-20 md:w-24 md:h-24 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 flex flex-col items-center justify-center hover:bg-red-500 hover:text-white hover:scale-110 transition-all cursor-pointer">
+                                    <i data-lucide="x" class="w-8 h-8 pointer-events-none"></i>
+                                </button>
+                                <a href="{% url 'validation_list' %}"
+                                   class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-white/5 border border-white/10 text-white/50 flex flex-col items-center justify-center mt-2 hover:bg-white/10 hover:text-white transition-all">
+                                    <span class="text-xs font-medium uppercase tracking-widest">Skip</span>
+                                </a>
+                                <button type="button"
+                                        onclick="submitVote('up')"
+                                        class="w-20 h-20 md:w-24 md:h-24 rounded-full bg-[#7CFFB2]/10 border border-[#7CFFB2]/20 text-[#7CFFB2] flex flex-col items-center justify-center hover:bg-[#7CFFB2] hover:text-[#0B0B0F] hover:scale-110 transition-all shadow-[0_0_30px_rgba(124,255,178,0.1)] hover:shadow-[0_0_40px_rgba(124,255,178,0.4)] cursor-pointer">
+                                    <i data-lucide="check" class="w-8 h-8 pointer-events-none"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% block extra_js %}
+        <script>
+    function submitVote(voteType) {
+        const voteInput = document.getElementById('id_vote');
+        if (voteInput) {
+            voteInput.value = voteType;
+            document.getElementById('validation-form').submit();
+        } else {
+            // Fallback for radio buttons if rendered as such by Crispy
+            const radios = document.querySelectorAll('input[name="vote"]');
+            radios.forEach(radio => {
+                if (radio.value === voteType) {
+                    radio.checked = true;
+                }
+            });
+            document.getElementById('validation-form').submit();
+        }
+    }
+        </script>
+    {% endblock %}
+    {% block extra_css %}
+        <style>
+    .custom-textarea-wrapper textarea {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.05) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 1rem;
+        padding: 1rem 1.25rem;
+        color: white !important;
+        outline: none !important;
+        min-height: 80px;
+        transition: all 0.3s;
+        resize: vertical;
+        box-shadow: none !important;
+    }
+    
+    .custom-textarea-wrapper textarea:focus {
+        border-color: #7CFFB2 !important;
+        background: rgba(255, 255, 255, 0.1) !important;
+    }
+        </style>
+    {% endblock %}
+{% endblock %}

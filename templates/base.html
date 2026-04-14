@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>
+            {% block title %}Koma Zmanî Kurdî{% endblock %}
+        </title>
+        <meta name="description"
+              content="{% block meta_description %}A community-driven platform for crowdsourcing Kurdish linguistic data.{% endblock %}">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+              rel="stylesheet">
+        <link rel="stylesheet" href="{% load static %}{% static 'css/main.css' %}">
+        {% block extra_css %}{% endblock %}
+    </head>
+    <body>
+        <nav class="navbar">
+            <div class="nav-container">
+                <a href="{% url 'home' %}" class="nav-brand">
+                    <span class="brand-icon">𝕶</span>
+                    <span class="brand-text">Koma Zmanî Kurdî</span>
+                </a>
+                <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                    <span></span><span></span><span></span>
+                </button>
+                <ul class="nav-links" id="navLinks">
+                    <li>
+                        <a href="{% url 'home' %}"
+                           class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'question_list' %}"
+                           class="nav-link {% if 'forum' in request.path %}active{% endif %}">Q&amp;A Forum</a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="{% url 'contribute_home' %}"
+                           class="nav-link {% if 'contribution' in request.path %}active{% endif %}">
+                            Contribution <span class="dropdown-arrow">▾</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="{% url 'correct_this' %}">✏️ Correct This</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'parallel_text' %}">🔀 Parallel Text</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'is_this_correct' %}">✅ Sentence Flagging</a>
+                            </li>
+                            {% if user.is_authenticated %}
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="{% url 'my_submissions' %}">📋 My Submissions</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="{% url 'validation_coming_soon' %}"
+                           class="nav-link {% if 'validation' in request.path %}active{% endif %}">
+                            Validation <span class="badge-soon">Soon</span>
+                        </a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li>
+                            <a href="{% url 'dashboard' %}"
+                               class="nav-link {% if 'dashboard' in request.path %}active{% endif %}">Dashboard</a>
+                        </li>
+                        <li class="dropdown">
+                            <a href="{% url 'profile' %}" class="nav-link nav-user">
+                                {% if user.profile_image %}
+                                    <img src="{{ user.profile_image.url }}" alt="Profile" class="nav-avatar">
+                                {% else %}
+                                    <span class="nav-avatar-placeholder">{{ user.username|first|upper }}</span>
+                                {% endif %}
+                                {{ user.username }} <span class="dropdown-arrow">▾</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-right">
+                                <li>
+                                    <a href="{% url 'profile' %}">👤 Profile</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'profile_edit' %}">✏️ Edit Profile</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'settings' %}">⚙️ Settings</a>
+                                </li>
+                                {% if user.is_moderator %}
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a href="{% url 'moderator_dashboard' %}">🛡️ Moderator Panel</a>
+                                    </li>
+                                {% endif %}
+                                {% if user.is_site_admin %}
+                                    <li>
+                                        <a href="{% url 'admin_dashboard' %}">⚡ Admin Panel</a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a href="{% url 'export_corrections_csv' %}">📥 Export Data</a>
+                                    </li>
+                                {% endif %}
+                                <li class="divider"></li>
+                                <li>
+                                    <form method="post" action="{% url 'logout' %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="nav-logout-btn">🚪 Log Out</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li>
+                            <a href="{% url 'login' %}" class="nav-link">Log In</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'register' %}" class="btn btn-primary btn-sm">Join Free</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+        {% if messages %}
+            <div class="messages-container">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} fade-in" role="alert">
+                        <span>{{ message }}</span>
+                        <button class="alert-close"
+                                onclick="this.parentElement.remove()"
+                                aria-label="Close">×</button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <main class="main-content">
+            {% block content %}{% endblock %}
+        </main>
+        <footer class="footer">
+            <div class="footer-container">
+                <div class="footer-brand">
+                    <span class="brand-icon">𝕶</span>
+                    <strong>Koma Zmanî Kurdî</strong>
+                </div>
+                <p class="footer-tagline">Crowdsourcing Kurdish linguistic data — together.</p>
+                <div class="footer-links">
+                    <a href="{% url 'home' %}">Home</a>
+                    <a href="{% url 'question_list' %}">Forum</a>
+                    <a href="{% url 'contribute_home' %}">Contribute</a>
+                    <a href="{% url 'validation_coming_soon' %}">Validation</a>
+                </div>
+                <p class="footer-copy">&copy; 2026 Koma Zmanî Kurdî. Built for the Kurdish language community.</p>
+            </div>
+        </footer>
+        <script>
+// Mobile nav toggle
+const navToggle = document.getElementById('navToggle');
+const navLinks = document.getElementById('navLinks');
+navToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+
+// Dropdown menus
+document.querySelectorAll('.dropdown').forEach(dropdown => {
+    const trigger = dropdown.querySelector('.nav-link');
+    trigger.addEventListener('click', (e) => {
+        e.preventDefault();
+        dropdown.classList.toggle('open');
+    });
+});
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.dropdown')) {
+        document.querySelectorAll('.dropdown.open').forEach(d => d.classList.remove('open'));
+    }
+});
+
+// Auto-dismiss alerts
+setTimeout(() => {
+    document.querySelectorAll('.alert').forEach(a => a.style.opacity = '0');
+}, 5000);
+        </script>
+        {% block extra_js %}
+        {% endblock %}
+    </body>
+</html>

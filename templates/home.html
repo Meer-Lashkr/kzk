@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Koma Zmanî Kurdî — Crowdsourced Kurdish Language Data{% endblock %}
+{% block meta_description %}
+    Join the Kurdish language community. Contribute grammar corrections, parallel texts, and linguistic judgments to build the future of Kurdish NLP.
+{% endblock %}
+{% block content %}
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">🌍 Open to all Kurdish speakers</div>
+            <h1 class="hero-title">
+                Building Kurdish Language
+                <br>
+                <span class="gradient-text">Data Together</span>
+            </h1>
+            <p class="hero-subtitle">
+                Koma Zmanî Kurdî is a community platform where Kurdish speakers collaborate to create
+                high-quality linguistic datasets — powering the next generation of Kurdish NLP tools.
+            </p>
+            <div class="hero-actions">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'contribute_home' %}"
+                       class="btn btn-white btn-lg"
+                       style="color: var(--primary);
+                              background: white">Start Contributing</a>
+                    <a href="{% url 'question_list' %}"
+                       class="btn btn-white btn-lg"
+                       style="color: var(--primary);
+                              background: white">Visit the Forum</a>
+                {% else %}
+                    <a href="{% url 'register' %}"
+                       class="btn btn-white btn-lg"
+                       style="color: var(--primary);
+                              background: white">Join Free</a>
+                    <a href="{% url 'question_list' %}"
+                       class="btn btn-white btn-lg"
+                       style="color: var(--primary);
+                              background: white">Explore the Forum</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="hero-card floating">
+                <span class="hero-card-icon">✏️</span>
+                <div>
+                    <strong>Correct This</strong>
+                    <p>Fix incorrect Kurdish sentences</p>
+                </div>
+            </div>
+            <div class="hero-card floating delay-1">
+                <span class="hero-card-icon">🔀</span>
+                <div>
+                    <strong>Parallel Text</strong>
+                    <p>Submit bilingual text pairs</p>
+                </div>
+            </div>
+            <div class="hero-card floating delay-2">
+                <span class="hero-card-icon">✅</span>
+                <div>
+                    <strong>Sentence Flagging</strong>
+                    <p>Label sentence correctness</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Stats -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">{{ total_users|default:"0" }}</span>
+                    <span class="stat-label">Contributors</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">{{ total_contributions|default:"0" }}</span>
+                    <span class="stat-label">Contributions</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">{{ total_questions|default:"0" }}</span>
+                    <span class="stat-label">Forum Questions</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">4</span>
+                    <span class="stat-label">Kurdish Dialects</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- How it works -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>How It Works</h2>
+                <p>Three simple ways to help grow Kurdish language resources</p>
+            </div>
+            <div class="cards-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">✏️</div>
+                    <h3>Correct This</h3>
+                    <p>
+                        Submit incorrect→correct sentence pairs. Turn grammar mistakes into valuable training data for correction models.
+                    </p>
+                    <a href="{% url 'correct_this' %}" class="btn btn-outline btn-sm">Get Started →</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔀</div>
+                    <h3>Parallel Text</h3>
+                    <p>Submit aligned text across languages and dialects — from Sorani to English, Kurmanji to Sorani, and more.</p>
+                    <a href="{% url 'parallel_text' %}" class="btn btn-outline btn-sm">Get Started →</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">✅</div>
+                    <h3>Sentence Flagging</h3>
+                    <p>Label whether a Kurdish sentence is grammatically correct or not. Simple binary judgments, big impact.</p>
+                    <a href="{% url 'is_this_correct' %}" class="btn btn-outline btn-sm">Get Started →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Forum CTA -->
+    <section class="section section-alt">
+        <div class="container">
+            <div class="cta-block">
+                <div class="cta-content">
+                    <h2>Have a Kurdish Language Question?</h2>
+                    <p>
+                        Ask the community. Whether it's grammar, dialect differences, or translation challenges — our Q&amp;A forum is the place.
+                    </p>
+                    <a href="{% url 'question_list' %}" class="btn btn-primary">Browse the Forum</a>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'question_create' %}" class="btn btn-ghost">Ask a Question</a>
+                    {% else %}
+                        <a href="{% url 'register' %}" class="btn btn-ghost">Sign Up to Ask</a>
+                    {% endif %}
+                </div>
+                <div class="cta-visual">
+                    <div class="forum-preview">
+                        <div class="fp-question">Why do some Sorani words differ in Kurmanji?</div>
+                        <div class="fp-question">What is the correct spelling of "school" in Kurdish?</div>
+                        <div class="fp-question">How do I write plurals in Sorani?</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

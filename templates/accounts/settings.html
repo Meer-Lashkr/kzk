@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}
+    Settings — Koma Zmanî Kurdî
+{% endblock title %}
+{% block content %}
+    <div class="container page-container">
+        <h1 class="page-title">Account Settings</h1>
+        <div class="settings-layout">
+            <div class="settings-card">
+                <h3>Account</h3>
+                <ul class="settings-links">
+                    <li>
+                        <a href="{% url 'profile_edit' %}">✏️ Edit Profile</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'change_password' %}">🔒 Change Password</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="settings-card">
+                <h3>Your Role</h3>
+                <p>
+                    You are currently a <strong>{{ request.user.get_role_display }}</strong>.
+                </p>
+                {% if not request.user.is_moderator %}
+                    <p class="form-hint">Contribute quality data to be considered for a moderator role.</p>
+                {% endif %}
+            </div>
+            <div class="settings-card danger-zone">
+                <h3>Danger Zone</h3>
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Log Out</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

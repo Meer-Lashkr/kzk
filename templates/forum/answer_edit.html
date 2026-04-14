@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Edit Answer — Koma Zmanî Kurdî{% endblock %}
+{% block content %}
+    <div class="container page-container">
+        <h1 class="page-title">Edit Answer</h1>
+        <p class="form-hint">
+            Answering: <a href="{% url 'question_detail' answer.question.pk %}">{{ answer.question.title }}</a>
+        </p>
+        <form method="post" class="content-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.body.id_for_label }}">{{ form.body.label }}</label>
+                {{ form.body }}
+                {% for error in form.body.errors %}<span class="form-error">{{ error }}</span>{% endfor %}
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a href="{% url 'question_detail' answer.question.pk %}"
+                   class="btn btn-ghost">Cancel</a>
+            </div>
+        </form>
+    </div>
+{% endblock %}

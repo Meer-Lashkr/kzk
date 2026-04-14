@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}Moderator Dashboard — Koma Zmanî Kurdî{% endblock title %}
+{% block content %}
+    <div class="container page-container">
+        <div class="page-header">
+            <div>
+                <h1>🛡️ Moderator Dashboard</h1>
+                <p>Review and manage community content</p>
+            </div>
+            <a href="{% url 'user_dashboard' %}" class="btn btn-ghost">My Dashboard</a>
+        </div>
+        <div class="stats-row">
+            <div class="stat-card-sm">
+                <strong>{{ total_corrections }}</strong><span>Total Corrections</span>
+            </div>
+            <div class="stat-card-sm">
+                <strong>{{ total_parallel }}</strong><span>Parallel Texts</span>
+            </div>
+            <div class="stat-card-sm">
+                <strong>{{ total_judgments }}</strong><span>Sentence Flagging</span>
+            </div>
+        </div>
+        <div class="dashboard-grid dashboard-grid-2">
+            <section class="dash-card">
+                <h3>Recent Corrections</h3>
+                {% if recent_corrections %}
+                    <ul class="activity-list">
+                        {% for c in recent_corrections %}
+                            <li>
+                                <span>{{ c.incorrect_text|truncatechars:50 }}</span>
+                                <span class="activity-date">by {{ c.submitted_by.username|default:"—" }} · {{ c.created_at|date:"M d" }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-state">No corrections yet.</p>
+                {% endif %}
+            </section>
+            <section class="dash-card">
+                <h3>Recent Parallel Texts</h3>
+                {% if recent_parallel %}
+                    <ul class="activity-list">
+                        {% for p in recent_parallel %}
+                            <li>
+                                <span>{{ p.source_text|truncatechars:50 }}</span>
+                                <span class="activity-date">by {{ p.submitted_by.username|default:"—" }} · {{ p.created_at|date:"M d" }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-state">No parallel texts yet.</p>
+                {% endif %}
+            </section>
+            <section class="dash-card">
+                <h3>Recent Forum Questions</h3>
+                {% if recent_questions %}
+                    <ul class="activity-list">
+                        {% for q in recent_questions %}
+                            <li>
+                                <a href="{% url 'question_detail' q.pk %}">{{ q.title|truncatechars:55 }}</a>
+                                <span class="activity-date">{{ q.created_at|date:"M d" }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-state">No questions yet.</p>
+                {% endif %}
+            </section>
+            <section class="dash-card">
+                <h3>Recent Platform Activity</h3>
+                {% if recent_activity %}
+                    <ul class="activity-list">
+                        {% for log in recent_activity %}
+                            <li>
+                                <span>{{ log.user.username|default:"—" }}: {{ log.action_type|title }}</span>
+                                <span class="activity-date">{{ log.created_at|date:"M d" }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-state">No recent activity.</p>
+                {% endif %}
+            </section>
+            <section class="dash-card">
+                <h3>🚩 Recent Sentence Flagging</h3>
+                {% if recent_judgments %}
+                    <ul class="activity-list">
+                        {% for j in recent_judgments %}
+                            <li>
+                                <span>{{ j.sentence_text|truncatechars:50 }} — <span class="badge badge-{{ j.binary_label }}">{{ j.binary_label|capfirst }}</span></span>
+                                <span class="activity-date">by {{ j.submitted_by.username|default:"—" }} · {{ j.created_at|date:"M d" }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-state">No sentence flags yet.</p>
+                {% endif %}
+            </section>
+        </div>
+    </div>
+{% endblock content %}

@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% block title %}
+    My Submissions — Koma Zmanî Kurdî
+{% endblock title %}
+{% block content %}
+    <div class="container page-container">
+        <div class="page-header">
+            <h1>My Submissions</h1>
+            <a href="{% url 'contribute_home' %}" class="btn btn-outline">+ New Contribution</a>
+        </div>
+        <div class="submission-stats">
+            <div class="stat-mini">
+                <strong>{{ corrections.count }}</strong><span>Corrections</span>
+            </div>
+            <div class="stat-mini">
+                <strong>{{ parallel_texts.count }}</strong><span>Parallel Texts</span>
+            </div>
+            <div class="stat-mini">
+                <strong>{{ judgments.count }}</strong><span>Sentence Flagging</span>
+            </div>
+            <div class="stat-mini">
+                <strong>{{ total }}</strong><span>Total</span>
+            </div>
+        </div>
+        <section class="submission-section">
+            <h2>✏️ Corrections ({{ corrections.count }})</h2>
+            {% if corrections %}
+                <div class="table-wrap">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Incorrect</th>
+                                <th>Corrected</th>
+                                <th>Dialect</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for c in corrections %}
+                                <tr>
+                                    <td>{{ c.incorrect_text|truncatechars:60 }}</td>
+                                    <td>{{ c.corrected_text|truncatechars:60 }}</td>
+                                    <td>
+                                        <span class="tag tag-sm">{{ c.get_language_variant_display }}</span>
+                                    </td>
+                                    <td>{{ c.created_at|date:"M d, Y" }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="empty-state">
+                    No corrections submitted yet. <a href="{% url 'correct_this' %}">Start now →</a>
+                </p>
+            {% endif %}
+        </section>
+        <section class="submission-section">
+            <h2>🔀 Parallel Texts ({{ parallel_texts.count }})</h2>
+            {% if parallel_texts %}
+                <div class="table-wrap">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Source</th>
+                                <th>Target</th>
+                                <th>Languages</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for p in parallel_texts %}
+                                <tr>
+                                    <td>{{ p.source_text|truncatechars:60 }}</td>
+                                    <td>{{ p.target_text|truncatechars:60 }}</td>
+                                    <td>
+                                        <span class="tag tag-sm">{{ p.source_language }} → {{ p.target_language }}</span>
+                                    </td>
+                                    <td>{{ p.created_at|date:"M d, Y" }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="empty-state">
+                    No parallel texts submitted yet. <a href="{% url 'parallel_text' %}">Start now →</a>
+                </p>
+            {% endif %}
+        </section>
+        <section class="submission-section">
+            <h2>🚩 Sentence Flagging ({{ judgments.count }})</h2>
+            {% if judgments %}
+                <div class="table-wrap">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Sentence</th>
+                                <th>Judgment</th>
+                                <th>Dialect</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for j in judgments %}
+                                <tr>
+                                    <td>{{ j.sentence_text|truncatechars:80 }}</td>
+                                    <td>
+                                        <span class="badge badge-{{ j.binary_label }}">{{ j.binary_label|capfirst }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="tag tag-sm">{{ j.get_language_variant_display }}</span>
+                                    </td>
+                                    <td>{{ j.created_at|date:"M d, Y" }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="empty-state">
+                    No sentence flags submitted yet. <a href="{% url 'is_this_correct' %}">Start now →</a>
+                </p>
+            {% endif %}
+        </section>
+    </div>
+{% endblock content %}

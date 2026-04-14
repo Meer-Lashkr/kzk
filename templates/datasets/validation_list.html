@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block title %}Sentence Validation - Datasets{% endblock %}
+{% block content %}
+    <section id="page-validation-list" class="page-section active">
+        <div class="max-w-5xl mx-auto px-6 pt-32 pb-20">
+            <div class="reveal-up mb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+                <div>
+                    <a href="{% url 'datasets_home' %}"
+                       class="inline-flex items-center gap-2 text-white/50 hover:text-white transition-colors mb-6">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> Datasets Hub
+                    </a>
+                    <h1 class="text-4xl font-semibold tracking-tight flex items-center gap-3 mb-2">
+                        <div class="w-10 h-10 rounded-xl bg-[#7CFFB2]/20 flex items-center justify-center border border-[#7CFFB2]/30">
+                            <i data-lucide="check-circle" class="text-[#7CFFB2] w-5 h-5"></i>
+                        </div>
+                        Is This Correct?
+                    </h1>
+                    <p class="text-white/50">
+                        Review these sentences and vote on whether they are grammatically correct and colloquially natural.
+                    </p>
+                </div>
+                <div class="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm font-medium">
+                    {{ tasks.count|default:0 }} Pending Task{{ tasks.count|pluralize }}
+                </div>
+            </div>
+            <div class="space-y-4">
+                {% for task in tasks %}
+                    <div class="reveal-up" data-delay="{{ forloop.counter0|add:0 }}00">
+                        <div class="p-6 md:p-8 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-[#7CFFB2]/30 transition-all cursor-pointer backdrop-blur-sm group flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
+                            <div class="flex-1">
+                                <div class="text-xs font-medium text-[#7CFFB2] uppercase tracking-widest mb-2 flex items-center gap-2">
+                                    <i data-lucide="globe" class="w-3.5 h-3.5"></i> {{ task.get_dialect_display }}
+                                </div>
+                                <div class="text-xl md:text-2xl font-medium mb-3 text-white/90 group-hover:text-white transition-colors">
+                                    "{{ task.sentence }}"
+                                </div>
+                                <div class="flex items-center gap-4 text-sm text-white/50">
+                                    <span class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10">
+                                        Current Confidence: <strong class="text-white/80">{{ task.confidence_score }}</strong>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="w-full md:w-auto">
+                                <a href="{% url 'validation_detail' task.pk %}"
+                                   class="w-full md:w-auto px-6 py-3 rounded-full bg-[#7CFFB2]/10 text-[#7CFFB2] font-medium hover:bg-[#7CFFB2]/20 transition-colors border border-[#7CFFB2]/20 flex items-center justify-center gap-2 group-hover:bg-[#7CFFB2] group-hover:text-[#0B0B0F] hover:scale-105 active:scale-95 duration-300">
+                                    Review <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="reveal-up">
+                        <div class="p-12 text-center rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm">
+                            <i data-lucide="check-circle"
+                               class="w-12 h-12 mx-auto text-[#7CFFB2] mb-4 opacity-50"></i>
+                            <h3 class="text-xl font-medium text-white/80 mb-2">No pending validations</h3>
+                            <p class="text-white/40">You've cleared the queue! Check back later for new sentences to review.</p>
+                            <a href="{% url 'datasets_home' %}"
+                               class="mt-6 inline-flex px-6 py-3 rounded-full bg-white/10 text-white font-medium hover:bg-white/20 transition-colors">
+                                Explore Other Modules
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

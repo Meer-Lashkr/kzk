@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block title %}{{ question.title }} — Koma Zmanî Kurdî{% endblock %}
+{% block content %}
+    <div class="container page-container">
+        <a href="{% url 'question_list' %}" class="back-link">← Back to Forum</a>
+        <!-- Question -->
+        <div class="question-detail-card">
+            <div class="qd-header">
+                <h1>{{ question.title }}</h1>
+                <div class="qd-meta">
+                    <span>Asked by <strong>{{ question.author.username }}</strong></span>
+                    <span>{{ question.created_at|date:"F d, Y" }}</span>
+                    {% if question.updated_at != question.created_at %}
+                        <span>Updated {{ question.updated_at|date:"M d, Y" }}</span>
+                    {% endif %}
+                    <span class="status-badge status-{{ question.status }}">{{ question.get_status_display }}</span>
+                </div>
+                <div class="qd-tags">
+                    {% for tag in question.tags.all %}
+                        <a href="{% url 'question_list' %}?tag={{ tag.slug }}" class="tag">{{ tag.name }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="qd-body">{{ question.body|linebreaks }}</div>
+            {% if user.is_authenticated %}
+                <div class="qd-actions">
+                    {% if user == question.author or user.is_moderator %}
+                        <a href="{% url 'question_edit' question.pk %}"
+                           class="btn btn-ghost btn-sm">Edit</a>
+                        <form method="post"
+                              action="{% url 'question_delete' question.pk %}"
+                              style="display:inline">
+                            {% csrf_token %}
+                            <button type="submit"
+                                    class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Delete this question?')">Delete</button>
+                        </form>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+        <!-- Answers -->
+        <div class="answers-section">
+            <h2>{{ answers|length }} Answer{{ answers|length|pluralize }}</h2>
+            {% for answer in answers %}
+                <div class="answer-card {% if answer.is_accepted %}answer-accepted{% endif %}">
+                    {% if answer.is_accepted %}<div class="accepted-badge">✅ Accepted Answer</div>{% endif %}
+                    <div class="answer-body">{{ answer.body|linebreaks }}</div>
+                    <div class="answer-footer">
+                        <span>Answered by <strong>{{ answer.author.username }}</strong> · {{ answer.created_at|date:"M d, Y" }}</span>
+                        <div class="answer-actions">
+                            {% if user.is_authenticated %}
+                                {% if user == question.author and not answer.is_accepted %}
+                                    <form method="post"
+                                          action="{% url 'accept_answer' question.pk answer.pk %}"
+                                          style="display:inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-success btn-sm">✓ Accept</button>
+                                    </form>
+                                {% endif %}
+                                {% if user == answer.author or user.is_moderator %}
+                                    <a href="{% url 'answer_edit' answer.pk %}" class="btn btn-ghost btn-sm">Edit</a>
+                                    <form method="post"
+                                          action="{% url 'answer_delete' answer.pk %}"
+                                          style="display:inline">
+                                        {% csrf_token %}
+                                        <button type="submit"
+                                                class="btn btn-danger btn-sm"
+                                                onclick="return confirm('Delete this answer?')">Delete</button>
+                                    </form>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="empty-state-block">No answers yet. Be the first to answer!</div>
+            {% endfor %}
+        </div>
+        <!-- Answer Form -->
+        {% if user.is_authenticated %}
+            <div class="answer-form-section">
+                <h3>Your Answer</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {{ form.body }}
+                        {% for error in form.body.errors %}<span class="form-error">{{ error }}</span>{% endfor %}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Post Answer</button>
+                </form>
+            </div>
+        {% else %}
+            <div class="auth-cta-block">
+                <a href="{% url 'login' %}" class="btn btn-primary">Log in to Answer</a>
+                <a href="{% url 'register' %}" class="btn btn-ghost">Create an Account</a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

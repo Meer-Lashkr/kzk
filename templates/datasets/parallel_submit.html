@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Submit Parallel Text - Datasets{% endblock %}
+{% block content %}
+    <section id="page-parallel-submit" class="page-section active">
+        <!-- Form errors if any -->
+        {% if form.errors %}
+            <div class="max-w-6xl mx-auto px-6 pt-24 text-red-400">Please correct the errors below.</div>
+        {% endif %}
+        <div class="max-w-6xl mx-auto px-6 pt-32 pb-20">
+            <div class="reveal-up mb-8">
+                <a href="{% url 'parallel_list' %}"
+                   class="inline-flex items-center gap-2 text-white/50 hover:text-white transition-colors">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Entries
+                </a>
+            </div>
+            <div class="reveal-up mb-12">
+                <h1 class="text-4xl font-semibold tracking-tight mb-4 flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-[#A78BFA]/20 flex items-center justify-center border border-[#A78BFA]/30">
+                        <i data-lucide="layout" class="text-[#A78BFA] w-6 h-6"></i>
+                    </div>
+                    Parallel Text Submission
+                </h1>
+                <p class="text-white/50 text-lg">
+                    Provide high-quality translations to build bilingual datasets. Ensure the translation captures the nuances of the original text.
+                </p>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="reveal-up grid grid-cols-1 lg:grid-cols-2 gap-6 relative"
+                     data-delay="100">
+                    <div class="hidden lg:flex absolute top-[60%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-[#11131A] border border-white/10 rounded-full items-center justify-center text-white/30 shadow-xl">
+                        <i data-lucide="arrow-right-left" class="w-5 h-5"></i>
+                    </div>
+                    <!-- Source Text (Other Language) -->
+                    <div class="bg-white/5 border border-white/10 rounded-3xl p-8 flex flex-col backdrop-blur-md group focus-within:border-white/30 transition-colors">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                            <div class="w-full sm:w-auto">
+                                <label class="text-xs uppercase tracking-widest text-white/40 block mb-2 px-1">Source Language</label>
+                                <div class="custom-select-wrapper">{{ form.source_language }}</div>
+                            </div>
+                        </div>
+                        {% if form.other_language_text.errors %}
+                            <div class="text-red-400 text-sm mb-2">{{ form.other_language_text.errors }}</div>
+                        {% endif %}
+                        <div class="flex-1 custom-textarea-wrapper h-full flex flex-col">{{ form.other_language_text }}</div>
+                    </div>
+                    <!-- Target Text (Kurdish) -->
+                    <div class="bg-white/5 border border-[#A78BFA]/30 rounded-3xl p-8 flex flex-col backdrop-blur-md relative overflow-hidden group focus-within:border-[#A78BFA]/60 transition-colors">
+                        <div class="absolute inset-0 bg-gradient-to-br from-[#A78BFA]/5 to-transparent pointer-events-none"></div>
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 relative z-10 w-full">
+                            <div class="w-full sm:w-auto flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                                <div>
+                                    <label class="text-xs uppercase tracking-widest text-[#A78BFA] block mb-2 px-1">Target Language</label>
+                                    <div class="custom-select-wrapper target-select">{{ form.target_language }}</div>
+                                </div>
+                                <div>
+                                    <label class="text-xs uppercase tracking-widest text-[#A78BFA]/60 block mb-2 px-1">Dialect</label>
+                                    <div class="custom-select-wrapper target-select">{{ form.dialect }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        {% if form.kurdish_text.errors %}
+                            <div class="text-red-400 text-sm mb-2 relative z-10">{{ form.kurdish_text.errors }}</div>
+                        {% endif %}
+                        <div class="flex-1 custom-textarea-wrapper h-full flex flex-col relative z-10">{{ form.kurdish_text }}</div>
+                    </div>
+                </div>
+                <div class="reveal-up mt-8 flex flex-col sm:flex-row justify-between items-center bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-md gap-6"
+                     data-delay="200">
+                    <div class="w-full sm:w-64">
+                        <label class="text-xs uppercase tracking-widest text-white/40 block mb-2 px-1">Domain / Topic</label>
+                        <div class="custom-select-wrapper">{{ form.topic }}</div>
+                    </div>
+                    <button type="submit"
+                            class="w-full sm:w-auto px-10 py-4 rounded-full bg-[#A78BFA] text-[#0B0B0F] font-semibold hover:bg-[#B8A1FA] hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(167,139,250,0.3)] flex items-center justify-center gap-2">
+                        Submit Translation Pair <i data-lucide="check" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+    {% block extra_css %}
+        <style>
+    /* Custom styling for crispy forms in this specific layout */
+    .asteriskField { display: none; }
+    
+    /* Hide the default labels where we've added custom ones above */
+    label[for="id_source_language"], 
+    label[for="id_target_language"],
+    label[for="id_kurdish_text"],
+    label[for="id_other_language_text"],
+    label[for="id_dialect"],
+    label[for="id_topic"] { 
+        display: none !important; 
+    }
+    
+    .custom-select-wrapper select {
+        appearance: none;
+        background-color: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: white;
+        padding: 0.5rem 1.5rem 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        outline: none;
+        width: 100%;
+        cursor: pointer;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.5rem center;
+        background-size: 1em;
+    }
+    
+    .custom-select-wrapper.target-select select {
+        background-color: rgba(167, 139, 250, 0.1);
+        border-color: rgba(167, 139, 250, 0.3);
+        color: #A78BFA;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23A78BFA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    }
+    
+    .custom-select-wrapper select option {
+        color: #0B0B0F; /* Options text in dropdown menu */
+    }
+
+    .custom-textarea-wrapper {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+    
+    .custom-textarea-wrapper .controls, .custom-textarea-wrapper .form-group {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 0;
+    }
+    
+    .custom-textarea-wrapper textarea {
+        flex: 1;
+        width: 100%;
+        background: transparent !important;
+        border: none !important;
+        font-size: 1.25rem;
+        line-height: 1.6;
+        color: rgba(255, 255, 255, 0.8) !important;
+        outline: none !important;
+        resize: none;
+        min-height: 250px;
+        box-shadow: none !important;
+    }
+    
+    .custom-textarea-wrapper textarea::placeholder {
+        color: rgba(255, 255, 255, 0.2);
+    }
+    
+    .custom-textarea-wrapper textarea:focus {
+        color: white !important;
+    }
+    
+    @media (min-width: 768px) {
+        .custom-textarea-wrapper textarea {
+            font-size: 1.5rem;
+        }
+    }
+        </style>
+    {% endblock %}
+{% endblock %}

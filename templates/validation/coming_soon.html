@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Validation — Coming Soon — Koma Zmanî Kurdî{% endblock %}
+{% block content %}
+    <div class="container page-container">
+        <div class="coming-soon-block">
+            <div class="cs-icon">🔜</div>
+            <h1>Validation</h1>
+            <p class="cs-subtitle">Coming soon...</p>
+            <p class="cs-description">
+                The Validation and Evaluation section is planned for a future release.
+                It will include community voting, consensus scoring, and data quality workflows
+                to help verify contributed linguistic data.
+            </p>
+            <div class="cs-actions">
+                <a href="{% url 'contribute_home' %}" class="btn btn-primary">Contribute Data Instead</a>
+                <a href="{% url 'question_list' %}" class="btn btn-outline">Visit the Forum</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

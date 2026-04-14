@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}
+    {{ profile_user.username }}'s Profile — Koma Zmanî Kurdî
+{% endblock title %}
+{% block content %}
+    <div class="container page-container">
+        <div class="profile-layout">
+            <aside class="profile-sidebar">
+                <div class="profile-avatar-wrap">
+                    {% if profile_user.profile_image %}
+                        <img src="{{ profile_user.profile_image.url }}"
+                             alt="{{ profile_user.username }}"
+                             class="profile-avatar">
+                    {% else %}
+                        <div class="profile-avatar-placeholder">{{ profile_user.username|first|upper }}</div>
+                    {% endif %}
+                </div>
+                <h2 class="profile-name">{{ profile_user.get_full_name|default:profile_user.username }}</h2>
+                <span class="role-badge role-{{ profile_user.role }}">{{ profile_user.get_role_display }}</span>
+                {% if profile_user.bio %}<p class="profile-bio">{{ profile_user.bio }}</p>{% endif %}
+                <p class="profile-joined">Member since {{ profile_user.date_joined|date:"F Y" }}</p>
+                {% if request.user == profile_user %}
+                    <a href="{% url 'profile_edit' %}"
+                       class="btn btn-outline btn-sm btn-full">Edit Profile</a>
+                {% endif %}
+            </aside>
+            <div class="profile-main">
+                <div class="stats-row">
+                    <div class="stat-mini">
+                        <strong>{{ profile_user.questions.count }}</strong><span>Questions</span>
+                    </div>
+                    <div class="stat-mini">
+                        <strong>{{ profile_user.answers.count }}</strong><span>Answers</span>
+                    </div>
+                    <div class="stat-mini">
+                        <strong>{{ profile_user.correction_submissions.count }}</strong><span>Corrections</span>
+                    </div>
+                    <div class="stat-mini">
+                        <strong>{{ profile_user.parallel_text_submissions.count }}</strong><span>Parallel Texts</span>
+                    </div>
+                    <div class="stat-mini">
+                        <strong>{{ profile_user.judgment_submissions.count }}</strong><span>Judgments</span>
+                    </div>
+                </div>
+                <section class="profile-section">
+                    <h3>Recent Forum Questions</h3>
+                    {% with questions=profile_user.questions.all|slice:":5" %}
+                        {% if questions %}
+                            <ul class="activity-list">
+                                {% for q in questions %}
+                                    <li>
+                                        <a href="{% url 'question_detail' q.pk %}">{{ q.title }}</a><span class="activity-date">{{ q.created_at|date:"M d, Y" }}</span>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="empty-state">No questions yet.</p>
+                        {% endif %}
+                    {% endwith %}
+                </section>
+                <section class="profile-section">
+                    <h3>Recent Contributions</h3>
+                    {% with corrections=profile_user.correction_submissions.all|slice:":3" %}
+                        {% if corrections %}
+                            <ul class="activity-list">
+                                {% for c in corrections %}
+                                    <li>
+                                        ✏️ Correction: <em>{{ c.incorrect_text|truncatechars:60 }}</em> <span class="activity-date">{{ c.created_at|date:"M d, Y" }}</span>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="empty-state">No contributions yet.</p>
+                        {% endif %}
+                    {% endwith %}
+                </section>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

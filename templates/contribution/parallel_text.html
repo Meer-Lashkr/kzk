@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}
+    Parallel Text Submission — Koma Zmanî Kurdî
+{% endblock title %}
+{% block content %}
+    <div class="container page-container">
+        <a href="{% url 'contribute_home' %}" class="back-link">← Back to Contributions</a>
+        <div class="form-page">
+            <div class="form-page-header">
+                <span class="feature-icon-sm">🔀</span>
+                <h1>Parallel Text</h1>
+                <p>Submit bilingual or bidialectal aligned text pairs to support translation and multilingual NLP research.</p>
+            </div>
+            <form method="post" class="content-form">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% for error in field.errors %}<span class="form-error">{{ error }}</span>{% endfor %}
+                        {% if field.help_text %}<span class="form-hint">{{ field.help_text }}</span>{% endif %}
+                    </div>
+                {% endfor %}
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Submit Parallel Text</button>
+                    <a href="{% url 'contribute_home' %}" class="btn btn-ghost">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}

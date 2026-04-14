@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Create Account — Koma Zmanî Kurdî{% endblock %}
+{% block content %}
+    <div class="auth-page">
+        <div class="auth-card">
+            <div class="auth-header">
+                <span class="auth-icon">𝕶</span>
+                <h1>Join the Community</h1>
+                <p>Create your free Koma Zmanî Kurdî account</p>
+            </div>
+            <form method="post" class="auth-form">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            {% for error in field.errors %}<span class="form-error">{{ error }}</span>{% endfor %}
+                        {% endif %}
+                        {% if field.help_text %}<span class="form-hint">{{ field.help_text }}</span>{% endif %}
+                    </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-primary btn-full">Create Account</button>
+                <p class="auth-footer">
+                    Already have an account? <a href="{% url 'login' %}">Log in</a>
+                </p>
+            </form>
+        </div>
+    </div>
+{% endblock %}

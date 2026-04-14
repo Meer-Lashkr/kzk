@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block title %}
+    Admin Dashboard — Koma Zmanî Kurdî
+{% endblock title %}
+{% block content %}
+    <div class="container page-container">
+        <div class="page-header">
+            <div>
+                <h1>⚡ Admin Dashboard</h1>
+                <p>Full platform management and oversight</p>
+            </div>
+            <div class="page-header-actions">
+                <a href="{% url 'moderator_dashboard' %}" class="btn btn-ghost">Moderator Panel</a>
+                <a href="/admin/" class="btn btn-outline">Django Admin</a>
+            </div>
+        </div>
+        <!-- System Stats -->
+        <div class="stats-row">
+            <div class="stat-card-sm primary">
+                <strong>{{ total_users }}</strong><span>Total Users</span>
+            </div>
+            <div class="stat-card-sm">
+                <strong>{{ active_users }}</strong><span>Active Users</span>
+            </div>
+            <div class="stat-card-sm">
+                <strong>{{ total_questions }}</strong><span>Questions</span>
+            </div>
+            <div class="stat-card-sm">
+                <strong>{{ total_answers }}</strong><span>Answers</span>
+            </div>
+            <div class="stat-card-sm">
+                <strong>{{ total_corrections }}</strong><span>Corrections</span>
+            </div>
+            <div class="stat-card-sm">
+                <strong>{{ total_parallel }}</strong><span>Parallel Texts</span>
+            </div>
+            <div class="stat-card-sm">
+                <strong>{{ total_judgments }}</strong><span>Sentence Flagging</span>
+            </div>
+        </div>
+        <!-- Role Distribution -->
+        <section class="dash-card">
+            <h3>Role Distribution</h3>
+            <div class="role-dist">
+                <div class="role-item">
+                    <span class="role-badge role-normal_user">Normal Users</span>
+                    <strong>{{ role_distribution.normal_user }}</strong>
+                </div>
+                <div class="role-item">
+                    <span class="role-badge role-moderator">Moderators</span>
+                    <strong>{{ role_distribution.moderator }}</strong>
+                </div>
+                <div class="role-item">
+                    <span class="role-badge role-admin">Admins</span>
+                    <strong>{{ role_distribution.admin }}</strong>
+                </div>
+            </div>
+        </section>
+        <!-- Export Links -->
+        <section class="dash-card">
+            <h3>📥 Data Exports</h3>
+            <p class="form-hint">Download all contribution data for NLP pipeline use. Excludes private credentials.</p>
+            <div class="export-grid">
+                <div class="export-item">
+                    <strong>Corrections</strong>
+                    <a href="{% url 'export_corrections_csv' %}"
+                       class="btn btn-outline btn-sm">CSV</a>
+                    <a href="{% url 'export_corrections_json' %}"
+                       class="btn btn-outline btn-sm">JSON</a>
+                </div>
+                <div class="export-item">
+                    <strong>Parallel Texts</strong>
+                    <a href="{% url 'export_parallel_csv' %}" class="btn btn-outline btn-sm">CSV</a>
+                    <a href="{% url 'export_parallel_json' %}"
+                       class="btn btn-outline btn-sm">JSON</a>
+                </div>
+                <div class="export-item">
+                    <strong>Sentence Flagging</strong>
+                    <a href="{% url 'export_judgments_csv' %}"
+                       class="btn btn-outline btn-sm">CSV</a>
+                    <a href="{% url 'export_judgments_json' %}"
+                       class="btn btn-outline btn-sm">JSON</a>
+                </div>
+            </div>
+        </section>
+        <div class="dashboard-grid dashboard-grid-2">
+            <section class="dash-card">
+                <h3>Recent Users</h3>
+                {% if recent_users %}
+                    <ul class="activity-list">
+                        {% for u in recent_users %}
+                            <li>
+                                <span>{{ u.username }} <span class="role-badge role-{{ u.role }} role-xs">{{ u.get_role_display }}</span></span>
+                                <span class="activity-date">{{ u.date_joined|date:"M d, Y" }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-state">No users yet.</p>
+                {% endif %}
+            </section>
+            <section class="dash-card">
+                <h3>Audit Log</h3>
+                {% if audit_logs %}
+                    <ul class="activity-list">
+                        {% for log in audit_logs %}
+                            <li>
+                                <span>{{ log.performed_by.username|default:"—" }}: {{ log.action_type|title }} ({{ log.target_type }})</span>
+                                <span class="activity-date">{{ log.created_at|date:"M d" }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-state">No audit logs yet.</p>
+                {% endif %}
+            </section>
+        </div>
+    </div>
+{% endblock content %}

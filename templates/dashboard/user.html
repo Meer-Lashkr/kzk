@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}My Dashboard — Koma Zmanî Kurdî{% endblock title %}
+{% block content %}
+    <div class="container page-container">
+        <h1 class="page-title">My Dashboard</h1>
+        <!-- Stats Row -->
+        <div class="stats-row">
+            <div class="stat-card-sm">
+                <strong>{{ questions_count }}</strong><span>Questions</span>
+            </div>
+            <div class="stat-card-sm">
+                <strong>{{ answers_count }}</strong><span>Answers</span>
+            </div>
+            <div class="stat-card-sm">
+                <strong>{{ corrections_count }}</strong><span>Corrections</span>
+            </div>
+            <div class="stat-card-sm">
+                <strong>{{ parallel_count }}</strong><span>Parallel Texts</span>
+            </div>
+            <div class="stat-card-sm">
+                <strong>{{ judgments_count }}</strong><span>Sentence Flagging</span>
+            </div>
+        </div>
+        <div class="dashboard-grid">
+            <section class="dash-card">
+                <h3>My Forum Questions</h3>
+                {% if my_questions %}
+                    <ul class="activity-list">
+                        {% for q in my_questions %}
+                            <li>
+                                <a href="{% url 'question_detail' q.pk %}">{{ q.title|truncatechars:60 }}</a><span class="activity-date">{{ q.created_at|date:"M d" }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-state">No questions yet.</p>
+                {% endif %}
+                <a href="{% url 'question_create' %}" class="btn btn-ghost btn-sm">+ Ask a Question</a>
+            </section>
+            <section class="dash-card">
+                <h3>My Answers</h3>
+                {% if my_answers %}
+                    <ul class="activity-list">
+                        {% for a in my_answers %}
+                            <li>
+                                <a href="{% url 'question_detail' a.question.pk %}">{{ a.question.title|truncatechars:55 }}</a>
+                                {% if a.is_accepted %}<span class="badge badge-correct">✓</span>{% endif %}
+                                <span class="activity-date">{{ a.created_at|date:"M d" }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-state">No answers yet.</p>
+                {% endif %}
+            </section>
+            <section class="dash-card">
+                <h3>My Contributions</h3>
+                {% if my_corrections or my_parallel_texts or my_judgments %}
+                    <ul class="activity-list">
+                        {% for c in my_corrections %}
+                            <li>
+                                ✏️ {{ c.incorrect_text|truncatechars:50 }}<span class="activity-date">{{ c.created_at|date:"M d" }}</span>
+                            </li>
+                        {% endfor %}
+                        {% for p in my_parallel_texts %}
+                            <li>
+                                🔀 {{ p.source_text|truncatechars:50 }}<span class="activity-date">{{ p.created_at|date:"M d" }}</span>
+                            </li>
+                        {% endfor %}
+                        {% for j in my_judgments %}
+                            <li>
+                                🚩 {{ j.sentence_text|truncatechars:50 }}<span class="activity-date">{{ j.created_at|date:"M d" }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-state">No contributions yet.</p>
+                {% endif %}
+                <a href="{% url 'contribute_home' %}" class="btn btn-ghost btn-sm">Contribute Now</a>
+            </section>
+            <section class="dash-card">
+                <h3>Recent Activity</h3>
+                {% if recent_activity %}
+                    <ul class="activity-list">
+                        {% for log in recent_activity %}
+                            <li>
+                                {{ log.action_type|title }}<span class="activity-date">{{ log.created_at|date:"M d" }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-state">No recent activity.</p>
+                {% endif %}
+            </section>
+        </div>
+    </div>
+{% endblock content %}

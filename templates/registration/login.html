@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}Log In — Koma Zmanî Kurdî{% endblock %}
+{% block content %}
+    <div class="auth-page">
+        <div class="auth-card">
+            <div class="auth-header">
+                <span class="auth-icon">𝕶</span>
+                <h1>Welcome back</h1>
+                <p>Log in to your Koma Zmanî Kurdî account</p>
+            </div>
+            <form method="post" class="auth-form" id="loginForm">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_username">Username</label>
+                    <input type="text"
+                           name="username"
+                           id="id_username"
+                           class="form-input"
+                           placeholder="Your username"
+                           autofocus
+                           required>
+                </div>
+                <div class="form-group">
+                    <label for="id_password">Password</label>
+                    <input type="password"
+                           name="password"
+                           id="id_password"
+                           class="form-input"
+                           placeholder="Your password"
+                           required>
+                </div>
+                {% if form.errors %}<div class="form-error-banner">Invalid username or password. Please try again.</div>{% endif %}
+                <!-- Shown after 3 failed attempts (tracked in JS) -->
+                <div class="forgot-hint" id="forgotHint" style="display:none;">
+                    <p>
+                        Having trouble? <a href="{% url 'forgot_password' %}">Reset your password</a>
+                    </p>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Log In</button>
+                <div class="auth-divider">or</div>
+                <p class="auth-footer">
+                    New to the platform? <a href="{% url 'register' %}">Create an account</a>
+                </p>
+                <p class="auth-footer">
+                    <a href="{% url 'forgot_password' %}">Forgot your password?</a>
+                </p>
+            </form>
+        </div>
+    </div>
+    <script>
+// Track failed attempts in sessionStorage and show forgot-password hint after 3
+const key = 'loginAttempts';
+let attempts = parseInt(sessionStorage.getItem(key) || '0');
+
+{% if form.errors %}
+    attempts += 1;
+    sessionStorage.setItem(key, attempts);
+{% else %}
+    sessionStorage.removeItem(key);
+{% endif %}
+
+if (attempts >= 3) {
+    document.getElementById('forgotHint').style.display = 'block';
+}
+    </script>
+{% endblock %}

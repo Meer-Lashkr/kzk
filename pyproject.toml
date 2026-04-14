@@ -1,0 +1,14 @@
+[project]
+name = "kzk"
+version = "0.1.0"
+description = "Koma Zmanî Kurdî"
+requires-python = ">=3.12"
+dependencies = [
+    "Django>=5.0,<6.0",
+    "gunicorn",
+    "whitenoise",
+    "psycopg[binary]",
+    "python-dotenv",
+    "Pillow",
+    "djangorestframework"
+]

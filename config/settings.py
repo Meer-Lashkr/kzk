@@ -103,8 +103,8 @@ EMAIL_BACKEND     = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST        = 'smtp.gmail.com'
 EMAIL_PORT        = 587
 EMAIL_USE_TLS     = True
-EMAIL_HOST_USER   = 'm.hammza.03@gmail.com'    # ← replace with your Gmail address
-EMAIL_HOST_PASSWORD = 'xzgu pijf ojyd fsoe'     # ← replace with your Gmail App Password
+EMAIL_HOST_USER   = os.environ.get("EMAIL_HOST_USER")  # ← replace with your Gmail address
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")     # ← replace with your Gmail App Password
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # Console fallback (uncomment to print emails to terminal instead of sending)

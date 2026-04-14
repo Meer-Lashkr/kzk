@@ -1,0 +1,943 @@
+[
+{
+    "model": "sessions.session",
+    "pk": "iqldnk0a5zqtjrefjc0fn00757zwy2ew",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGlm2N14vlPQ5g7X-4QBypDipEHeHSCmgfTPzXsLztla_9bz4KYmLQHH63QLHR247SHdut1nGua3LFOSuyIN2Oc4pP6-H-3dQuddvDYABtQN1tlobHBgsQiCjqLjC0ViCrKxOBMq4IRVwRKwwQgYHxhXx_gCaqjYl:1w9Kyw:a454ugw7KZa5wJ_eDb0GL9sOSPOo7y-HH2uZfJqceIg",
+        "expire_date": "2026-04-19T10:45:30.569Z"
+    }
+},
+{
+    "model": "accounts.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1200000$8X4cXDQLNiBRQmSU472ZTL$5u/HtIO/O7OuyFdle2A+iWNI9tRwBL3fmAanowxM9UE=",
+        "last_login": "2026-04-05T10:37:00.643Z",
+        "is_superuser": true,
+        "username": "admin",
+        "first_name": "Admin",
+        "last_name": "",
+        "email": "admin@kzk.platform",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2026-04-02T13:47:37.484Z",
+        "role": "admin",
+        "bio": "Platform administrator.",
+        "profile_image": "",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "accounts.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1200000$bN1wKDCf9jaKZPINAkcXgx$Tqt7PxbNvQzPwx8Tkz2RsmZocr+AzPuvwWdn0kTuf1k=",
+        "last_login": "2026-04-04T20:48:49.202Z",
+        "is_superuser": false,
+        "username": "moderator",
+        "first_name": "Mêdyator",
+        "last_name": "",
+        "email": "mod@kzk.platform",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-04-02T13:47:37.695Z",
+        "role": "moderator",
+        "bio": "Keeping the platform clean and constructive.",
+        "profile_image": "",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "accounts.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1200000$wrqe3GyAb2IHYfUNnZMlji$eZvhxN84oivZdtY91yFRQNHL3pHjNwuOig5wLpp3vvU=",
+        "last_login": "2026-04-04T20:34:24.684Z",
+        "is_superuser": false,
+        "username": "sara_k",
+        "first_name": "Sara",
+        "last_name": "",
+        "email": "sara@kzk.platform",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-04-02T13:47:37.896Z",
+        "role": "normal_user",
+        "bio": "Kurdish linguist and learner.",
+        "profile_image": "",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "accounts.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1200000$2pOUYE60fhZC8LDhDOBy7E$/pVgqIY+0R98RgfPyramveYIFlQMOX8OU4Roh5YGPF0=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "diyar",
+        "first_name": "Diyar",
+        "last_name": "",
+        "email": "diyar@kzk.platform",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-04-02T13:47:38Z",
+        "role": "normal_user",
+        "bio": "Software developer building Kurdish NLP.",
+        "profile_image": "",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "accounts.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1200000$hqrwoG8kwRdwDJXR04bGMY$HQV8pa4ed0+ZCfvWBR1KQnVwzUZ7pBl8mR2d+uiFyzI=",
+        "last_login": "2026-04-04T20:37:11.615Z",
+        "is_superuser": false,
+        "username": "hawkar",
+        "first_name": "Hawkar",
+        "last_name": "",
+        "email": "hawkar@kzk.platform",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-04-02T13:47:38.300Z",
+        "role": "normal_user",
+        "bio": "Language teacher.",
+        "profile_image": "",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "accounts.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1200000$z6F61SF9IhW5DI4IZQ4TJy$qfGp4TPJX9O+E2f6LoGdz0rVLYklvDoi0wken3YXIJw=",
+        "last_login": "2026-04-05T10:45:30.568Z",
+        "is_superuser": false,
+        "username": "nadia_m",
+        "first_name": "Nadia",
+        "last_name": "",
+        "email": "nadia@kzk.platform",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-04-02T13:47:38.503Z",
+        "role": "normal_user",
+        "bio": "Translator (Kurdish–English).",
+        "profile_image": "",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "accounts.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1200000$PmLhum8XOj1lHTYYQ6GWjX$3bJLW7detZF2NcPbDyYp4MoA7iT9IQzCehgQadZdAcM=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "karo",
+        "first_name": "Karo",
+        "last_name": "",
+        "email": "karo@kzk.platform",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-04-02T13:47:38.731Z",
+        "role": "normal_user",
+        "bio": "Researcher, Kurdish dialects.",
+        "profile_image": "",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "accounts.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1200000$7Mardz5RUB5xd9FkTGIKCW$URPLE/IHRXOLt+mzmuW11EnTaZ5akh0szDb38V7Yy5E=",
+        "last_login": "2026-04-04T20:05:37.233Z",
+        "is_superuser": false,
+        "username": "Meer",
+        "first_name": "meer",
+        "last_name": "akakaak",
+        "email": "m.hammza.03@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-04-03T18:31:35Z",
+        "role": "admin",
+        "bio": "software abqARY",
+        "profile_image": "profile_images/Screenshot_2025-05-19_at_10.08.16PM.png",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "accounts.passwordresettoken",
+    "pk": 1,
+    "fields": {
+        "user": [
+            "Meer"
+        ],
+        "token": "6edfc1ab-9542-4dd3-a3e1-58146ab72050",
+        "expires_at": "2026-04-03T20:31:50.267Z",
+        "used_at": "2026-04-03T19:08:00.691Z",
+        "created_at": "2026-04-03T18:31:50.267Z"
+    }
+},
+{
+    "model": "accounts.passwordresettoken",
+    "pk": 2,
+    "fields": {
+        "user": [
+            "Meer"
+        ],
+        "token": "b26dbb77-2823-4d97-9e00-7655c93d17b2",
+        "expires_at": "2026-04-03T21:08:00.692Z",
+        "used_at": "2026-04-03T19:08:23.968Z",
+        "created_at": "2026-04-03T19:08:00.693Z"
+    }
+},
+{
+    "model": "accounts.passwordresettoken",
+    "pk": 3,
+    "fields": {
+        "user": [
+            "Meer"
+        ],
+        "token": "80b048d4-54d8-4c0a-8277-c07a181cf4ba",
+        "expires_at": "2026-04-05T12:36:33.490Z",
+        "used_at": null,
+        "created_at": "2026-04-05T10:36:33.490Z"
+    }
+},
+{
+    "model": "accounts.activitylog",
+    "pk": 1,
+    "fields": {
+        "user": [
+            "hawkar"
+        ],
+        "action_type": "correction_submitted",
+        "target_type": "CorrectionSubmission",
+        "target_id": 4,
+        "metadata_json": {},
+        "created_at": "2026-04-02T14:06:55.897Z"
+    }
+},
+{
+    "model": "accounts.activitylog",
+    "pk": 2,
+    "fields": {
+        "user": [
+            "Meer"
+        ],
+        "action_type": "register",
+        "target_type": null,
+        "target_id": null,
+        "metadata_json": {},
+        "created_at": "2026-04-03T18:31:35.573Z"
+    }
+},
+{
+    "model": "accounts.activitylog",
+    "pk": 3,
+    "fields": {
+        "user": [
+            "Meer"
+        ],
+        "action_type": "change_password",
+        "target_type": null,
+        "target_id": null,
+        "metadata_json": {},
+        "created_at": "2026-04-03T19:07:44.612Z"
+    }
+},
+{
+    "model": "accounts.activitylog",
+    "pk": 4,
+    "fields": {
+        "user": [
+            "admin"
+        ],
+        "action_type": "correction_submitted",
+        "target_type": "CorrectionSubmission",
+        "target_id": 5,
+        "metadata_json": {},
+        "created_at": "2026-04-03T19:10:42.851Z"
+    }
+},
+{
+    "model": "accounts.activitylog",
+    "pk": 5,
+    "fields": {
+        "user": [
+            "admin"
+        ],
+        "action_type": "question_created",
+        "target_type": "Question",
+        "target_id": 5,
+        "metadata_json": {},
+        "created_at": "2026-04-04T20:25:31.175Z"
+    }
+},
+{
+    "model": "accounts.activitylog",
+    "pk": 6,
+    "fields": {
+        "user": [
+            "nadia_m"
+        ],
+        "action_type": "question_created",
+        "target_type": "Question",
+        "target_id": 6,
+        "metadata_json": {},
+        "created_at": "2026-04-04T20:30:14.892Z"
+    }
+},
+{
+    "model": "accounts.activitylog",
+    "pk": 7,
+    "fields": {
+        "user": [
+            "nadia_m"
+        ],
+        "action_type": "question_created",
+        "target_type": "Question",
+        "target_id": 7,
+        "metadata_json": {},
+        "created_at": "2026-04-04T20:33:06.937Z"
+    }
+},
+{
+    "model": "accounts.activitylog",
+    "pk": 8,
+    "fields": {
+        "user": [
+            "nadia_m"
+        ],
+        "action_type": "answer_created",
+        "target_type": "Answer",
+        "target_id": 5,
+        "metadata_json": {},
+        "created_at": "2026-04-04T20:33:46.385Z"
+    }
+},
+{
+    "model": "accounts.activitylog",
+    "pk": 9,
+    "fields": {
+        "user": [
+            "sara_k"
+        ],
+        "action_type": "answer_created",
+        "target_type": "Answer",
+        "target_id": 6,
+        "metadata_json": {},
+        "created_at": "2026-04-04T20:36:32.061Z"
+    }
+},
+{
+    "model": "accounts.activitylog",
+    "pk": 10,
+    "fields": {
+        "user": [
+            "sara_k"
+        ],
+        "action_type": "answer_created",
+        "target_type": "Answer",
+        "target_id": 7,
+        "metadata_json": {},
+        "created_at": "2026-04-04T20:36:55.779Z"
+    }
+},
+{
+    "model": "accounts.activitylog",
+    "pk": 11,
+    "fields": {
+        "user": [
+            "hawkar"
+        ],
+        "action_type": "answer_created",
+        "target_type": "Answer",
+        "target_id": 8,
+        "metadata_json": {},
+        "created_at": "2026-04-04T20:37:37.717Z"
+    }
+},
+{
+    "model": "accounts.activitylog",
+    "pk": 12,
+    "fields": {
+        "user": [
+            "nadia_m"
+        ],
+        "action_type": "correction_submitted",
+        "target_type": "CorrectionSubmission",
+        "target_id": 6,
+        "metadata_json": {},
+        "created_at": "2026-04-04T20:39:47.837Z"
+    }
+},
+{
+    "model": "accounts.activitylog",
+    "pk": 13,
+    "fields": {
+        "user": [
+            "nadia_m"
+        ],
+        "action_type": "parallel_text_submitted",
+        "target_type": "ParallelTextSubmission",
+        "target_id": 5,
+        "metadata_json": {},
+        "created_at": "2026-04-05T08:38:33.201Z"
+    }
+},
+{
+    "model": "forum.questiontag",
+    "pk": 1,
+    "fields": {
+        "name": "Grammar",
+        "slug": "grammar"
+    }
+},
+{
+    "model": "forum.questiontag",
+    "pk": 2,
+    "fields": {
+        "name": "Sorani",
+        "slug": "sorani"
+    }
+},
+{
+    "model": "forum.questiontag",
+    "pk": 3,
+    "fields": {
+        "name": "Kurmanji",
+        "slug": "kurmanji"
+    }
+},
+{
+    "model": "forum.questiontag",
+    "pk": 4,
+    "fields": {
+        "name": "Spelling",
+        "slug": "spelling"
+    }
+},
+{
+    "model": "forum.questiontag",
+    "pk": 5,
+    "fields": {
+        "name": "Dialect",
+        "slug": "dialect"
+    }
+},
+{
+    "model": "forum.questiontag",
+    "pk": 6,
+    "fields": {
+        "name": "Vocabulary",
+        "slug": "vocabulary"
+    }
+},
+{
+    "model": "forum.questiontag",
+    "pk": 7,
+    "fields": {
+        "name": "Translation",
+        "slug": "translation"
+    }
+},
+{
+    "model": "forum.question",
+    "pk": 1,
+    "fields": {
+        "title": "What is the correct spelling of 'school' in Sorani Kurdish?",
+        "body": "I've seen it written as مەکتەب and قوتابخانە in different sources. Which is correct or more common in modern Sorani?",
+        "author": [
+            "sara_k"
+        ],
+        "status": "active",
+        "created_at": "2026-04-02T13:47:38.944Z",
+        "updated_at": "2026-04-02T13:47:38.944Z",
+        "tags": [
+            2,
+            4
+        ]
+    }
+},
+{
+    "model": "forum.question",
+    "pk": 2,
+    "fields": {
+        "title": "How do plural forms work in Sorani Kurdish?",
+        "body": "I'm learning Sorani and struggling with plural formation. Are there regular rules, or is it irregular like in English?",
+        "author": [
+            "diyar"
+        ],
+        "status": "active",
+        "created_at": "2026-04-02T13:47:38.945Z",
+        "updated_at": "2026-04-02T13:47:38.945Z",
+        "tags": [
+            1,
+            2
+        ]
+    }
+},
+{
+    "model": "forum.question",
+    "pk": 3,
+    "fields": {
+        "title": "What are the major differences between Kurmanji and Sorani dialects?",
+        "body": "I speak some Sorani but want to understand Kurmanji too. What are the biggest grammatical and vocabulary differences?",
+        "author": [
+            "hawkar"
+        ],
+        "status": "active",
+        "created_at": "2026-04-02T13:47:38.946Z",
+        "updated_at": "2026-04-02T13:47:38.946Z",
+        "tags": [
+            2,
+            3,
+            5
+        ]
+    }
+},
+{
+    "model": "forum.question",
+    "pk": 4,
+    "fields": {
+        "title": "How do I say 'I am happy' in different Kurdish dialects?",
+        "body": "Looking to compare how emotion expressions differ across Sorani, Kurmanji, and Hawrami.\r\nhahahahah",
+        "author": [
+            "nadia_m"
+        ],
+        "status": "active",
+        "created_at": "2026-04-02T13:47:38.947Z",
+        "updated_at": "2026-04-02T14:08:45.911Z",
+        "tags": [
+            5,
+            6
+        ]
+    }
+},
+{
+    "model": "forum.question",
+    "pk": 5,
+    "fields": {
+        "title": "لە ڕستەی (ئەو دەڕوات بۆ/لە هەولێر) کام ئامرازی پەیوەندی دروستە؟",
+        "body": "(ئەمن دەڕۆم لە هەولێر.) چی هەڵەیەکی تێدایە؟",
+        "author": [
+            "admin"
+        ],
+        "status": "active",
+        "created_at": "2026-04-04T20:25:31.171Z",
+        "updated_at": "2026-04-04T20:25:31.171Z",
+        "tags": [
+            1
+        ]
+    }
+},
+{
+    "model": "forum.question",
+    "pk": 6,
+    "fields": {
+        "title": "لە کۆتایی ڕستەی (ئەو خواردی) چ نیشانەیەک دادەنرێت؟",
+        "body": "ڕستەی (ئەو خواردی)، چی کەمە؟",
+        "author": [
+            "nadia_m"
+        ],
+        "status": "active",
+        "created_at": "2026-04-04T20:30:14.889Z",
+        "updated_at": "2026-04-04T20:30:14.889Z",
+        "tags": [
+            1
+        ]
+    }
+},
+{
+    "model": "forum.question",
+    "pk": 7,
+    "fields": {
+        "title": "هاوکارم بن لە وەرگێڕانی ئەم ڕستەیە",
+        "body": "سڵاو هاوڕێیان تکایە ئەم ڕستەیەم بۆ وەبگێڕنە سەر زمانی ئینگلیزی:\r\nدارا دوو داری دووری دیت.",
+        "author": [
+            "nadia_m"
+        ],
+        "status": "active",
+        "created_at": "2026-04-04T20:33:06.933Z",
+        "updated_at": "2026-04-04T20:33:06.933Z",
+        "tags": [
+            7
+        ]
+    }
+},
+{
+    "model": "forum.answer",
+    "pk": 1,
+    "fields": {
+        "question": 1,
+        "body": "قوتابخانە is the more native Kurdish word and is preferred in modern Sorani usage. مەکتەب is borrowed from Arabic.",
+        "author": [
+            "moderator"
+        ],
+        "is_accepted": false,
+        "created_at": "2026-04-02T13:47:38.948Z",
+        "updated_at": "2026-04-02T13:47:38.948Z"
+    }
+},
+{
+    "model": "forum.answer",
+    "pk": 2,
+    "fields": {
+        "question": 1,
+        "body": "Both are used, but قوتابخانە is more commonly found in formal writing and education contexts.",
+        "author": [
+            "karo"
+        ],
+        "is_accepted": false,
+        "created_at": "2026-04-02T13:47:38.948Z",
+        "updated_at": "2026-04-02T13:47:38.948Z"
+    }
+},
+{
+    "model": "forum.answer",
+    "pk": 3,
+    "fields": {
+        "question": 2,
+        "body": "Sorani plural is generally formed by adding -ەکان for definite plural and -ان for indefinite. For example: کتێب (book) → کتێبەکان (the books).",
+        "author": [
+            "admin"
+        ],
+        "is_accepted": true,
+        "created_at": "2026-04-02T13:47:38.949Z",
+        "updated_at": "2026-04-02T13:47:38.949Z"
+    }
+},
+{
+    "model": "forum.answer",
+    "pk": 4,
+    "fields": {
+        "question": 3,
+        "body": "Key differences: Kurmanji uses Latin/Cyrillic scripts, Sorani uses Arabic script. Kurmanji has grammatical gender (masculine/feminine), Sorani does not. Verb conjugation patterns also differ significantly.",
+        "author": [
+            "sara_k"
+        ],
+        "is_accepted": false,
+        "created_at": "2026-04-02T13:47:38.949Z",
+        "updated_at": "2026-04-02T13:47:38.949Z"
+    }
+},
+{
+    "model": "forum.answer",
+    "pk": 5,
+    "fields": {
+        "question": 5,
+        "body": "ئەمن دەڕۆم بۆ هەولێر.",
+        "author": [
+            "nadia_m"
+        ],
+        "is_accepted": false,
+        "created_at": "2026-04-04T20:33:46.384Z",
+        "updated_at": "2026-04-04T20:33:46.384Z"
+    }
+},
+{
+    "model": "forum.answer",
+    "pk": 6,
+    "fields": {
+        "question": 7,
+        "body": "Dara saw two far trees.",
+        "author": [
+            "sara_k"
+        ],
+        "is_accepted": false,
+        "created_at": "2026-04-04T20:36:32.059Z",
+        "updated_at": "2026-04-04T20:36:32.059Z"
+    }
+},
+{
+    "model": "forum.answer",
+    "pk": 7,
+    "fields": {
+        "question": 6,
+        "body": "نیشانەی پرسیار",
+        "author": [
+            "sara_k"
+        ],
+        "is_accepted": false,
+        "created_at": "2026-04-04T20:36:55.777Z",
+        "updated_at": "2026-04-05T10:45:36.505Z"
+    }
+},
+{
+    "model": "forum.answer",
+    "pk": 8,
+    "fields": {
+        "question": 6,
+        "body": "(.) لە کۆتا",
+        "author": [
+            "hawkar"
+        ],
+        "is_accepted": true,
+        "created_at": "2026-04-04T20:37:37.714Z",
+        "updated_at": "2026-04-05T10:45:40.160Z"
+    }
+},
+{
+    "model": "datasets.correctionsubmission",
+    "pk": 1,
+    "fields": {
+        "incorrect_text": "من کتێبەکە خوێند",
+        "corrected_text": "من کتێبەکەم خوێند",
+        "language_variant": "sorani",
+        "topic": "Grammar",
+        "notes": null,
+        "submitted_by": [
+            "diyar"
+        ],
+        "record_status": "active",
+        "created_at": "2026-04-02T13:47:38.950Z",
+        "updated_at": "2026-04-02T13:47:38.950Z"
+    }
+},
+{
+    "model": "datasets.correctionsubmission",
+    "pk": 2,
+    "fields": {
+        "incorrect_text": "ئەو رۆژانە باشن",
+        "corrected_text": "ئەو رۆژانە باشن",
+        "language_variant": "sorani",
+        "topic": "Daily Speech",
+        "notes": null,
+        "submitted_by": [
+            "diyar"
+        ],
+        "record_status": "active",
+        "created_at": "2026-04-02T13:47:38.950Z",
+        "updated_at": "2026-04-02T13:47:38.950Z"
+    }
+},
+{
+    "model": "datasets.correctionsubmission",
+    "pk": 3,
+    "fields": {
+        "incorrect_text": "Ez dibixwim kitêb",
+        "corrected_text": "Ez kitêb dixwînim",
+        "language_variant": "kurmanji",
+        "topic": "Grammar",
+        "notes": null,
+        "submitted_by": [
+            "diyar"
+        ],
+        "record_status": "active",
+        "created_at": "2026-04-02T13:47:38.951Z",
+        "updated_at": "2026-04-02T13:47:38.951Z"
+    }
+},
+{
+    "model": "datasets.correctionsubmission",
+    "pk": 4,
+    "fields": {
+        "incorrect_text": "akawantakam bare",
+        "corrected_text": "account'akam bare",
+        "language_variant": "sorani",
+        "topic": "kaka omeri",
+        "notes": "",
+        "submitted_by": [
+            "hawkar"
+        ],
+        "record_status": "active",
+        "created_at": "2026-04-02T14:06:55.895Z",
+        "updated_at": "2026-04-02T14:06:55.895Z"
+    }
+},
+{
+    "model": "datasets.correctionsubmission",
+    "pk": 5,
+    "fields": {
+        "incorrect_text": "hi",
+        "corrected_text": "by",
+        "language_variant": "sorani",
+        "topic": null,
+        "notes": "",
+        "submitted_by": [
+            "admin"
+        ],
+        "record_status": "active",
+        "created_at": "2026-04-03T19:10:42.849Z",
+        "updated_at": "2026-04-03T19:10:42.849Z"
+    }
+},
+{
+    "model": "datasets.correctionsubmission",
+    "pk": 6,
+    "fields": {
+        "incorrect_text": "من دااچم بۆ بازار.",
+        "corrected_text": "من دەچم بۆ بازار.",
+        "language_variant": "sorani",
+        "topic": "Spelling",
+        "notes": "",
+        "submitted_by": [
+            "nadia_m"
+        ],
+        "record_status": "active",
+        "created_at": "2026-04-04T20:39:47.834Z",
+        "updated_at": "2026-04-04T20:39:47.834Z"
+    }
+},
+{
+    "model": "datasets.paralleltextsubmission",
+    "pk": 1,
+    "fields": {
+        "source_text": "ئەمڕۆ هەوای باشە",
+        "target_text": "The weather is nice today",
+        "source_language": "Sorani Kurdish",
+        "target_language": "English",
+        "topic": "Daily Life",
+        "notes": null,
+        "submitted_by": [
+            "hawkar"
+        ],
+        "record_status": "active",
+        "created_at": "2026-04-02T13:47:38.951Z",
+        "updated_at": "2026-04-02T13:47:38.951Z"
+    }
+},
+{
+    "model": "datasets.paralleltextsubmission",
+    "pk": 2,
+    "fields": {
+        "source_text": "من مامۆستام",
+        "target_text": "I am a teacher",
+        "source_language": "Sorani Kurdish",
+        "target_language": "English",
+        "topic": "Introduction",
+        "notes": null,
+        "submitted_by": [
+            "hawkar"
+        ],
+        "record_status": "active",
+        "created_at": "2026-04-02T13:47:38.952Z",
+        "updated_at": "2026-04-02T13:47:38.952Z"
+    }
+},
+{
+    "model": "datasets.paralleltextsubmission",
+    "pk": 3,
+    "fields": {
+        "source_text": "Roj baş",
+        "target_text": "Good morning",
+        "source_language": "Kurmanji Kurdish",
+        "target_language": "English",
+        "topic": "Greetings",
+        "notes": null,
+        "submitted_by": [
+            "hawkar"
+        ],
+        "record_status": "active",
+        "created_at": "2026-04-02T13:47:38.953Z",
+        "updated_at": "2026-04-02T13:47:38.953Z"
+    }
+},
+{
+    "model": "datasets.paralleltextsubmission",
+    "pk": 4,
+    "fields": {
+        "source_text": "کتێبەکە لە سەر مێزەکەدایە",
+        "target_text": "The book is on the table",
+        "source_language": "Sorani Kurdish",
+        "target_language": "English",
+        "topic": "Vocabulary",
+        "notes": null,
+        "submitted_by": [
+            "hawkar"
+        ],
+        "record_status": "active",
+        "created_at": "2026-04-02T13:47:38.953Z",
+        "updated_at": "2026-04-02T13:47:38.953Z"
+    }
+},
+{
+    "model": "datasets.paralleltextsubmission",
+    "pk": 5,
+    "fields": {
+        "source_text": "سڵاو چۆنن",
+        "target_text": "hi how are you?",
+        "source_language": "Sorani Kurdish",
+        "target_language": "English",
+        "topic": null,
+        "notes": "",
+        "submitted_by": [
+            "nadia_m"
+        ],
+        "record_status": "active",
+        "created_at": "2026-04-05T08:38:33.199Z",
+        "updated_at": "2026-04-05T08:38:33.199Z"
+    }
+},
+{
+    "model": "datasets.sentencejudgmentsubmission",
+    "pk": 1,
+    "fields": {
+        "sentence_text": "من بە خانووەکانە دەچم",
+        "binary_label": "incorrect",
+        "language_variant": "sorani",
+        "topic": "Grammar",
+        "notes": null,
+        "submitted_by": [
+            "nadia_m"
+        ],
+        "record_status": "active",
+        "created_at": "2026-04-02T13:47:38.954Z",
+        "updated_at": "2026-04-02T13:47:38.954Z"
+    }
+},
+{
+    "model": "datasets.sentencejudgmentsubmission",
+    "pk": 2,
+    "fields": {
+        "sentence_text": "ئەو کتێبێکی باشی نووسی",
+        "binary_label": "correct",
+        "language_variant": "sorani",
+        "topic": "Literature",
+        "notes": null,
+        "submitted_by": [
+            "nadia_m"
+        ],
+        "record_status": "active",
+        "created_at": "2026-04-02T13:47:38.954Z",
+        "updated_at": "2026-04-02T13:47:38.954Z"
+    }
+},
+{
+    "model": "datasets.sentencejudgmentsubmission",
+    "pk": 3,
+    "fields": {
+        "sentence_text": "Ez diçim malê",
+        "binary_label": "correct",
+        "language_variant": "kurmanji",
+        "topic": "Daily Life",
+        "notes": null,
+        "submitted_by": [
+            "nadia_m"
+        ],
+        "record_status": "active",
+        "created_at": "2026-04-02T13:47:38.955Z",
+        "updated_at": "2026-04-02T13:47:38.955Z"
+    }
+},
+{
+    "model": "datasets.sentencejudgmentsubmission",
+    "pk": 4,
+    "fields": {
+        "sentence_text": "ئەمە زمانی کوردییە",
+        "binary_label": "correct",
+        "language_variant": "sorani",
+        "topic": "Identity",
+        "notes": null,
+        "submitted_by": [
+            "nadia_m"
+        ],
+        "record_status": "active",
+        "created_at": "2026-04-02T13:47:38.955Z",
+        "updated_at": "2026-04-02T13:47:38.955Z"
+    }
+}
+]

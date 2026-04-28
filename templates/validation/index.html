@@ -1,0 +1,615 @@
+{% extends 'base.html' %}
+{% block title %}Validation — Koma Zmanî Kurdî{% endblock %}
+{% block meta_description %}Help validate Kurdish linguistic data by reviewing submissions and voting on their correctness.{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ── Validation page layout ── */
+.validation-page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 2rem;
+    align-items: start;
+}
+@media (max-width: 900px) {
+    .validation-page { grid-template-columns: 1fr; }
+    .validation-sidebar { order: -1; }
+}
+
+/* ── Hero banner ── */
+.validation-hero {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a78bfa 100%);
+    border-radius: 16px;
+    padding: 2rem 2.5rem;
+    color: #fff;
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+}
+.validation-hero::before {
+    content: '✓';
+    position: absolute;
+    right: 2rem; top: 50%;
+    transform: translateY(-50%);
+    font-size: 8rem;
+    opacity: 0.08;
+    font-weight: 900;
+    pointer-events: none;
+}
+.validation-hero h1 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 0.4rem;
+    color: #fff;
+}
+.validation-hero p {
+    color: rgba(255,255,255,0.85);
+    font-size: 1rem;
+    margin: 0;
+}
+
+/* ── Voting card ── */
+.vote-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(99,102,241,0.10);
+    transition: box-shadow 0.3s;
+}
+.vote-card-header {
+    padding: 1.25rem 1.75rem;
+    border-bottom: 1px solid #f3f4f6;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.data-type-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.85rem;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+}
+.chip-correction   { background: #ede9fe; color: #5b21b6; }
+.chip-parallel_text { background: #d1fae5; color: #065f46; }
+.chip-flagged_data { background: #fef3c7; color: #92400e; }
+.vote-card-meta {
+    margin-left: auto;
+    font-size: 0.8rem;
+    color: #9ca3af;
+}
+
+/* ── Data display ── */
+.vote-content {
+    padding: 1.75rem;
+}
+.data-field {
+    margin-bottom: 1.25rem;
+}
+.data-field:last-child { margin-bottom: 0; }
+.data-field-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: #9ca3af;
+    margin-bottom: 0.4rem;
+}
+.data-field-value {
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    font-size: 1rem;
+    color: #1e1b4b;
+    line-height: 1.7;
+    direction: auto;
+}
+.data-arrow {
+    text-align: center;
+    color: #6366f1;
+    font-size: 1.4rem;
+    margin: 0.5rem 0;
+}
+
+/* ── Question prompt ── */
+.vote-question {
+    padding: 1.25rem 1.75rem;
+    border-top: 1px solid #f3f4f6;
+    background: #fafbff;
+}
+.vote-question-text {
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1e1b4b;
+    margin-bottom: 1.25rem;
+}
+.vote-question-text span {
+    display: inline-block;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ── Vote buttons ── */
+.vote-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+.vote-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 1.25rem;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    border: 2.5px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+    font-family: inherit;
+}
+.vote-btn-icon { font-size: 2rem; }
+.vote-btn-yes {
+    background: #f0fdf4;
+    color: #15803d;
+    border-color: #bbf7d0;
+}
+.vote-btn-yes:hover {
+    background: #16a34a;
+    color: #fff;
+    border-color: #16a34a;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(22,163,74,0.25);
+}
+.vote-btn-no {
+    background: #fef2f2;
+    color: #b91c1c;
+    border-color: #fecaca;
+}
+.vote-btn-no:hover {
+    background: #dc2626;
+    color: #fff;
+    border-color: #dc2626;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(220,38,38,0.25);
+}
+
+/* ── Progress bar ── */
+.vote-progress {
+    padding: 1rem 1.75rem;
+    border-top: 1px solid #f3f4f6;
+}
+.progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+.progress-bar-wrap {
+    background: #f3f4f6;
+    border-radius: 999px;
+    height: 6px;
+    overflow: hidden;
+}
+.progress-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #6366f1, #8b5cf6);
+    transition: width 0.6s ease;
+}
+
+/* ── Success state ── */
+.vote-result-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 3rem 2rem;
+    text-align: center;
+    box-shadow: 0 4px 24px rgba(99,102,241,0.10);
+    display: none; /* shown via JS */
+}
+.vote-result-card.visible { display: block; }
+.result-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+.vote-result-card h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    color: #1e1b4b;
+}
+.vote-result-card p {
+    color: #6b7280;
+    margin-bottom: 1.75rem;
+}
+
+/* ── Empty state ── */
+.validation-empty {
+    background: #fff;
+    border: 1px dashed #e5e7eb;
+    border-radius: 16px;
+    padding: 4rem 2rem;
+    text-align: center;
+}
+.validation-empty .empty-icon { font-size: 4rem; margin-bottom: 1rem; display: block; }
+.validation-empty h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+.validation-empty p { color: #6b7280; margin-bottom: 1.75rem; }
+
+/* ── Sidebar stats ── */
+.validation-sidebar {}
+.sidebar-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.sidebar-card h3 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #9ca3af;
+    margin-bottom: 1rem;
+}
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f3f4f6;
+    font-size: 0.9rem;
+}
+.stat-row:last-child { border-bottom: none; }
+.stat-row-label { color: #374151; font-weight: 500; }
+.stat-row-value { font-weight: 700; color: #6366f1; }
+.stat-row-value.green { color: #16a34a; }
+.stat-row-value.red { color: #dc2626; }
+.stat-row-value.amber { color: #d97706; }
+.stat-row-value.muted { color: #9ca3af; }
+
+.your-impact {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    border-radius: 16px;
+    padding: 1.5rem;
+    color: #fff;
+    text-align: center;
+}
+.your-impact .impact-count {
+    font-size: 3rem;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 0.3rem;
+}
+.your-impact p { color: rgba(255,255,255,0.85); font-size: 0.9rem; margin: 0; }
+
+/* ── Loading spinner ── */
+.spinner {
+    display: inline-block;
+    width: 20px; height: 20px;
+    border: 3px solid #e5e7eb;
+    border-top-color: #6366f1;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="validation-page">
+
+    <!-- ── Main column ─────────────────────────────────────── -->
+    <div class="validation-main">
+
+        <!-- Hero -->
+        <div class="validation-hero">
+            <h1>✅ Data Validation</h1>
+            <p>Review Kurdish linguistic data and help the community decide what's correct.</p>
+        </div>
+
+        <!-- Voting card (shown when item exists) -->
+        {% if item %}
+        <div class="vote-card" id="voteCard">
+            <div class="vote-card-header">
+                {% if item.data_type == 'correction' %}
+                    <span class="data-type-chip chip-correction">✏️ Correction</span>
+                {% elif item.data_type == 'parallel_text' %}
+                    <span class="data-type-chip chip-parallel_text">🔀 Parallel Text</span>
+                {% else %}
+                    <span class="data-type-chip chip-flagged_data">🚩 Flagged Data</span>
+                {% endif %}
+                <span class="vote-card-meta">
+                    {{ item.total_votes }} / {{ item.required_votes }} votes
+                </span>
+            </div>
+
+            <div class="vote-content">
+                {% if item.data_type == 'correction' %}
+                    <div class="data-field">
+                        <div class="data-field-label">Incorrect Sentence</div>
+                        <div class="data-field-value">{{ item.content.incorrect_sentence }}</div>
+                    </div>
+                    <div class="data-arrow">↓</div>
+                    <div class="data-field">
+                        <div class="data-field-label">Corrected Sentence</div>
+                        <div class="data-field-value">{{ item.content.correct_sentence }}</div>
+                    </div>
+
+                {% elif item.data_type == 'parallel_text' %}
+                    <div class="data-field">
+                        <div class="data-field-label">{{ item.content.source_language }}</div>
+                        <div class="data-field-value">{{ item.content.source_text }}</div>
+                    </div>
+                    <div class="data-arrow">⇄</div>
+                    <div class="data-field">
+                        <div class="data-field-label">{{ item.content.target_language }}</div>
+                        <div class="data-field-value">{{ item.content.target_text }}</div>
+                    </div>
+
+                {% else %}{# flagged_data #}
+                    <div class="data-field">
+                        <div class="data-field-label">Sentence</div>
+                        <div class="data-field-value">{{ item.content.sentence }}</div>
+                    </div>
+                    <div class="data-field">
+                        <div class="data-field-label">Original Label</div>
+                        <div class="data-field-value">
+                            {% if item.content.original_label == 'correct' %}
+                                ✅ Marked as correct
+                            {% else %}
+                                ❌ Marked as incorrect
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Question + Buttons -->
+            <div class="vote-question">
+                <p class="vote-question-text">
+                    <span>Is this data correct?</span>
+                </p>
+                <div class="vote-buttons" id="voteButtons">
+                    <button class="vote-btn vote-btn-yes"
+                            onclick="submitVote({{ item.id }}, 'yes')"
+                            id="btnYes">
+                        <span class="vote-btn-icon">👍</span>
+                        YES
+                    </button>
+                    <button class="vote-btn vote-btn-no"
+                            onclick="submitVote({{ item.id }}, 'no')"
+                            id="btnNo">
+                        <span class="vote-btn-icon">👎</span>
+                        NO
+                    </button>
+                </div>
+            </div>
+
+            <!-- Vote progress -->
+            <div class="vote-progress">
+                <div class="progress-label">
+                    <span>Votes collected</span>
+                    <span id="progressText">{{ item.total_votes }} / {{ item.required_votes }}</span>
+                </div>
+                <div class="progress-bar-wrap">
+                    {% with pct=item.total_votes|floatformat:0 req=item.required_votes %}
+                    <div class="progress-bar-fill"
+                         style="width: {% widthratio item.total_votes item.required_votes 100 %}%"
+                         id="progressBar">
+                    </div>
+                    {% endwith %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Thank-you card (shown after vote, hidden initially) -->
+        <div class="vote-result-card" id="voteResult">
+            <span class="result-icon" id="resultIcon">🎉</span>
+            <h2 id="resultTitle">Thank you for your evaluation!</h2>
+            <p id="resultMsg">Your vote has been recorded.</p>
+            <button class="btn btn-primary btn-lg" id="nextItemBtn" onclick="loadNextItem()">
+                Next Item →
+            </button>
+        </div>
+
+        {% else %}
+        <!-- Empty state -->
+        <div class="validation-empty" id="voteCard">
+            <span class="empty-icon">🏆</span>
+            <h2>You're all caught up!</h2>
+            <p>There are no pending items left for you to validate right now.<br>
+               Check back later as new data is contributed.</p>
+            <a href="{% url 'contribute_home' %}" class="btn btn-primary">
+                Contribute More Data
+            </a>
+        </div>
+        {% endif %}
+
+    </div><!-- /main -->
+
+    <!-- ── Sidebar ──────────────────────────────────────────── -->
+    <aside class="validation-sidebar">
+
+        <!-- Your impact -->
+        <div class="your-impact">
+            <div class="impact-count">{{ stats.user_votes }}</div>
+            <p>evaluations you've submitted</p>
+        </div>
+
+        <!-- Queue stats -->
+        <div class="sidebar-card" style="margin-top:1.25rem;">
+            <h3>📊 Queue Overview</h3>
+            <div class="stat-row">
+                <span class="stat-row-label">Total Items</span>
+                <span class="stat-row-value muted">{{ stats.total }}</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-row-label">Pending</span>
+                <span class="stat-row-value">{{ stats.pending }}</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-row-label">Accepted</span>
+                <span class="stat-row-value green">{{ stats.accepted }}</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-row-label">Rejected</span>
+                <span class="stat-row-value red">{{ stats.rejected }}</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-row-label">Needs Moderation</span>
+                <span class="stat-row-value amber">{{ stats.needs_moderation }}</span>
+            </div>
+        </div>
+
+        <!-- How it works -->
+        <div class="sidebar-card">
+            <h3>ℹ️ How It Works</h3>
+            <div style="display:flex;flex-direction:column;gap:0.75rem;font-size:0.88rem;color:#4b5563;">
+                <div>
+                    <strong style="color:#1e1b4b;">1. Read the data</strong><br>
+                    Review the Kurdish text entry carefully.
+                </div>
+                <div>
+                    <strong style="color:#1e1b4b;">2. Vote YES or NO</strong><br>
+                    Is the data linguistically correct?
+                </div>
+                <div>
+                    <strong style="color:#1e1b4b;">3. Collective decision</strong><br>
+                    After 20 votes, the system automatically accepts or rejects the entry.
+                </div>
+                <div>
+                    <strong style="color:#1e1b4b;">4. Close calls</strong><br>
+                    If the vote is close, a moderator reviews manually.
+                </div>
+            </div>
+        </div>
+
+        {% if user.is_moderator %}
+        <div class="sidebar-card" style="border-color:#fde68a;background:#fffbeb;">
+            <h3 style="color:#92400e;">🛡️ Moderation</h3>
+            <p style="font-size:0.88rem;color:#78350f;margin-bottom:1rem;">
+                {{ stats.needs_moderation }} item(s) are waiting for your decision.
+            </p>
+            <a href="{% url 'moderation_list' %}" class="btn btn-outline btn-full"
+               style="border-color:#f59e0b;color:#d97706;">
+                Open Moderator Dashboard
+            </a>
+        </div>
+        {% endif %}
+
+    </aside>
+</div>
+
+{% csrf_token %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const SUBMIT_URL = "{% url 'validation_submit' %}";
+const NEXT_URL   = "{% url 'validation_next' %}";
+const csrfToken  = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+function setButtonsDisabled(disabled) {
+    const yes = document.getElementById('btnYes');
+    const no  = document.getElementById('btnNo');
+    if (yes) yes.disabled = disabled;
+    if (no)  no.disabled  = disabled;
+}
+
+async function submitVote(itemId, response) {
+    setButtonsDisabled(true);
+
+    const formData = new FormData();
+    formData.append('item_id', itemId);
+    formData.append('response', response);
+    formData.append('csrfmiddlewaretoken', csrfToken);
+
+    try {
+        const res = await fetch(SUBMIT_URL, { method: 'POST', body: formData });
+        const data = await res.json();
+
+        if (!res.ok || data.error) {
+            alert(data.error || 'Something went wrong. Please try again.');
+            setButtonsDisabled(false);
+            return;
+        }
+
+        // Update progress bar
+        const bar = document.getElementById('progressBar');
+        const txt = document.getElementById('progressText');
+        if (bar && txt) {
+            const pct = Math.min(100, (data.total_votes / {{ item.required_votes|default:20 }}) * 100);
+            bar.style.width = pct + '%';
+            txt.textContent = data.total_votes + ' / {{ item.required_votes|default:20 }}';
+        }
+
+        // Show result card
+        showResult(response, data.status);
+
+    } catch (err) {
+        console.error(err);
+        alert('Network error. Please try again.');
+        setButtonsDisabled(false);
+    }
+}
+
+function showResult(response, status) {
+    const voteCard   = document.getElementById('voteCard');
+    const resultCard = document.getElementById('voteResult');
+    const icon  = document.getElementById('resultIcon');
+    const title = document.getElementById('resultTitle');
+    const msg   = document.getElementById('resultMsg');
+
+    if (voteCard)   voteCard.style.display = 'none';
+    if (resultCard) resultCard.classList.add('visible');
+
+    if (response === 'yes') {
+        icon.textContent  = '👍';
+        title.textContent = 'You voted YES!';
+    } else {
+        icon.textContent  = '👎';
+        title.textContent = 'You voted NO!';
+    }
+
+    const statusMessages = {
+        accepted:         'This item has now been accepted by the community.',
+        rejected:         'This item has been rejected by the community.',
+        needs_moderation: 'This item will be reviewed by a moderator.',
+        pending:          'Your vote has been recorded.',
+    };
+    msg.textContent = statusMessages[status] || 'Your vote has been recorded.';
+}
+
+async function loadNextItem() {
+    const btn = document.getElementById('nextItemBtn');
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner"></span> Loading…';
+    }
+    // Full page reload — simplest and most reliable approach
+    window.location.href = "{% url 'validation_home' %}";
+}
+</script>
+{% endblock %}

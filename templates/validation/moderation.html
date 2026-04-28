@@ -1,0 +1,386 @@
+{% extends 'base.html' %}
+{% block title %}Moderator Dashboard — Validation — Koma Zmanî Kurdî{% endblock %}
+
+{% block extra_css %}
+<style>
+.mod-page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem;
+}
+.mod-hero {
+    background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+    border-radius: 16px;
+    padding: 1.75rem 2.5rem;
+    color: #fff;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+.mod-hero-icon { font-size: 2.5rem; }
+.mod-hero h1 { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.25rem; color: #fff; }
+.mod-hero p  { color: rgba(255,255,255,0.85); font-size: 0.95rem; margin: 0; }
+
+/* ── Summary chips ── */
+.mod-summary {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.75rem;
+    flex-wrap: wrap;
+}
+.mod-chip {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 0.85rem 1.25rem;
+    text-align: center;
+    flex: 1;
+    min-width: 120px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+.mod-chip strong {
+    display: block;
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #d97706;
+}
+.mod-chip span {
+    font-size: 0.78rem;
+    color: #9ca3af;
+    font-weight: 500;
+}
+
+/* ── Table ── */
+.mod-table-wrap {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+.mod-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.mod-table th {
+    background: #fafbff;
+    padding: 0.85rem 1rem;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #9ca3af;
+    border-bottom: 2px solid #f3f4f6;
+    white-space: nowrap;
+}
+.mod-table td {
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid #f3f4f6;
+    font-size: 0.88rem;
+    vertical-align: top;
+}
+.mod-table tr:last-child td { border-bottom: none; }
+.mod-table tr:hover td { background: #fafbff; }
+
+/* Content preview */
+.content-preview {
+    max-width: 300px;
+}
+.preview-line {
+    color: #374151;
+    line-height: 1.5;
+    margin-bottom: 0.2rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 280px;
+}
+.preview-line em { color: #9ca3af; font-style: normal; font-size: 0.75rem; }
+
+/* Vote counts */
+.vote-count-yes { color: #16a34a; font-weight: 700; }
+.vote-count-no  { color: #dc2626; font-weight: 700; }
+
+/* Confidence */
+.conf-bar-wrap {
+    background: #f3f4f6;
+    border-radius: 999px;
+    height: 6px;
+    width: 80px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 0.4rem;
+    overflow: hidden;
+}
+.conf-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #6366f1, #8b5cf6);
+}
+
+/* Action buttons */
+.action-cell { display: flex; gap: 0.5rem; align-items: center; }
+.btn-accept {
+    padding: 0.45rem 1rem;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    background: #16a34a;
+    color: #fff;
+    font-family: inherit;
+    transition: all 0.2s;
+}
+.btn-accept:hover { background: #15803d; transform: translateY(-1px); }
+.btn-reject {
+    padding: 0.45rem 1rem;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    background: #dc2626;
+    color: #fff;
+    font-family: inherit;
+    transition: all 0.2s;
+}
+.btn-reject:hover { background: #b91c1c; transform: translateY(-1px); }
+
+/* Empty state */
+.mod-empty {
+    text-align: center;
+    padding: 5rem 2rem;
+    color: #9ca3af;
+    background: #fff;
+    border-radius: 16px;
+    border: 1px dashed #e5e7eb;
+}
+.mod-empty-icon { font-size: 4rem; display: block; margin-bottom: 1rem; }
+.mod-empty h2 { font-size: 1.5rem; font-weight: 800; color: #1e1b4b; margin-bottom: 0.5rem; }
+
+/* Toast */
+.mod-toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: #1e1b4b;
+    color: #fff;
+    padding: 0.85rem 1.5rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    z-index: 9999;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: all 0.3s;
+    pointer-events: none;
+}
+.mod-toast.show { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 768px) {
+    .mod-table { font-size: 0.8rem; }
+    .content-preview { max-width: 160px; }
+    .conf-bar-wrap { display: none; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="mod-page">
+
+    <!-- Hero -->
+    <div class="mod-hero">
+        <span class="mod-hero-icon">🛡️</span>
+        <div>
+            <h1>Moderator Dashboard</h1>
+            <p>Items where community votes were too close — decide accept or reject.</p>
+        </div>
+        <a href="{% url 'validation_home' %}" class="btn btn-outline-white btn-sm"
+           style="margin-left:auto;flex-shrink:0;">← Back to Voting</a>
+    </div>
+
+    <!-- Summary -->
+    <div class="mod-summary">
+        <div class="mod-chip">
+            <strong>{{ items.count }}</strong>
+            <span>Awaiting Decision</span>
+        </div>
+        <div class="mod-chip">
+            <strong style="color:#6366f1;">20</strong>
+            <span>Required Votes</span>
+        </div>
+        <div class="mod-chip">
+            <strong style="color:#16a34a;">≥30%</strong>
+            <span>Auto-resolve Margin</span>
+        </div>
+        <div class="mod-chip">
+            <strong style="color:#dc2626;">80</strong>
+            <span>Confidence After Override</span>
+        </div>
+    </div>
+
+    {% if items %}
+    <div class="mod-table-wrap">
+        <table class="mod-table" id="modTable">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Type</th>
+                    <th>Content Preview</th>
+                    <th>YES</th>
+                    <th>NO</th>
+                    <th>Confidence</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="modTableBody">
+                {% for item in items %}
+                <tr id="row-{{ item.id }}">
+                    <td style="color:#9ca3af;font-size:0.8rem;">{{ item.id }}</td>
+                    <td>
+                        {% if item.data_type == 'correction' %}
+                            <span class="data-type-chip chip-correction"
+                                  style="display:inline-flex;align-items:center;gap:0.3rem;
+                                         padding:0.25rem 0.65rem;border-radius:20px;
+                                         font-size:0.72rem;font-weight:700;
+                                         background:#ede9fe;color:#5b21b6;">
+                                ✏️ Correction
+                            </span>
+                        {% elif item.data_type == 'parallel_text' %}
+                            <span style="display:inline-flex;align-items:center;gap:0.3rem;
+                                         padding:0.25rem 0.65rem;border-radius:20px;
+                                         font-size:0.72rem;font-weight:700;
+                                         background:#d1fae5;color:#065f46;">
+                                🔀 Parallel Text
+                            </span>
+                        {% else %}
+                            <span style="display:inline-flex;align-items:center;gap:0.3rem;
+                                         padding:0.25rem 0.65rem;border-radius:20px;
+                                         font-size:0.72rem;font-weight:700;
+                                         background:#fef3c7;color:#92400e;">
+                                🚩 Flagged Data
+                            </span>
+                        {% endif %}
+                    </td>
+                    <td class="content-preview">
+                        {% if item.data_type == 'correction' %}
+                            <div class="preview-line"><em>Wrong: </em>{{ item.content.incorrect_sentence|truncatechars:50 }}</div>
+                            <div class="preview-line"><em>Correct: </em>{{ item.content.correct_sentence|truncatechars:50 }}</div>
+                        {% elif item.data_type == 'parallel_text' %}
+                            <div class="preview-line"><em>{{ item.content.source_language }}: </em>{{ item.content.source_text|truncatechars:45 }}</div>
+                            <div class="preview-line"><em>{{ item.content.target_language }}: </em>{{ item.content.target_text|truncatechars:45 }}</div>
+                        {% else %}
+                            <div class="preview-line">{{ item.content.sentence|truncatechars:70 }}</div>
+                            <div class="preview-line"><em>Label: {{ item.content.original_label }}</em></div>
+                        {% endif %}
+                    </td>
+                    <td><span class="vote-count-yes">{{ item.yes_votes }}</span></td>
+                    <td><span class="vote-count-no">{{ item.no_votes }}</span></td>
+                    <td>
+                        <div style="display:flex;align-items:center;gap:0.4rem;">
+                            <div class="conf-bar-wrap">
+                                <div class="conf-bar-fill"
+                                     style="width:{{ item.confidence_score|floatformat:0 }}%"></div>
+                            </div>
+                            <span style="font-weight:700;font-size:0.88rem;">
+                                {{ item.confidence_score|floatformat:1 }}%
+                            </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="action-cell">
+                            <form method="post"
+                                  action="{% url 'moderation_resolve' item.id %}"
+                                  class="resolve-form" data-item-id="{{ item.id }}">
+                                {% csrf_token %}
+                                <input type="hidden" name="decision" value="accept">
+                                <button type="submit" class="btn-accept">✓ Accept</button>
+                            </form>
+                            <form method="post"
+                                  action="{% url 'moderation_resolve' item.id %}"
+                                  class="resolve-form" data-item-id="{{ item.id }}">
+                                {% csrf_token %}
+                                <input type="hidden" name="decision" value="reject">
+                                <button type="submit" class="btn-reject">✗ Reject</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% else %}
+    <!-- Empty state -->
+    <div class="mod-empty">
+        <span class="mod-empty-icon">🎉</span>
+        <h2>No items need moderation right now.</h2>
+        <p style="margin:0.5rem 0 1.5rem;">All community votes were decisive enough to auto-resolve.</p>
+        <a href="{% url 'validation_home' %}" class="btn btn-primary">Go to Validation Queue</a>
+    </div>
+    {% endif %}
+
+</div>
+
+<!-- Toast notification -->
+<div class="mod-toast" id="modToast"></div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Intercept resolve forms with AJAX for a smoother experience
+document.querySelectorAll('.resolve-form').forEach(form => {
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const itemId   = form.dataset.itemId;
+        const decision = form.querySelector('input[name="decision"]').value;
+        const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
+        const btn = form.querySelector('button[type="submit"]');
+        btn.disabled = true;
+
+        try {
+            const res = await fetch(form.action, {
+                method: 'POST',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                body: new FormData(form),
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                // Animate row out
+                const row = document.getElementById('row-' + itemId);
+                if (row) {
+                    row.style.transition = 'opacity 0.4s, transform 0.4s';
+                    row.style.opacity = '0';
+                    row.style.transform = 'translateX(40px)';
+                    setTimeout(() => row.remove(), 400);
+                }
+                showToast(decision === 'accept'
+                    ? '✅ Item accepted successfully'
+                    : '❌ Item rejected successfully');
+            } else {
+                showToast('Error: ' + (data.error || 'Something went wrong'));
+                btn.disabled = false;
+            }
+        } catch (err) {
+            console.error(err);
+            showToast('Network error. Please try again.');
+            btn.disabled = false;
+        }
+    });
+});
+
+function showToast(msg) {
+    const toast = document.getElementById('modToast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+}
+</script>
+{% endblock %}

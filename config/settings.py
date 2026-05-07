@@ -95,24 +95,19 @@ LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "home"
 LOGIN_URL = "login"
 
-# ─── Email / SMTP ───────────────────────────────────────────────────────────
-# To send real password-reset emails via Gmail:
-#   1. Go to your Google Account → Security → App Passwords
-#   2. Generate an App Password for "Mail"
-#   3. Fill in EMAIL_HOST_USER and EMAIL_HOST_PASSWORD below
+# ─── Email / Resend API ─────────────────────────────────────────────────────
+# Uses Resend (https://resend.com) — works on Vercel (no SMTP ports needed).
+# 1. Sign up at resend.com → create an API key
+# 2. Verify your sending domain in the Resend dashboard
+# 3. Set RESEND_API_KEY and DEFAULT_FROM_EMAIL in your environment / Vercel vars
 #
-# For local development without a Gmail account, comment out the SMTP block
-# and uncomment the console backend instead — emails will print to terminal.
+# Local dev fallback: set EMAIL_BACKEND to console backend below instead.
 
-EMAIL_BACKEND     = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST        = os.environ.get("EMAIL_HOST")
-EMAIL_PORT        = int(os.environ.get("EMAIL_PORT", 587))
-EMAIL_USE_TLS     = True
-EMAIL_HOST_USER   = os.environ.get("EMAIL_HOST_USER")  # ← replace with your Gmail address
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")     # ← replace with your Gmail App Password
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+RESEND_API_KEY     = os.environ.get("RESEND_API_KEY")
+EMAIL_BACKEND      = "accounts.email_backend.ResendEmailBackend"
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "noreply@yourdomain.com")
 
-# Console fallback (uncomment to print emails to terminal instead of sending)
+# Console fallback — uncomment to print emails to terminal during local dev:
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Default primary key

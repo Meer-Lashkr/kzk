@@ -6,3 +6,4 @@ python-dotenv
 Pillow
 djangorestframework
 dj-database-url
+resend

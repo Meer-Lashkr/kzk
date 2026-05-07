@@ -95,17 +95,18 @@ LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "home"
 LOGIN_URL = "login"
 
-# ─── Email / Brevo API ──────────────────────────────────────────────────────
-# Uses Brevo (https://brevo.com) — free 300 emails/day, no domain needed.
-# Only requires a verified sender email address (any Gmail etc.).
-# 1. Sign up at brevo.com → Settings → Senders → Add & verify your email
-# 2. Settings → API Keys → Generate API Key (unrestricted)
-# 3. Set the three env vars below in Vercel → Settings → Environment Variables
+# ─── Email / Gmail SMTP ──────────────────────────────────────────────────────
+# Using Gmail SMTP with an App Password
+# Ensure EMAIL_HOST_USER and EMAIL_HOST_PASSWORD are set in your environment
+# Note: For Vercel, it allows SMTP via port 587.
 
-BREVO_API_KEY      = os.environ.get("BREVO_API_KEY")
-EMAIL_BACKEND      = "accounts.email_backend.BrevoEmailBackend"
-DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")   # your verified sender email
-DEFAULT_FROM_NAME  = os.environ.get("DEFAULT_FROM_NAME", "Koma Zmanî Kurdî")
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # Console fallback — uncomment to print emails to terminal during local dev:
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

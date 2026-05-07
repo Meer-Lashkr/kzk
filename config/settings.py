@@ -95,17 +95,17 @@ LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "home"
 LOGIN_URL = "login"
 
-# ─── Email / Resend API ─────────────────────────────────────────────────────
-# Uses Resend (https://resend.com) — works on Vercel (no SMTP ports needed).
-# 1. Sign up at resend.com → create an API key
-# 2. Verify your sending domain in the Resend dashboard
-# 3. Set RESEND_API_KEY and DEFAULT_FROM_EMAIL in your environment / Vercel vars
-#
-# Local dev fallback: set EMAIL_BACKEND to console backend below instead.
+# ─── Email / Brevo API ──────────────────────────────────────────────────────
+# Uses Brevo (https://brevo.com) — free 300 emails/day, no domain needed.
+# Only requires a verified sender email address (any Gmail etc.).
+# 1. Sign up at brevo.com → Settings → Senders → Add & verify your email
+# 2. Settings → API Keys → Generate API Key
+# 3. Set the three env vars below in Vercel → Settings → Environment Variables
 
-RESEND_API_KEY     = os.environ.get("RESEND_API_KEY")
-EMAIL_BACKEND      = "accounts.email_backend.ResendEmailBackend"
-DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "noreply@yourdomain.com")
+BREVO_API_KEY      = os.environ.get("BREVO_API_KEY")
+EMAIL_BACKEND      = "accounts.email_backend.BrevoEmailBackend"
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")   # your verified sender email
+DEFAULT_FROM_NAME  = os.environ.get("DEFAULT_FROM_NAME", "Koma Zmanî Kurdî")
 
 # Console fallback — uncomment to print emails to terminal during local dev:
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

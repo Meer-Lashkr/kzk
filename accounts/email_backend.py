@@ -1,51 +1,47 @@
 """
-Custom Django email backend using the SendGrid Web API.
+Custom Django email backend using the Brevo (ex-Sendinblue) Transactional Email API.
 
-No domain ownership required — only a verified sender email address.
-Uses HTTPS (no SMTP ports), compatible with Vercel.
-Free tier: 100 emails/day.
+No domain ownership required — just verify a sender email address in Brevo.
+Uses plain HTTPS (no SMTP ports), so works on Vercel without any issues.
 """
 
-import json
 import requests
 from django.conf import settings
 from django.core.mail.backends.base import BaseEmailBackend
 
-SENDGRID_API_URL = "https://api.sendgrid.com/v3/mail/send"
+BREVO_API_URL = "https://api.brevo.com/v3/smtp/email"
 
 
-class SendGridEmailBackend(BaseEmailBackend):
-    """Send emails via the SendGrid Web API (no SMTP port required)."""
+class BrevoEmailBackend(BaseEmailBackend):
+    """Send emails via the Brevo HTTP API (no SMTP port required)."""
 
     def send_messages(self, email_messages):
-        api_key = settings.SENDGRID_API_KEY
+        api_key = settings.BREVO_API_KEY
         num_sent = 0
 
         for message in email_messages:
             try:
                 payload = {
-                    "personalizations": [
-                        {"to": [{"email": addr} for addr in message.to]}
-                    ],
-                    "from": {
-                        "email": message.from_email,
+                    "sender": {
                         "name": getattr(settings, "DEFAULT_FROM_NAME", "Koma Zmanî Kurdî"),
+                        "email": message.from_email,
                     },
+                    "to": [{"email": addr} for addr in message.to],
                     "subject": message.subject,
-                    "content": [{"type": "text/plain", "value": message.body}],
+                    "textContent": message.body,
                 }
 
                 # Include HTML alternative if present
                 for content, mimetype in getattr(message, "alternatives", []):
                     if mimetype == "text/html":
-                        payload["content"].append({"type": "text/html", "value": content})
+                        payload["htmlContent"] = content
                         break
 
                 response = requests.post(
-                    SENDGRID_API_URL,
-                    data=json.dumps(payload),
+                    BREVO_API_URL,
+                    json=payload,
                     headers={
-                        "Authorization": f"Bearer {api_key}",
+                        "api-key": api_key,
                         "Content-Type": "application/json",
                     },
                     timeout=10,

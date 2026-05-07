@@ -95,15 +95,15 @@ LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "home"
 LOGIN_URL = "login"
 
-# ─── Email / SendGrid API ────────────────────────────────────────────────────
-# Uses SendGrid (https://sendgrid.com) — free 100 emails/day, no domain needed.
+# ─── Email / Brevo API ──────────────────────────────────────────────────────
+# Uses Brevo (https://brevo.com) — free 300 emails/day, no domain needed.
 # Only requires a verified sender email address (any Gmail etc.).
-# 1. Sign up at sendgrid.com → Settings → Sender Authentication → Single Sender
-# 2. Settings → API Keys → Create API Key (Full Access)
+# 1. Sign up at brevo.com → Settings → Senders → Add & verify your email
+# 2. Settings → API Keys → Generate API Key (unrestricted)
 # 3. Set the three env vars below in Vercel → Settings → Environment Variables
 
-SENDGRID_API_KEY   = os.environ.get("SENDGRID_API_KEY")
-EMAIL_BACKEND      = "accounts.email_backend.SendGridEmailBackend"
+BREVO_API_KEY      = os.environ.get("BREVO_API_KEY")
+EMAIL_BACKEND      = "accounts.email_backend.BrevoEmailBackend"
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")   # your verified sender email
 DEFAULT_FROM_NAME  = os.environ.get("DEFAULT_FROM_NAME", "Koma Zmanî Kurdî")
 

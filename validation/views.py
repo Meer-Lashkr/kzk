@@ -135,8 +135,8 @@ def validation_submit(request):
 
     if not item_id:
         return JsonResponse({"error": "item_id is required."}, status=400)
-    if response not in ("yes", "no"):
-        return JsonResponse({"error": "response must be 'yes' or 'no'."}, status=400)
+    if response not in ("yes", "no", "neutral"):
+        return JsonResponse({"error": "response must be 'yes', 'no', or 'neutral'."}, status=400)
 
     item = get_object_or_404(ValidationItem, pk=item_id)
 
@@ -168,6 +168,7 @@ def validation_submit(request):
         "item_id": item.id,
         "yes_votes": item.yes_votes,
         "no_votes": item.no_votes,
+        "neutral_votes": item.neutral_votes,
         "total_votes": item.total_votes,
         "confidence_score": round(item.confidence_score, 1),
         "status": item.status,

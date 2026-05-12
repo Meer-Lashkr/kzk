@@ -37,6 +37,8 @@ class CorrectionSubmission(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    integrity_swear = models.BooleanField(default=False, help_text="I swear that this submission is my own work and that I have not plagiarized.")
+
     class Meta:
         ordering = ['-created_at']
 

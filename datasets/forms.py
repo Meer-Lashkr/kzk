@@ -3,6 +3,14 @@ from .models import CorrectionSubmission, ParallelTextSubmission, SentenceJudgme
 
 
 class CorrectThisForm(forms.ModelForm):
+    integrity_swear = forms.BooleanField(
+    required=True,
+    label="I swear that this submission is my own work and that I have not plagiarized.",
+    error_messages={
+        'required': 'You must check this box to confirm this is your own original work.'
+    }
+)
+
     class Meta:
         model = CorrectionSubmission
         fields = ['incorrect_text', 'corrected_text', 'language_variant', 'topic', 'notes']

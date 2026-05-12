@@ -20,7 +20,9 @@ def update_validation_result(item):
     yes_votes = item.votes.filter(response="yes").count()
     no_votes = item.votes.filter(response="no").count()
     neutral_votes = item.votes.filter(response="neutral").count()
-    total_votes = yes_votes + no_votes + neutral_votes
+    
+    # Neutral votes have zero weight; they don't count towards the required threshold
+    total_votes = yes_votes + no_votes
 
     item.yes_votes = yes_votes
     item.no_votes = no_votes

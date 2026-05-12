@@ -144,7 +144,7 @@
 /* ── Vote buttons ── */
 .vote-buttons {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
 }
 .vote-btn {
@@ -187,6 +187,18 @@
     border-color: #dc2626;
     transform: translateY(-3px);
     box-shadow: 0 8px 24px rgba(220,38,38,0.25);
+}
+.vote-btn-neutral {
+    background: #f3f4f6;
+    color: #4b5563;
+    border-color: #e5e7eb;
+}
+.vote-btn-neutral:hover {
+    background: #6b7280;
+    color: #fff;
+    border-color: #6b7280;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(107,114,128,0.25);
 }
 
 /* ── Progress bar ── */
@@ -398,6 +410,12 @@
                         <span class="vote-btn-icon">👍</span>
                         YES
                     </button>
+                    <button class="vote-btn vote-btn-neutral"
+                            onclick="submitVote({{ item.id }}, 'neutral')"
+                            id="btnNeutral">
+                        <span class="vote-btn-icon">➖</span>
+                        NEUTRAL
+                    </button>
                     <button class="vote-btn vote-btn-no"
                             onclick="submitVote({{ item.id }}, 'no')"
                             id="btnNo">
@@ -492,7 +510,7 @@
                     Review the Kurdish text entry carefully.
                 </div>
                 <div>
-                    <strong style="color:#1e1b4b;">2. Vote YES or NO</strong><br>
+                    <strong style="color:#1e1b4b;">2. Vote YES, NO, or NEUTRAL</strong><br>
                     Is the data linguistically correct?
                 </div>
                 <div>
@@ -534,8 +552,10 @@ const csrfToken  = document.querySelector('[name=csrfmiddlewaretoken]').value;
 function setButtonsDisabled(disabled) {
     const yes = document.getElementById('btnYes');
     const no  = document.getElementById('btnNo');
+    const neutral = document.getElementById('btnNeutral');
     if (yes) yes.disabled = disabled;
     if (no)  no.disabled  = disabled;
+    if (neutral) neutral.disabled = disabled;
 }
 
 async function submitVote(itemId, response) {
@@ -588,9 +608,12 @@ function showResult(response, status) {
     if (response === 'yes') {
         icon.textContent  = '👍';
         title.textContent = 'You voted YES!';
-    } else {
+    } else if (response === 'no') {
         icon.textContent  = '👎';
         title.textContent = 'You voted NO!';
+    } else {
+        icon.textContent  = '➖';
+        title.textContent = 'You voted NEUTRAL!';
     }
 
     const statusMessages = {

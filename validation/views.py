@@ -149,6 +149,7 @@ def validation_submit(request):
         return JsonResponse(
             {"error": "This item has already reached its vote quota."}, status=400
         )
+        
 
     # Guard: no duplicate votes
     if ValidationVote.objects.filter(item=item, user=request.user).exists():

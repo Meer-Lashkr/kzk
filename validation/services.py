@@ -19,10 +19,12 @@ def update_validation_result(item):
     """
     yes_votes = item.votes.filter(response="yes").count()
     no_votes = item.votes.filter(response="no").count()
-    total_votes = yes_votes + no_votes
+    neutral_votes = item.votes.filter(response="neutral").count()
+    total_votes = yes_votes + no_votes + neutral_votes
 
     item.yes_votes = yes_votes
     item.no_votes = no_votes
+    item.neutral_votes = neutral_votes
     item.total_votes = total_votes
 
     if total_votes > 0:

@@ -43,6 +43,7 @@ class ValidationItem(models.Model):
 
     yes_votes = models.PositiveIntegerField(default=0)
     no_votes = models.PositiveIntegerField(default=0)
+    neutral_votes = models.PositiveIntegerField(default=0)
     total_votes = models.PositiveIntegerField(default=0)
 
     # Percentage (0–100) of users who voted YES.
@@ -104,6 +105,7 @@ class ValidationVote(models.Model):
     RESPONSE_CHOICES = [
         ("yes", "Yes"),
         ("no", "No"),
+        ("neutral", "Neutral"),
     ]
 
     item = models.ForeignKey(

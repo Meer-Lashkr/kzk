@@ -11,7 +11,7 @@ from accounts.models import ActivityLog
 def question_list(request):
     query = request.GET.get('q', '')
     tag_slug = request.GET.get('tag', '')
-    questions = Question.objects.exclude(status='deleted_soft').order_by('-created_at')
+    questions = Question.objects.exclude(status='deleted_soft').select_related('author').prefetch_related('tags').order_by('-created_at')
 
     if query:
         questions = questions.filter(
@@ -36,8 +36,8 @@ def question_list(request):
 
 
 def question_detail(request, pk):
-    question = get_object_or_404(Question, pk=pk)
-    answers = question.answers.all().order_by('-is_accepted', 'created_at')
+    question = get_object_or_404(Question.objects.select_related('author').prefetch_related('tags'), pk=pk)
+    answers = question.answers.select_related('author').all().order_by('-is_accepted', 'created_at')
 
     if request.method == 'POST':
         if not request.user.is_authenticated:

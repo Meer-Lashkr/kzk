@@ -29,17 +29,17 @@ def dashboard_index(request):
 def user_dashboard(request):
     user = request.user
     context = {
-        'my_questions': Question.objects.filter(author=user).order_by('-created_at')[:5],
-        'my_answers': Answer.objects.filter(author=user).order_by('-created_at')[:5],
-        'my_corrections': CorrectionSubmission.objects.filter(submitted_by=user).order_by('-created_at')[:5],
-        'my_parallel_texts': ParallelTextSubmission.objects.filter(submitted_by=user).order_by('-created_at')[:5],
-        'my_judgments': SentenceJudgmentSubmission.objects.filter(submitted_by=user).order_by('-created_at')[:5],
+        'my_questions': Question.objects.filter(author=user).select_related('author').order_by('-created_at')[:5],
+        'my_answers': Answer.objects.filter(author=user).select_related('author', 'question').order_by('-created_at')[:5],
+        'my_corrections': CorrectionSubmission.objects.filter(submitted_by=user).select_related('submitted_by').order_by('-created_at')[:5],
+        'my_parallel_texts': ParallelTextSubmission.objects.filter(submitted_by=user).select_related('submitted_by').order_by('-created_at')[:5],
+        'my_judgments': SentenceJudgmentSubmission.objects.filter(submitted_by=user).select_related('submitted_by').order_by('-created_at')[:5],
         'corrections_count': CorrectionSubmission.objects.filter(submitted_by=user).count(),
         'parallel_count': ParallelTextSubmission.objects.filter(submitted_by=user).count(),
         'judgments_count': SentenceJudgmentSubmission.objects.filter(submitted_by=user).count(),
         'questions_count': Question.objects.filter(author=user).count(),
         'answers_count': Answer.objects.filter(author=user).count(),
-        'recent_activity': ActivityLog.objects.filter(user=user).order_by('-created_at')[:10],
+        'recent_activity': ActivityLog.objects.filter(user=user).select_related('user').order_by('-created_at')[:10],
     }
     return render(request, 'dashboard/user.html', context)
 
@@ -51,11 +51,11 @@ def moderator_dashboard(request):
         return redirect('user_dashboard')
 
     context = {
-        'recent_corrections': CorrectionSubmission.objects.order_by('-created_at')[:10],
-        'recent_parallel': ParallelTextSubmission.objects.order_by('-created_at')[:10],
-        'recent_judgments': SentenceJudgmentSubmission.objects.order_by('-created_at')[:10],
-        'recent_questions': Question.objects.exclude(status='deleted_soft').order_by('-created_at')[:10],
-        'recent_activity': ActivityLog.objects.order_by('-created_at')[:20],
+        'recent_corrections': CorrectionSubmission.objects.select_related('submitted_by').order_by('-created_at')[:10],
+        'recent_parallel': ParallelTextSubmission.objects.select_related('submitted_by').order_by('-created_at')[:10],
+        'recent_judgments': SentenceJudgmentSubmission.objects.select_related('submitted_by').order_by('-created_at')[:10],
+        'recent_questions': Question.objects.select_related('author').exclude(status='deleted_soft').order_by('-created_at')[:10],
+        'recent_activity': ActivityLog.objects.select_related('user', 'target_content_type').order_by('-created_at')[:20],
         'total_corrections': CorrectionSubmission.objects.count(),
         'total_parallel': ParallelTextSubmission.objects.count(),
         'total_judgments': SentenceJudgmentSubmission.objects.count(),
@@ -84,7 +84,7 @@ def admin_dashboard(request):
         'total_parallel': ParallelTextSubmission.objects.count(),
         'total_judgments': SentenceJudgmentSubmission.objects.count(),
         'recent_users': User.objects.order_by('-date_joined')[:10],
-        'audit_logs': AuditLog.objects.order_by('-created_at')[:20],
-        'recent_activity': ActivityLog.objects.order_by('-created_at')[:20],
+        'audit_logs': AuditLog.objects.select_related('user').order_by('-created_at')[:20],
+        'recent_activity': ActivityLog.objects.select_related('user', 'target_content_type').order_by('-created_at')[:20],
     }
     return render(request, 'dashboard/admin.html', context)

@@ -1,97 +1,216 @@
 {% extends "base.html" %}
 {% block title %}My Dashboard — Koma Zmanî Kurdî{% endblock title %}
 {% block content %}
-    <div class="container page-container">
-        <h1 class="page-title">My Dashboard</h1>
-        <!-- Stats Row -->
-        <div class="stats-row">
-            <div class="stat-card-sm">
-                <strong>{{ questions_count }}</strong><span>Questions</span>
+    <div class="max-w-7xl mx-auto px-6 pt-16 pb-20">
+        <!-- Header -->
+        <div class="reveal-up mb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+            <div>
+                <h1 class="text-4xl font-outfit font-bold text-white">Welcome, {{ request.user.username }}</h1>
+                <p class="text-white/50 text-sm font-sans mt-0.5">Track your contribution impact and community discussions.</p>
             </div>
-            <div class="stat-card-sm">
-                <strong>{{ answers_count }}</strong><span>Answers</span>
+            <a href="{% url 'contribute_home' %}" class="px-6 py-3 rounded-full bg-gradient-to-r from-[#4DA8FF] to-[#6C63FF] text-white font-semibold hover:scale-105 active:scale-95 transition-transform shadow-[0_0_30px_rgba(77,168,255,0.25)]">
+                Contribute Now
+            </a>
+        </div>
+
+        <!-- Stats Grid Row -->
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-12 reveal-up">
+            <div class="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                <span class="text-3xl font-outfit font-bold text-white mb-1 block">{{ corrections_count }}</span>
+                <span class="text-xs uppercase text-white/40 tracking-wider font-semibold font-outfit">Corrections</span>
             </div>
-            <div class="stat-card-sm">
-                <strong>{{ corrections_count }}</strong><span>Corrections</span>
+            <div class="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                <span class="text-3xl font-outfit font-bold text-white mb-1 block">{{ parallel_count }}</span>
+                <span class="text-xs uppercase text-white/40 tracking-wider font-semibold font-outfit">Parallel Texts</span>
             </div>
-            <div class="stat-card-sm">
-                <strong>{{ parallel_count }}</strong><span>Parallel Texts</span>
+            <div class="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                <span class="text-3xl font-outfit font-bold text-white mb-1 block">{{ judgments_count }}</span>
+                <span class="text-xs uppercase text-white/40 tracking-wider font-semibold font-outfit">Sentence Flags</span>
             </div>
-            <div class="stat-card-sm">
-                <strong>{{ judgments_count }}</strong><span>Sentence Flagging</span>
+            <div class="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                <span class="text-3xl font-outfit font-bold text-[#4DA8FF] mb-1 block">{{ questions_count }}</span>
+                <span class="text-xs uppercase text-white/40 tracking-wider font-semibold font-outfit">Questions</span>
+            </div>
+            <div class="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                <span class="text-3xl font-outfit font-bold text-[#A78BFA] mb-1 block">{{ answers_count }}</span>
+                <span class="text-xs uppercase text-white/40 tracking-wider font-semibold font-outfit">Answers</span>
             </div>
         </div>
-        <div class="dashboard-grid">
-            <section class="dash-card">
-                <h3>My Forum Questions</h3>
-                {% if my_questions %}
-                    <ul class="activity-list">
-                        {% for q in my_questions %}
-                            <li>
-                                <a href="{% url 'question_detail' q.pk %}">{{ q.title|truncatechars:60 }}</a><span class="activity-date">{{ q.created_at|date:"M d" }}</span>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <p class="empty-state">No questions yet.</p>
-                {% endif %}
-                <a href="{% url 'question_create' %}" class="btn btn-ghost btn-sm">+ Ask a Question</a>
-            </section>
-            <section class="dash-card">
-                <h3>My Answers</h3>
-                {% if my_answers %}
-                    <ul class="activity-list">
-                        {% for a in my_answers %}
-                            <li>
-                                <a href="{% url 'question_detail' a.question.pk %}">{{ a.question.title|truncatechars:55 }}</a>
-                                {% if a.is_accepted %}<span class="badge badge-correct">✓</span>{% endif %}
-                                <span class="activity-date">{{ a.created_at|date:"M d" }}</span>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <p class="empty-state">No answers yet.</p>
-                {% endif %}
-            </section>
-            <section class="dash-card">
-                <h3>My Contributions</h3>
-                {% if my_corrections or my_parallel_texts or my_judgments %}
-                    <ul class="activity-list">
-                        {% for c in my_corrections %}
-                            <li>
-                                ✏️ {{ c.incorrect_text|truncatechars:50 }}<span class="activity-date">{{ c.created_at|date:"M d" }}</span>
-                            </li>
-                        {% endfor %}
-                        {% for p in my_parallel_texts %}
-                            <li>
-                                🔀 {{ p.source_text|truncatechars:50 }}<span class="activity-date">{{ p.created_at|date:"M d" }}</span>
-                            </li>
-                        {% endfor %}
-                        {% for j in my_judgments %}
-                            <li>
-                                🚩 {{ j.sentence_text|truncatechars:50 }}<span class="activity-date">{{ j.created_at|date:"M d" }}</span>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <p class="empty-state">No contributions yet.</p>
-                {% endif %}
-                <a href="{% url 'contribute_home' %}" class="btn btn-ghost btn-sm">Contribute Now</a>
-            </section>
-            <section class="dash-card">
-                <h3>Recent Activity</h3>
-                {% if recent_activity %}
-                    <ul class="activity-list">
-                        {% for log in recent_activity %}
-                            <li>
-                                {{ log.action_type|title }}<span class="activity-date">{{ log.created_at|date:"M d" }}</span>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <p class="empty-state">No recent activity.</p>
-                {% endif %}
-            </section>
+
+        <!-- Main Dashboard Layout Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+            <!-- Left Side: Heatmap Chart Card (Occupies 2 columns) -->
+            <div class="lg:col-span-2 reveal-up" data-delay="100">
+                <div class="bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-md h-full flex flex-col justify-between">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h3 class="text-xl font-outfit font-bold text-white">Activity Pulse</h3>
+                            <p class="text-xs text-white/40 font-sans">Visual representation of contributions over the last 30 days.</p>
+                        </div>
+                        <span class="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-white/60">Live Analytics</span>
+                    </div>
+                    
+                    <!-- Dynamic Heatmap Columns (Loaded by JS) -->
+                    <div class="flex items-end gap-1.5 h-48 mt-8 border-b border-white/5 pb-2" id="heatmap-container">
+                        <!-- Bars dynamically loaded -->
+                    </div>
+                    
+                    <div class="flex justify-between items-center mt-6 text-xs text-white/30 font-sans">
+                        <span>30 Days Ago</span>
+                        <span>Today</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Recent Activity Logs (Occupies 1 column) -->
+            <div class="reveal-up" data-delay="150">
+                <div class="bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-md h-full">
+                    <h3 class="text-xl font-outfit font-bold text-white mb-6 flex items-center gap-2">
+                        <i data-lucide="activity" class="w-5 h-5 text-[#4DA8FF]"></i> Recent Logs
+                    </h3>
+                    
+                    {% if recent_activity %}
+                        <div class="space-y-6">
+                            {% for log in recent_activity %}
+                                <div class="flex gap-4 items-start">
+                                    <div class="mt-1 bg-white/5 p-2 rounded-xl border border-white/10">
+                                        {% if log.action_type == 'correction_submitted' %}
+                                            <i data-lucide="edit-2" class="w-4 h-4 text-[#4DA8FF]"></i>
+                                        {% elif log.action_type == 'parallel_text_submitted' %}
+                                            <i data-lucide="layout" class="w-4 h-4 text-[#A78BFA]"></i>
+                                        {% elif log.action_type == 'judgment_submitted' %}
+                                            <i data-lucide="flag" class="w-4 h-4 text-[#7CFFB2]"></i>
+                                        {% else %}
+                                            <i data-lucide="message-square" class="w-4 h-4 text-white/50"></i>
+                                        {% endif %}
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium text-white/95 leading-normal capitalize">{{ log.action_type|title }}</p>
+                                        <p class="text-2xs text-white/30 font-sans mt-0.5">{{ log.created_at|date:"M d, Y" }}</p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-sm text-white/30 italic font-sans">No recent platform interactions registered.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Lists of personal contributions (Questions, Answers, Submissions) -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 reveal-up" data-delay="200">
+            <!-- My Questions -->
+            <div class="p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-md flex flex-col justify-between">
+                <div>
+                    <h3 class="text-lg font-outfit font-bold text-white mb-6 flex items-center gap-2 border-b border-white/5 pb-4">
+                        <i data-lucide="help-circle" class="w-5 h-5 text-[#6C63FF]"></i> Forum Questions
+                    </h3>
+                    {% if my_questions %}
+                        <ul class="space-y-4">
+                            {% for q in my_questions %}
+                                <li class="flex justify-between items-start gap-4">
+                                    <a href="{% url 'question_detail' q.pk %}" class="text-sm text-white/80 hover:text-white hover:underline truncate">{{ q.title }}</a>
+                                    <span class="text-2xs text-white/30 font-sans shrink-0">{{ q.created_at|date:"M d" }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-sm text-white/30 italic font-sans py-4">No questions created yet.</p>
+                    {% endif %}
+                </div>
+                <a href="{% url 'question_create' %}" class="mt-8 text-center py-2.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-xs font-semibold text-white/80 transition-colors">
+                    + Ask Question
+                </a>
+            </div>
+
+            <!-- My Answers -->
+            <div class="p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-md flex flex-col justify-between">
+                <div>
+                    <h3 class="text-lg font-outfit font-bold text-white mb-6 flex items-center gap-2 border-b border-white/5 pb-4">
+                        <i data-lucide="message-square" class="w-5 h-5 text-[#A78BFA]"></i> My Answers
+                    </h3>
+                    {% if my_answers %}
+                        <ul class="space-y-4">
+                            {% for a in my_answers %}
+                                <li class="flex justify-between items-start gap-4">
+                                    <div class="flex items-center gap-1.5 min-w-0">
+                                        {% if a.is_accepted %}
+                                            <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-400 shrink-0"></i>
+                                        {% endif %}
+                                        <a href="{% url 'question_detail' a.question.pk %}" class="text-sm text-white/80 hover:text-white hover:underline truncate">{{ a.question.title }}</a>
+                                    </div>
+                                    <span class="text-2xs text-white/30 font-sans shrink-0">{{ a.created_at|date:"M d" }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-sm text-white/30 italic font-sans py-4">No answers posted yet.</p>
+                    {% endif %}
+                </div>
+                <a href="{% url 'question_list' %}" class="mt-8 text-center py-2.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-xs font-semibold text-white/80 transition-colors">
+                    Browse Hub
+                </a>
+            </div>
+
+            <!-- My Contributions -->
+            <div class="p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-md flex flex-col justify-between">
+                <div>
+                    <h3 class="text-lg font-outfit font-bold text-white mb-6 flex items-center gap-2 border-b border-white/5 pb-4">
+                        <i data-lucide="clipboard-list" class="w-5 h-5 text-[#7CFFB2]"></i> Recent Inputs
+                    </h3>
+                    {% if my_corrections or my_parallel_texts or my_judgments %}
+                        <ul class="space-y-4">
+                            {% for c in my_corrections %}
+                                <li class="flex justify-between items-center gap-4 text-xs font-sans">
+                                    <span class="text-white/80 truncate font-light">✏️ {{ c.incorrect_text }}</span>
+                                    <span class="text-2xs text-white/30 shrink-0">{{ c.created_at|date:"M d" }}</span>
+                                </li>
+                            {% endfor %}
+                            {% for p in my_parallel_texts %}
+                                <li class="flex justify-between items-center gap-4 text-xs font-sans">
+                                    <span class="text-white/80 truncate font-light">🔀 {{ p.source_text }}</span>
+                                    <span class="text-2xs text-white/30 shrink-0">{{ p.created_at|date:"M d" }}</span>
+                                </li>
+                            {% endfor %}
+                            {% for j in my_judgments %}
+                                <li class="flex justify-between items-center gap-4 text-xs font-sans">
+                                    <span class="text-white/80 truncate font-light">🚩 {{ j.sentence_text }}</span>
+                                    <span class="text-2xs text-white/30 shrink-0">{{ j.created_at|date:"M d" }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-sm text-white/30 italic font-sans py-4">No content submitted yet.</p>
+                    {% endif %}
+                </div>
+                <a href="{% url 'contribute_home' %}" class="mt-8 text-center py-2.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-xs font-semibold text-white/80 transition-colors">
+                    Add Submissions
+                </a>
+            </div>
         </div>
     </div>
 {% endblock content %}
+
+{% block extra_js %}
+    <script>
+        // Generate Dashboard mock Heatmap
+        document.addEventListener('DOMContentLoaded', () => {
+            const heatmapContainer = document.getElementById('heatmap-container');
+            if (heatmapContainer) {
+                let heatmapHTML = '';
+                for (let i = 0; i < 30; i++) {
+                    const height = Math.floor(Math.random() * 80) + 20;
+                    const isHigh = height > 70;
+                    const colorClass = isHigh ? 'bg-[#6C63FF] opacity-90 shadow-[0_0_15px_rgba(108,99,255,0.4)]' : 'bg-white/20 opacity-55';
+                    heatmapHTML += `
+                        <div class="flex-1 flex flex-col justify-end group cursor-pointer h-full">
+                            <div class="w-full rounded-t-lg transition-all duration-300 group-hover:opacity-100 ${colorClass}" style="height: ${height}%" title="${height} contributions"></div>
+                        </div>
+                    `;
+                }
+                heatmapContainer.innerHTML = heatmapHTML;
+            }
+        });
+    </script>
+{% endblock extra_js %}

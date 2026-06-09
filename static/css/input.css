@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+@source "../../templates/**/*.html";
+
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui;
+  --font-outfit: 'Outfit', sans-serif;
+}
+
+/* Base Styles & Custom Scrollbar */
+html { scroll-behavior: smooth; }
+body {
+    background-color: #0B0B0F;
+    color: #F5F5F7;
+    overflow-x: hidden;
+    font-family: 'Inter', ui-sans-serif, system-ui;
+}
+::selection {
+    background: rgba(108, 99, 255, 0.3);
+    color: white;
+}
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: #0B0B0F; }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
+
+/* Custom Animations */
+@keyframes fade-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in { animation: fade-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+@keyframes pulse-slow {
+    0%, 100% { opacity: 0.1; transform: scale(1); }
+    50% { opacity: 0.2; transform: scale(1.05); }
+}
+.animate-pulse-slow { animation: pulse-slow 8s ease-in-out infinite; }
+
+/* Scroll Reveal Animation Classes */
+.reveal-up { opacity: 0; transform: translateY(3rem); transition: all 1s ease-out; }
+.reveal-left { opacity: 0; transform: translateX(-3rem); transition: all 1s ease-out; }
+.reveal-right { opacity: 0; transform: translateX(3rem); transition: all 1s ease-out; }
+.reveal-up.revealed, .reveal-left.revealed, .reveal-right.revealed { opacity: 1; transform: translate(0, 0); }
+
+/* Dropdown custom transitions */
+.dropdown-menu-custom {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-10px);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.dropdown-menu-custom.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}

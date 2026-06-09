@@ -1,36 +1,61 @@
 {% extends "base.html" %}
-{% block title %}
-    Contribute — Koma Zmanî Kurdî
-{% endblock title %}
+{% block title %}Contribute — Koma Zmanî Kurdî{% endblock title %}
 {% block content %}
-    <div class="container page-container">
-        <div class="section-header">
-            <h1>Data Contribution</h1>
-            <p>Help build the largest Kurdish linguistic dataset. Every contribution matters.</p>
+    <div class="max-w-7xl mx-auto px-6 pt-16 pb-20">
+        <div class="text-center mb-16 reveal-up">
+            <h1 class="text-4xl md:text-5xl font-outfit font-bold tracking-tight mb-4 text-white">Data Contribution</h1>
+            <p class="text-lg text-white/50 max-w-xl mx-auto font-sans font-light">Help build the largest open Kurdish linguistic dataset. Every contribution counts toward powering machine intelligence.</p>
         </div>
-        <div class="cards-grid">
-            <div class="feature-card">
-                <div class="feature-icon">✏️</div>
-                <h3>Correct This</h3>
-                <p>Submit incorrect→correct sentence pairs to build grammar correction training data.</p>
-                <a href="{% url 'correct_this' %}" class="btn btn-primary">Start Contributing</a>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+            <!-- Correct This Card -->
+            <div class="reveal-up" data-delay="0">
+                <div class="h-full flex flex-col p-8 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 backdrop-blur-xl">
+                    <div class="mb-6 w-12 h-12 rounded-2xl bg-[#4DA8FF]/10 flex items-center justify-center border border-[#4DA8FF]/20">
+                        <i data-lucide="edit-2" class="text-[#4DA8FF] w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-2xl font-outfit font-bold mb-3 text-white">Correct This</h3>
+                    <p class="text-white/50 text-sm leading-relaxed mb-8 flex-grow font-sans font-light">Submit incorrect sentences alongside their corrected versions to build grammar and syntax correction datasets.</p>
+                    <a href="{% url 'correct_this' %}" class="w-full py-3.5 rounded-full bg-gradient-to-r from-[#4DA8FF] to-[#6C63FF] text-white text-center font-semibold hover:scale-[1.02] transition-transform shadow-[0_0_30px_rgba(77,168,255,0.2)]">
+                        Start Correcting
+                    </a>
+                </div>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon">🔀</div>
-                <h3>Parallel Text</h3>
-                <p>Submit aligned bilingual or bidialectal text pairs for translation research.</p>
-                <a href="{% url 'parallel_text' %}" class="btn btn-primary">Start Contributing</a>
+
+            <!-- Parallel Text Card -->
+            <div class="reveal-up" data-delay="100">
+                <div class="h-full flex flex-col p-8 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 backdrop-blur-xl">
+                    <div class="mb-6 w-12 h-12 rounded-2xl bg-[#A78BFA]/10 flex items-center justify-center border border-[#A78BFA]/20">
+                        <i data-lucide="layout" class="text-[#A78BFA] w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-2xl font-outfit font-bold mb-3 text-white">Parallel Text</h3>
+                    <p class="text-white/50 text-sm leading-relaxed mb-8 flex-grow font-sans font-light">Submit aligned bilingual or bidialectal text pairs to assist machine translation and localization systems.</p>
+                    <a href="{% url 'parallel_text' %}" class="w-full py-3.5 rounded-full bg-gradient-to-r from-[#A78BFA] to-[#6C63FF] text-white text-center font-semibold hover:scale-[1.02] transition-transform shadow-[0_0_30px_rgba(167,139,250,0.2)]">
+                        Submit Translations
+                    </a>
+                </div>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon">🚩</div>
-                <h3>Sentence Flagging</h3>
-                <p>Label Kurdish sentences as grammatically correct or incorrect. Fast, simple, impactful.</p>
-                <a href="{% url 'is_this_correct' %}" class="btn btn-primary">Start Contributing</a>
+
+            <!-- Sentence Flagging Card -->
+            <div class="reveal-up" data-delay="200">
+                <div class="h-full flex flex-col p-8 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 backdrop-blur-xl">
+                    <div class="mb-6 w-12 h-12 rounded-2xl bg-[#7CFFB2]/10 flex items-center justify-center border border-[#7CFFB2]/20">
+                        <i data-lucide="flag" class="text-[#7CFFB2] w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-2xl font-outfit font-bold mb-3 text-white">Sentence Flagging</h3>
+                    <p class="text-white/50 text-sm leading-relaxed mb-8 flex-grow font-sans font-light">Evaluate Kurdish sentences as correct or incorrect. Provide quick binary labels with high-scale impact.</p>
+                    <a href="{% url 'is_this_correct' %}" class="w-full py-3.5 rounded-full bg-gradient-to-r from-[#7CFFB2] to-[#4DA8FF] text-white text-center font-semibold hover:scale-[1.02] transition-transform shadow-[0_0_30px_rgba(124,255,178,0.2)]">
+                        Start Flagging
+                    </a>
+                </div>
             </div>
         </div>
+
         {% if user.is_authenticated %}
-            <div class="cta-secondary">
-                <a href="{% url 'my_submissions' %}" class="btn btn-outline">📋 View My Submissions</a>
+            <div class="text-center reveal-up" data-delay="300">
+                <a href="{% url 'my_submissions' %}" class="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-white/5 text-white font-semibold hover:bg-white/10 border border-white/10 transition-colors">
+                    <i data-lucide="clipboard-list" class="w-5 h-5 text-white/60"></i> View My Submissions
+                </a>
             </div>
         {% endif %}
     </div>

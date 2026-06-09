@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Koma Zmani Kurdi</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* Base Styles & Custom Scrollbar */
+        html { scroll-behavior: smooth; }
+        body {
+            background-color: #0B0B0F;
+            color: #F5F5F7;
+            overflow-x: hidden;
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        ::selection {
+            background: rgba(108, 99, 255, 0.3);
+            color: white;
+        }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #0B0B0F; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
+
+        /* Custom Animations */
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in { animation: fade-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+        @keyframes pulse-slow {
+            0%, 100% { opacity: 0.1; transform: scale(1); }
+            50% { opacity: 0.2; transform: scale(1.05); }
+        }
+        .animate-pulse-slow { animation: pulse-slow 8s ease-in-out infinite; }
+
+        /* Scroll Reveal Animation Classes */
+        .reveal-up { opacity: 0; transform: translateY(3rem); transition: all 1s ease-out; }
+        .reveal-left { opacity: 0; transform: translateX(-3rem); transition: all 1s ease-out; }
+        .reveal-right { opacity: 0; transform: translateX(3rem); transition: all 1s ease-out; }
+        .reveal-up.revealed, .reveal-left.revealed, .reveal-right.revealed { opacity: 1; transform: translate(0, 0); }
+
+        /* Page Visibility */
+        .page-section { display: none; }
+        .page-section.active { display: block; animation: fade-in 0.5s ease-out forwards; }
+    </style>
+</head>
+<body class="min-h-screen relative flex flex-col">
+
+<!-- Global Background Glow -->
+<div class="fixed inset-0 overflow-hidden pointer-events-none z-[-1]">
+    <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[#6C63FF] rounded-full mix-blend-screen filter blur-[150px] opacity-20 animate-pulse-slow"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-[#4DA8FF] rounded-full mix-blend-screen filter blur-[150px] opacity-10"></div>
+    <div class="absolute top-[40%] left-[60%] w-[30%] h-[30%] bg-[#A78BFA] rounded-full mix-blend-screen filter blur-[120px] opacity-10"></div>
+</div>
+
+<!-- Navigation -->
+<nav id="navbar" class="fixed top-0 w-full z-50 transition-all duration-500 bg-transparent py-6">
+    <div class="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
+        <div class="flex items-center gap-2 cursor-pointer group" onclick="navigateTo('landing')">
+            <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-[#6C63FF] to-[#4DA8FF] flex items-center justify-center group-hover:scale-110 transition-transform">
+                <i data-lucide="sparkles" class="text-white w-4 h-4"></i>
+            </div>
+            <span class="font-semibold text-lg tracking-tight text-white">Koma Zimanî</span>
+        </div>
+
+        <div class="hidden md:flex items-center gap-8">
+            <button onclick="navigateTo('landing')" class="nav-btn text-sm font-medium transition-colors hover:text-white text-white/60" data-target="landing">Home</button>
+            <button onclick="navigateTo('forum')" class="nav-btn text-sm font-medium transition-colors hover:text-white text-white/60" data-target="forum">Forum</button>
+            <button onclick="navigateTo('correct')" class="nav-btn text-sm font-medium transition-colors hover:text-white text-white/60" data-target="contribute">Contribute</button>
+            <button onclick="navigateTo('dashboard')" class="nav-btn text-sm font-medium transition-colors hover:text-white text-white/60" data-target="dashboard">Dashboard</button>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <button onclick="navigateTo('profile')" class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors">
+                <i data-lucide="user" class="text-white/80 w-[18px] h-[18px]"></i>
+            </button>
+            <button onclick="navigateTo('moderator')" class="hidden md:flex px-5 py-2 rounded-full bg-white text-[#0B0B0F] text-sm font-medium hover:scale-105 active:scale-95 transition-transform">
+                Mod Access
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content Area -->
+<main class="flex-1 w-full relative z-10" id="main-content">
+
+    <!-- 1. LANDING PAGE -->
+    <section id="page-landing" class="page-section active relative">
+        <!-- Hero Section -->
+        <div class="min-h-screen flex items-center justify-center pt-32 pb-20 px-6 relative overflow-hidden">
+            <!-- Elegant Hero Background Glow -->
+            <div class="absolute inset-0 w-full h-full z-0 overflow-hidden bg-[#0B0B0F]">
+                <div class="absolute inset-0 bg-gradient-to-tr from-[#6C63FF]/15 via-[#4DA8FF]/5 to-[#A78BFA]/15 z-0 pointer-events-none"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-[#0B0B0F] via-transparent to-[#0B0B0F]/40 pointer-events-none z-10"></div>
+            </div>
+
+
+            <div class="max-w-5xl mx-auto text-center z-10 relative">
+                <div class="reveal-up">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-[#4DA8FF] text-sm font-medium mb-8 backdrop-blur-md">
+                        <i data-lucide="sparkles" class="w-4 h-4"></i>
+                        <span>Version 2.0 is live</span>
+                    </div>
+                </div>
+
+                <div class="reveal-up" data-delay="100">
+                    <h1 class="text-6xl md:text-8xl font-semibold tracking-tighter mb-8 leading-[1.1] text-transparent bg-clip-text bg-gradient-to-b from-white to-white/60">
+                        Build the Future of <br class="hidden md:block" />
+                        Kurdish Technology.
+                    </h1>
+                </div>
+
+                <div class="reveal-up" data-delay="200">
+                    <p class="text-lg md:text-2xl text-white/50 max-w-3xl mx-auto mb-12 leading-relaxed font-light">
+                        Contribute, validate, and organize linguistic data to power the next generation of translation tools, grammar checkers, and AI systems.
+                    </p>
+                </div>
+
+                <div class="reveal-up" data-delay="300">
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
+                        <button onclick="navigateTo('correct')" class="w-full sm:w-auto px-8 py-4 rounded-full bg-white text-[#0B0B0F] text-lg font-medium hover:scale-105 active:scale-95 transition-all shadow-[0_0_40px_rgba(255,255,255,0.2)]">
+                            Start Contributing
+                        </button>
+                        <button onclick="navigateTo('forum')" class="w-full sm:w-auto px-8 py-4 rounded-full bg-white/10 text-white text-lg font-medium hover:bg-white/15 border border-white/10 backdrop-blur-md transition-colors">
+                            Explore the Forum
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mission Section -->
+        <section class="py-32 px-6">
+            <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-24 items-center">
+                <div class="reveal-left">
+                    <h2 class="text-4xl md:text-5xl font-semibold tracking-tight leading-tight">
+                        Preserving a language requires more than history. <br/>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#6C63FF] to-[#4DA8FF]">It requires action.</span>
+                    </h2>
+                </div>
+                <div class="reveal-right" data-delay="200">
+                    <p class="text-xl text-white/60 leading-relaxed">
+                        Every sentence corrected, every parallel text submitted, and every question answered contributes directly to a massive open-source dataset. We are giving the Kurdish language a digital voice that machines can understand.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Feature Showcase -->
+        <section class="py-32 px-6 bg-[#11131A]/50 border-y border-white/5">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-24 reveal-up">
+                    <h2 class="text-3xl md:text-5xl font-semibold tracking-tight mb-6">Four ways to make an impact.</h2>
+                    <p class="text-xl text-white/50">Choose your path and start shaping the data.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="reveal-up" data-delay="0">
+                        <div onclick="navigateTo('forum')" class="group relative p-12 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer overflow-hidden backdrop-blur-xl">
+                            <div class="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity group-hover:scale-110 duration-500">
+                                <i data-lucide="message-square" class="text-[#6C63FF] w-32 h-32"></i>
+                            </div>
+                            <div class="mb-8 w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center border border-white/10">
+                                <i data-lucide="message-square" class="text-[#6C63FF] w-8 h-8"></i>
+                            </div>
+                            <h3 class="text-2xl font-semibold mb-4 text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-white/60 transition-all">Q&A Forum</h3>
+                            <p class="text-white/50 text-lg leading-relaxed">Ask and answer complex linguistic questions.</p>
+                            <div class="mt-8 flex items-center gap-2 text-sm font-medium text-[#4DA8FF] opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all">
+                                Explore module <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="reveal-up" data-delay="100">
+                        <div onclick="navigateTo('correct')" class="group relative p-12 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer overflow-hidden backdrop-blur-xl">
+                            <div class="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity group-hover:scale-110 duration-500">
+                                <i data-lucide="edit-2" class="text-[#4DA8FF] w-32 h-32"></i>
+                            </div>
+                            <div class="mb-8 w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center border border-white/10">
+                                <i data-lucide="edit-2" class="text-[#4DA8FF] w-8 h-8"></i>
+                            </div>
+                            <h3 class="text-2xl font-semibold mb-4 text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-white/60 transition-all">Correct This</h3>
+                            <p class="text-white/50 text-lg leading-relaxed">Fix grammatical errors in community-submitted sentences.</p>
+                            <div class="mt-8 flex items-center gap-2 text-sm font-medium text-[#4DA8FF] opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all">
+                                Explore module <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="reveal-up" data-delay="200">
+                        <div onclick="navigateTo('parallel')" class="group relative p-12 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer overflow-hidden backdrop-blur-xl">
+                            <div class="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity group-hover:scale-110 duration-500">
+                                <i data-lucide="layout" class="text-[#A78BFA] w-32 h-32"></i>
+                            </div>
+                            <div class="mb-8 w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center border border-white/10">
+                                <i data-lucide="layout" class="text-[#A78BFA] w-8 h-8"></i>
+                            </div>
+                            <h3 class="text-2xl font-semibold mb-4 text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-white/60 transition-all">Parallel Texts</h3>
+                            <p class="text-white/50 text-lg leading-relaxed">Submit and verify bilingual translations.</p>
+                            <div class="mt-8 flex items-center gap-2 text-sm font-medium text-[#4DA8FF] opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all">
+                                Explore module <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="reveal-up" data-delay="300">
+                        <div onclick="navigateTo('validate')" class="group relative p-12 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer overflow-hidden backdrop-blur-xl">
+                            <div class="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity group-hover:scale-110 duration-500">
+                                <i data-lucide="check-circle" class="text-[#7CFFB2] w-32 h-32"></i>
+                            </div>
+                            <div class="mb-8 w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center border border-white/10">
+                                <i data-lucide="check-circle" class="text-[#7CFFB2] w-8 h-8"></i>
+                            </div>
+                            <h3 class="text-2xl font-semibold mb-4 text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-white/60 transition-all">Validation</h3>
+                            <p class="text-white/50 text-lg leading-relaxed">Quickly vote on the accuracy of existing data.</p>
+                            <div class="mt-8 flex items-center gap-2 text-sm font-medium text-[#4DA8FF] opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all">
+                                Explore module <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Impact Section -->
+        <section class="py-40 px-6">
+            <div class="max-w-7xl mx-auto text-center">
+                <div class="reveal-up mb-20">
+                    <h2 class="text-4xl md:text-6xl font-semibold tracking-tight">The power of community.</h2>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-12">
+                    <div class="reveal-up" data-delay="0">
+                        <div class="text-5xl md:text-7xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/40 mb-4">1.2M+</div>
+                        <div class="text-xl text-white/50 font-medium">Words Validated</div>
+                    </div>
+                    <div class="reveal-up" data-delay="150">
+                        <div class="text-5xl md:text-7xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/40 mb-4">45,000+</div>
+                        <div class="text-xl text-white/50 font-medium">Active Contributors</div>
+                    </div>
+                    <div class="reveal-up" data-delay="300">
+                        <div class="text-5xl md:text-7xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/40 mb-4">8</div>
+                        <div class="text-xl text-white/50 font-medium">Dialects Supported</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </section>
+
+    <!-- 2. FORUM PAGE -->
+    <section id="page-forum" class="page-section">
+        <div class="max-w-7xl mx-auto px-6 pt-32 pb-20">
+            <div class="reveal-up flex flex-col md:flex-row justify-between items-start md:items-end gap-8 mb-16">
+                <div>
+                    <h1 class="text-5xl font-semibold tracking-tight mb-4">Linguistic Hub</h1>
+                    <p class="text-xl text-white/50">Discuss grammar, semantics, and standardized usage.</p>
+                </div>
+                <button class="px-6 py-3 rounded-full bg-[#6C63FF] text-white font-medium hover:bg-[#5A52D5] transition-colors shadow-[0_0_30px_rgba(108,99,255,0.3)]">
+                    New Discussion
+                </button>
+            </div>
+
+            <div class="reveal-up relative mb-12 group" data-delay="100">
+                <i data-lucide="search" class="absolute left-6 top-1/2 -translate-y-1/2 text-white/40 group-focus-within:text-[#6C63FF] transition-colors w-6 h-6"></i>
+                <input type="text" placeholder="Search discussions, tags, or phrases..." class="w-full bg-white/5 border border-white/10 rounded-full py-5 pl-16 pr-6 text-lg text-white placeholder:text-white/30 focus:outline-none focus:border-[#6C63FF]/50 focus:bg-white/10 transition-all backdrop-blur-md">
+            </div>
+
+            <div class="reveal-up flex flex-wrap gap-3 mb-12" data-delay="200">
+                <button class="px-5 py-2 rounded-full text-sm font-medium border transition-all bg-white text-black border-white">All Topics</button>
+                <button class="px-5 py-2 rounded-full text-sm font-medium border transition-all bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:text-white">Grammar</button>
+                <button class="px-5 py-2 rounded-full text-sm font-medium border transition-all bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:text-white">Kurmanji</button>
+                <button class="px-5 py-2 rounded-full text-sm font-medium border transition-all bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:text-white">Sorani</button>
+                <button class="px-5 py-2 rounded-full text-sm font-medium border transition-all bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:text-white">Idioms</button>
+                <button class="px-5 py-2 rounded-full text-sm font-medium border transition-all bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:text-white">Syntax</button>
+                <button class="px-5 py-2 rounded-full text-sm font-medium border transition-all bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:text-white">Translation</button>
+            </div>
+
+            <div class="space-y-6">
+                <div class="reveal-up" data-delay="300">
+                    <div class="p-8 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all cursor-pointer backdrop-blur-sm group flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
+                        <div class="flex-1">
+                            <h3 class="text-xl font-medium mb-3 text-white/90 group-hover:text-white transition-colors">What is the correct ergative structure in past tense for transitive verbs?</h3>
+                            <div class="flex items-center gap-4 text-sm text-white/50">
+                                <span class="flex items-center gap-1"><i data-lucide="user" class="w-3.5 h-3.5"></i> Azad_M</span>
+                                <span class="flex items-center gap-1"><i data-lucide="message-circle" class="w-3.5 h-3.5"></i> 24 replies</span>
+                                <span class="flex items-center gap-1"><i data-lucide="clock" class="w-3.5 h-3.5"></i> 2h ago</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-6">
+                            <div class="flex gap-2">
+                                <span class="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-white/60">Grammar</span>
+                                <span class="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-white/60">Kurmanji</span>
+                            </div>
+                            <div class="flex flex-col items-center bg-white/5 rounded-xl p-3 border border-white/10">
+                                <i data-lucide="chevron-right" class="-rotate-90 text-white/40 group-hover:text-[#6C63FF] transition-colors w-5 h-5"></i>
+                                <span class="font-medium text-white/80 my-1">156</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal-up" data-delay="400">
+                    <div class="p-8 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all cursor-pointer backdrop-blur-sm group flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
+                        <div class="flex-1">
+                            <h3 class="text-xl font-medium mb-3 text-white/90 group-hover:text-white transition-colors">Standardizing technical terminology: 'Computer' vs 'Komputer' vs 'Xêvjimêr'</h3>
+                            <div class="flex items-center gap-4 text-sm text-white/50">
+                                <span class="flex items-center gap-1"><i data-lucide="user" class="w-3.5 h-3.5"></i> TechKurd</span>
+                                <span class="flex items-center gap-1"><i data-lucide="message-circle" class="w-3.5 h-3.5"></i> 89 replies</span>
+                                <span class="flex items-center gap-1"><i data-lucide="clock" class="w-3.5 h-3.5"></i> 4h ago</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-6">
+                            <div class="flex gap-2">
+                                <span class="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-white/60">Vocabulary</span>
+                                <span class="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-white/60">Standardization</span>
+                            </div>
+                            <div class="flex flex-col items-center bg-white/5 rounded-xl p-3 border border-white/10">
+                                <i data-lucide="chevron-right" class="-rotate-90 text-white/40 group-hover:text-[#6C63FF] transition-colors w-5 h-5"></i>
+                                <span class="font-medium text-white/80 my-1">112</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. CORRECT THIS PAGE -->
+    <section id="page-correct" class="page-section">
+        <div class="max-w-4xl mx-auto px-6 pt-32 pb-20 min-h-[80vh] flex flex-col">
+            <div class="reveal-up text-center mb-16">
+                <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white/5 border border-white/10 text-[#4DA8FF] mb-6">
+                    <i data-lucide="edit-2" class="w-6 h-6"></i>
+                </div>
+                <h1 class="text-4xl font-semibold tracking-tight mb-4">Refine the Structure</h1>
+                <p class="text-white/50">Correct the grammar, spelling, or syntax of the sentence below.</p>
+            </div>
+
+            <div class="reveal-up flex-1" data-delay="100">
+                <div class="bg-white/5 border border-white/10 rounded-3xl p-8 md:p-12 backdrop-blur-xl relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-[#4DA8FF]/5 rounded-full filter blur-[80px]"></div>
+
+                    <div class="relative z-10">
+                        <div class="mb-8">
+                            <label class="text-xs font-medium text-white/40 uppercase tracking-widest mb-4 block">Original Sentence (Needs Review)</label>
+                            <div class="text-2xl md:text-3xl font-medium text-white/80 leading-relaxed p-6 bg-white/5 rounded-2xl border border-white/5">
+                                "Min do sêv xwarî, lê ew ne xweş bûn."
+                            </div>
+                        </div>
+
+                        <div class="mb-12">
+                            <label class="text-xs font-medium text-[#4DA8FF] uppercase tracking-widest mb-4 flex items-center gap-2">
+                                <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Your Correction
+                            </label>
+                            <textarea class="w-full bg-white/10 border border-white/20 rounded-2xl p-6 text-2xl md:text-3xl font-medium text-white focus:outline-none focus:border-[#4DA8FF] focus:bg-white/15 transition-all resize-none shadow-[inset_0_2px_10px_rgba(0,0,0,0.2)]" rows="3">Min do sêv xwarin, lê ew ne xweş bûn.</textarea>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row justify-between items-center gap-6">
+                            <div class="flex gap-4 w-full sm:w-auto">
+                                <button class="px-6 py-3 rounded-full bg-white/5 text-white/60 font-medium hover:bg-white/10 transition-colors w-full sm:w-auto">Skip</button>
+                                <button class="px-6 py-3 rounded-full bg-red-500/10 text-red-400 font-medium hover:bg-red-500/20 transition-colors flex items-center justify-center gap-2 w-full sm:w-auto">
+                                    <i data-lucide="alert-triangle" class="w-4 h-4"></i> Flag Issue
+                                </button>
+                            </div>
+                            <button class="w-full sm:w-auto px-10 py-4 rounded-full bg-gradient-to-r from-[#4DA8FF] to-[#6C63FF] text-white font-medium hover:scale-105 transition-transform shadow-[0_0_30px_rgba(77,168,255,0.3)]">
+                                Submit Correction
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 text-center text-sm text-white/30">Task 12 of 50 in your current batch.</div>
+        </div>
+    </section>
+
+    <!-- 4. PARALLEL TEXT PAGE -->
+    <section id="page-parallel" class="page-section">
+        <div class="max-w-6xl mx-auto px-6 pt-32 pb-20">
+            <div class="reveal-up mb-12">
+                <h1 class="text-4xl font-semibold tracking-tight mb-4">Parallel Text Submission</h1>
+                <p class="text-white/50">Provide high-quality translations to build bilingual datasets.</p>
+            </div>
+
+            <div class="reveal-up grid grid-cols-1 lg:grid-cols-2 gap-6 relative" data-delay="100">
+                <div class="hidden lg:flex absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-[#11131A] border border-white/10 rounded-full items-center justify-center text-white/30">
+                    <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </div>
+
+                <div class="bg-white/5 border border-white/10 rounded-3xl p-8 flex flex-col backdrop-blur-md">
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="px-4 py-1.5 rounded-full bg-white/10 text-sm font-medium border border-white/5">Source: English</div>
+                        <button class="text-white/40 hover:text-white transition-colors"><i data-lucide="edit-2" class="w-[18px] h-[18px]"></i></button>
+                    </div>
+                    <textarea class="flex-1 bg-transparent border-none text-xl md:text-2xl text-white/80 focus:outline-none resize-none min-h-[250px] placeholder:text-white/20" placeholder="Enter the source text here...">The rapid advancement of artificial intelligence has significantly transformed how we interact with technology.</textarea>
+                </div>
+
+                <div class="bg-white/5 border border-[#A78BFA]/30 rounded-3xl p-8 flex flex-col backdrop-blur-md relative overflow-hidden group focus-within:border-[#A78BFA]/60 transition-colors">
+                    <div class="absolute inset-0 bg-gradient-to-br from-[#A78BFA]/5 to-transparent pointer-events-none"></div>
+                    <div class="flex justify-between items-center mb-6 relative z-10">
+                        <div class="px-4 py-1.5 rounded-full bg-[#A78BFA]/20 text-[#A78BFA] text-sm font-medium border border-[#A78BFA]/30">Target: Kurdish (Sorani)</div>
+                    </div>
+                    <textarea class="flex-1 bg-transparent border-none text-xl md:text-2xl text-white focus:outline-none resize-none min-h-[250px] placeholder:text-white/20 relative z-10" placeholder="Wergera kurdî li vir binivîse..." dir="auto"></textarea>
+                </div>
+            </div>
+
+            <div class="reveal-up mt-8 flex justify-between items-center bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-md" data-delay="200">
+                <div class="flex gap-4">
+                    <select class="bg-white/10 border border-white/10 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-white/30 text-sm">
+                        <option class="text-black">Domain: General</option>
+                        <option class="text-black">Domain: Technology</option>
+                        <option class="text-black">Domain: Literature</option>
+                    </select>
+                </div>
+                <button class="px-8 py-3 rounded-full bg-[#A78BFA] text-[#0B0B0F] font-semibold hover:bg-[#B8A1FA] transition-colors shadow-[0_0_20px_rgba(167,139,250,0.3)]">
+                    Submit Pair
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. VALIDATE PAGE -->
+    <section id="page-validate" class="page-section">
+        <div class="max-w-4xl mx-auto px-6 pt-32 pb-20 min-h-[85vh] flex flex-col items-center justify-center">
+            <div class="reveal-up w-full text-center mb-12">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#7CFFB2]/10 text-[#7CFFB2] text-sm font-medium border border-[#7CFFB2]/20 mb-6">
+                    <i data-lucide="check-circle" class="w-4 h-4"></i> Data Validation Queue
+                </div>
+                <h1 class="text-3xl font-medium text-white/50">Is this translation accurate?</h1>
+            </div>
+
+            <div class="reveal-up w-full" data-delay="100">
+                <div class="bg-gradient-to-b from-white/10 to-white/5 border border-white/20 rounded-[2.5rem] p-10 md:p-16 backdrop-blur-2xl shadow-2xl relative overflow-hidden group">
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-white/5 rounded-full filter blur-[100px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none"></div>
+
+                    <div class="relative z-10">
+                        <div class="text-center mb-12">
+                            <span class="text-sm font-medium text-white/40 uppercase tracking-wider block mb-4">Source (English)</span>
+                            <p class="text-xl md:text-2xl text-white/70 font-light">"The sun sets behind the mountains."</p>
+                        </div>
+
+                        <div class="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent mb-12"></div>
+
+                        <div class="text-center mb-16">
+                            <span class="text-sm font-medium text-white/40 uppercase tracking-wider block mb-4">Target (Kurmanji)</span>
+                            <p class="text-3xl md:text-5xl font-medium text-white leading-tight">"Roj li pişt çiyayan ava dibe."</p>
+                        </div>
+
+                        <div class="flex justify-center gap-6 md:gap-8">
+                            <button class="w-20 h-20 md:w-24 md:h-24 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 flex flex-col items-center justify-center hover:bg-red-500 hover:text-white hover:scale-110 transition-all">
+                                <i data-lucide="x" class="w-8 h-8"></i>
+                            </button>
+                            <button class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-white/5 border border-white/10 text-white/50 flex flex-col items-center justify-center mt-2 hover:bg-white/10 hover:text-white transition-all">
+                                <span class="text-xs font-medium uppercase tracking-widest">Skip</span>
+                            </button>
+                            <button class="w-20 h-20 md:w-24 md:h-24 rounded-full bg-[#7CFFB2]/10 border border-[#7CFFB2]/20 text-[#7CFFB2] flex flex-col items-center justify-center hover:bg-[#7CFFB2] hover:text-[#0B0B0F] hover:scale-110 transition-all shadow-[0_0_30px_rgba(124,255,178,0.1)] hover:shadow-[0_0_40px_rgba(124,255,178,0.4)]">
+                                <i data-lucide="check" class="w-8 h-8"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-12 w-full max-w-md">
+                <div class="flex justify-between text-xs text-white/40 mb-2">
+                    <span>Daily Goal</span>
+                    <span>42 / 50 Validated</span>
+                </div>
+                <div class="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                    <div class="h-full bg-gradient-to-r from-[#7CFFB2] to-[#4DA8FF] w-[84%] rounded-full"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. DASHBOARD PAGE -->
+    <section id="page-dashboard" class="page-section">
+        <div class="max-w-7xl mx-auto px-6 pt-32 pb-20">
+            <div class="reveal-up mb-12">
+                <h1 class="text-4xl font-semibold tracking-tight mb-2">Contributor Overview</h1>
+                <p class="text-white/50">Track your impact on the language model.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+                <div class="reveal-up bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-md relative overflow-hidden" data-delay="0">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-3 rounded-2xl bg-white/5"><i data-lucide="activity" class="text-[#6C63FF] w-5 h-5"></i></div>
+                        <span class="text-xs font-medium text-white/40">+12% this week</span>
+                    </div>
+                    <div class="text-3xl font-semibold text-white mb-1">1,248</div>
+                    <div class="text-sm text-white/50">Total Contributions</div>
+                </div>
+                <div class="reveal-up bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-md relative overflow-hidden" data-delay="100">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-3 rounded-2xl bg-white/5"><i data-lucide="award" class="text-[#7CFFB2] w-5 h-5"></i></div>
+                        <span class="text-xs font-medium text-white/40">Top 5% contributor</span>
+                    </div>
+                    <div class="text-3xl font-semibold text-white mb-1">98.4%</div>
+                    <div class="text-sm text-white/50">Accuracy Score</div>
+                </div>
+                <div class="reveal-up bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-md relative overflow-hidden" data-delay="200">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-3 rounded-2xl bg-white/5"><i data-lucide="layout" class="text-[#4DA8FF] w-5 h-5"></i></div>
+                        <span class="text-xs font-medium text-white/40">+4 today</span>
+                    </div>
+                    <div class="text-3xl font-semibold text-white mb-1">432</div>
+                    <div class="text-sm text-white/50">Parallel Texts</div>
+                </div>
+                <div class="reveal-up bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-md relative overflow-hidden" data-delay="300">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-3 rounded-2xl bg-white/5"><i data-lucide="check-circle" class="text-[#A78BFA] w-5 h-5"></i></div>
+                        <span class="text-xs font-medium text-white/40">Streak: 14 days</span>
+                    </div>
+                    <div class="text-3xl font-semibold text-white mb-1">816</div>
+                    <div class="text-sm text-white/50">Validations</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="reveal-up lg:col-span-2" data-delay="400">
+                    <div class="bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-md h-full">
+                        <div class="flex justify-between items-center mb-8">
+                            <h3 class="text-xl font-medium">Activity Heatmap</h3>
+                            <select class="bg-transparent text-sm text-white/50 outline-none"><option class="text-black">Last 30 Days</option></select>
+                        </div>
+                        <div class="flex items-end gap-2 h-48 mt-8" id="heatmap-container">
+                            <!-- Generated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal-up" data-delay="500">
+                    <div class="bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-md h-full">
+                        <h3 class="text-xl font-medium mb-6">Recent Actions</h3>
+                        <div class="space-y-6">
+                            <div class="flex gap-4 items-start">
+                                <div class="mt-1 bg-white/10 p-2 rounded-full"><i data-lucide="check-circle" class="w-4 h-4 text-[#7CFFB2]"></i></div>
+                                <div><p class="text-sm font-medium text-white/90 mb-1">Validated 15 sentences</p><p class="text-xs text-white/40">2 hours ago</p></div>
+                            </div>
+                            <div class="flex gap-4 items-start">
+                                <div class="mt-1 bg-white/10 p-2 rounded-full"><i data-lucide="layout" class="w-4 h-4 text-[#4DA8FF]"></i></div>
+                                <div><p class="text-sm font-medium text-white/90 mb-1">Submitted parallel text</p><p class="text-xs text-white/40">5 hours ago</p></div>
+                            </div>
+                            <div class="flex gap-4 items-start">
+                                <div class="mt-1 bg-white/10 p-2 rounded-full"><i data-lucide="message-square" class="w-4 h-4 text-[#6C63FF]"></i></div>
+                                <div><p class="text-sm font-medium text-white/90 mb-1">Answered a grammar question</p><p class="text-xs text-white/40">1 day ago</p></div>
+                            </div>
+                            <div class="flex gap-4 items-start">
+                                <div class="mt-1 bg-white/10 p-2 rounded-full"><i data-lucide="award" class="w-4 h-4 text-yellow-400"></i></div>
+                                <div><p class="text-sm font-medium text-white/90 mb-1">Earned "Eagle Eye" badge</p><p class="text-xs text-white/40">2 days ago</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. MODERATOR PAGE -->
+    <section id="page-moderator" class="page-section">
+        <div class="max-w-7xl mx-auto px-6 pt-32 pb-20">
+            <div class="reveal-up flex flex-col md:flex-row justify-between items-start md:items-center mb-12 border-b border-white/10 pb-8">
+                <div>
+                    <div class="flex items-center gap-3 mb-2">
+                        <i data-lucide="shield-check" class="text-red-400 w-7 h-7"></i>
+                        <h1 class="text-3xl font-semibold tracking-tight">Review Center</h1>
+                    </div>
+                    <p class="text-white/50 text-sm">Review flagged items, conflicting validations, and user reports.</p>
+                </div>
+                <div class="mt-6 md:mt-0 flex gap-4">
+                    <div class="bg-red-500/10 border border-red-500/20 px-4 py-2 rounded-xl text-red-400 text-sm font-medium">12 Pending Reports</div>
+                    <div class="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-white text-sm font-medium">84 Conflicts</div>
+                </div>
+            </div>
+
+            <div class="bg-white/5 border border-white/10 rounded-3xl overflow-hidden backdrop-blur-md">
+                <div class="grid grid-cols-12 gap-4 p-6 border-b border-white/10 text-xs font-medium text-white/40 uppercase tracking-wider">
+                    <div class="col-span-2">Type</div>
+                    <div class="col-span-5">Content Preview</div>
+                    <div class="col-span-2">Reported By</div>
+                    <div class="col-span-3 text-right">Action</div>
+                </div>
+                <div class="divide-y divide-white/5">
+                    <div class="reveal-up grid grid-cols-12 gap-4 p-6 items-center hover:bg-white/5 transition-colors group" data-delay="0">
+                        <div class="col-span-2 flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-red-500"></div><span class="text-sm text-white/80">Flagged Edit</span></div>
+                        <div class="col-span-5"><p class="text-sm font-medium text-white mb-1 truncate">Min sêv xwarin -> Min sêvan xwar.</p><p class="text-xs text-white/40 truncate">Grammar conflict in ergative case.</p></div>
+                        <div class="col-span-2 text-sm text-white/60">user_442</div>
+                        <div class="col-span-3 flex justify-end gap-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity"><button class="px-4 py-2 rounded-lg bg-white/5 text-white/80 text-xs font-medium hover:bg-white/10 transition-colors">Details</button><button class="px-4 py-2 rounded-lg bg-[#7CFFB2]/20 text-[#7CFFB2] text-xs font-medium hover:bg-[#7CFFB2]/30 transition-colors">Resolve</button></div>
+                    </div>
+                    <div class="reveal-up grid grid-cols-12 gap-4 p-6 items-center hover:bg-white/5 transition-colors group" data-delay="100">
+                        <div class="col-span-2 flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-yellow-500"></div><span class="text-sm text-white/80">Validation Conflict</span></div>
+                        <div class="col-span-5"><p class="text-sm font-medium text-white mb-1 truncate">Target: "Zanist ronahiya jiyanê ye."</p><p class="text-xs text-white/40 truncate">50/50 split in community voting.</p></div>
+                        <div class="col-span-2 text-sm text-white/60">System</div>
+                        <div class="col-span-3 flex justify-end gap-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity"><button class="px-4 py-2 rounded-lg bg-white/5 text-white/80 text-xs font-medium hover:bg-white/10 transition-colors">Details</button><button class="px-4 py-2 rounded-lg bg-[#7CFFB2]/20 text-[#7CFFB2] text-xs font-medium hover:bg-[#7CFFB2]/30 transition-colors">Resolve</button></div>
+                    </div>
+                    <div class="reveal-up grid grid-cols-12 gap-4 p-6 items-center hover:bg-white/5 transition-colors group" data-delay="200">
+                        <div class="col-span-2 flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-red-500"></div><span class="text-sm text-white/80">Forum Report</span></div>
+                        <div class="col-span-5"><p class="text-sm font-medium text-white mb-1 truncate">Off-topic discussion in Grammar thread.</p><p class="text-xs text-white/40 truncate">Multiple user reports.</p></div>
+                        <div class="col-span-2 text-sm text-white/60">ModBot</div>
+                        <div class="col-span-3 flex justify-end gap-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity"><button class="px-4 py-2 rounded-lg bg-white/5 text-white/80 text-xs font-medium hover:bg-white/10 transition-colors">Details</button><button class="px-4 py-2 rounded-lg bg-[#7CFFB2]/20 text-[#7CFFB2] text-xs font-medium hover:bg-[#7CFFB2]/30 transition-colors">Resolve</button></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. PROFILE PAGE -->
+    <section id="page-profile" class="page-section">
+        <div class="max-w-5xl mx-auto px-6 pt-32 pb-20">
+            <div class="reveal-up relative rounded-[3rem] bg-gradient-to-br from-white/5 to-white/0 border border-white/10 p-12 overflow-hidden mb-12 backdrop-blur-xl">
+                <div class="absolute top-[-20%] right-[-10%] w-[50%] h-[150%] bg-gradient-to-b from-[#6C63FF]/20 to-transparent rotate-12 blur-3xl pointer-events-none"></div>
+                <div class="relative z-10 flex flex-col md:flex-row items-center gap-10">
+                    <div class="w-32 h-32 rounded-full p-1 bg-gradient-to-tr from-[#6C63FF] to-[#4DA8FF]">
+                        <div class="w-full h-full rounded-full bg-[#11131A] flex items-center justify-center text-4xl overflow-hidden relative">
+                            <i data-lucide="user" class="text-white/20 w-12 h-12"></i>
+                            <div class="absolute inset-0 bg-[url('https://api.dicebear.com/7.x/notionists/svg?seed=Felix')] bg-cover opacity-80 mix-blend-screen"></div>
+                        </div>
+                    </div>
+                    <div class="flex-1 text-center md:text-left">
+                        <h1 class="text-4xl font-semibold tracking-tight mb-2">Azad_M</h1>
+                        <p class="text-white/50 text-lg mb-6">Senior Linguist Contributor • Member since 2024</p>
+                        <div class="flex flex-wrap justify-center md:justify-start gap-3">
+                            <span class="px-4 py-1.5 rounded-full bg-white/10 text-xs font-medium border border-white/5 flex items-center gap-2"><i data-lucide="award" class="text-yellow-400 w-3.5 h-3.5"></i> Top 1% Validator</span>
+                            <span class="px-4 py-1.5 rounded-full bg-white/10 text-xs font-medium border border-white/5 flex items-center gap-2"><i data-lucide="globe" class="text-[#4DA8FF] w-3.5 h-3.5"></i> Sorani Expert</span>
+                            <span class="px-4 py-1.5 rounded-full bg-white/10 text-xs font-medium border border-white/5 flex items-center gap-2"><i data-lucide="zap" class="text-[#7CFFB2] w-3.5 h-3.5"></i> 100 Day Streak</span>
+                        </div>
+                    </div>
+                    <div class="hidden md:block w-px h-24 bg-white/10"></div>
+                    <div class="flex gap-8 text-center">
+                        <div><div class="text-3xl font-semibold mb-1">12k</div><div class="text-xs text-white/50 uppercase tracking-wider">Edits</div></div>
+                        <div><div class="text-3xl font-semibold mb-1">99%</div><div class="text-xs text-white/50 uppercase tracking-wider">Accuracy</div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="reveal-up md:col-span-2" data-delay="200">
+                    <div class="bg-white/5 border border-white/10 rounded-3xl p-8 h-full backdrop-blur-sm">
+                        <h3 class="text-lg font-medium mb-6 flex items-center gap-2"><i data-lucide="activity" class="w-[18px] h-[18px]"></i> Contribution History</h3>
+                        <div class="flex gap-1 flex-wrap" id="github-graph-container">
+                            <!-- Generated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal-up" data-delay="300">
+                    <div class="bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-sm">
+                        <h3 class="text-lg font-medium mb-6 flex items-center gap-2"><i data-lucide="award" class="w-[18px] h-[18px]"></i> Badges Earned</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="p-4 rounded-2xl bg-gradient-to-br border border-white/10 from-gray-700 to-gray-900 flex flex-col items-center gap-3 text-center hover:scale-105 transition-transform"><div class="w-12 h-12 rounded-full bg-[#11131A] flex items-center justify-center border border-white/5"><i data-lucide="edit-2" class="text-white/80"></i></div><span class="text-xs font-medium">First Edit</span></div>
+                            <div class="p-4 rounded-2xl bg-gradient-to-br border border-white/10 from-[#7CFFB2]/20 to-transparent flex flex-col items-center gap-3 text-center hover:scale-105 transition-transform"><div class="w-12 h-12 rounded-full bg-[#11131A] flex items-center justify-center border border-white/5"><i data-lucide="check-circle" class="text-[#7CFFB2]"></i></div><span class="text-xs font-medium">100 Validations</span></div>
+                            <div class="p-4 rounded-2xl bg-gradient-to-br border border-white/10 from-[#6C63FF]/20 to-transparent flex flex-col items-center gap-3 text-center hover:scale-105 transition-transform"><div class="w-12 h-12 rounded-full bg-[#11131A] flex items-center justify-center border border-white/5"><i data-lucide="message-square" class="text-[#6C63FF]"></i></div><span class="text-xs font-medium">Forum Legend</span></div>
+                            <div class="p-4 rounded-2xl bg-gradient-to-br border border-white/10 from-[#4DA8FF]/20 to-transparent flex flex-col items-center gap-3 text-center hover:scale-105 transition-transform"><div class="w-12 h-12 rounded-full bg-[#11131A] flex items-center justify-center border border-white/5"><i data-lucide="globe" class="text-[#4DA8FF]"></i></div><span class="text-xs font-medium">Dialect Master</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<!-- Footer -->
+<footer class="border-t border-white/10 bg-[#0B0B0F] pt-24 pb-12 mt-24 z-10">
+    <div class="max-w-7xl mx-auto px-6 md:px-12">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+            <div class="col-span-1 md:col-span-2">
+                <div class="flex items-center gap-2 mb-6">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-[#6C63FF] to-[#4DA8FF] flex items-center justify-center">
+                        <i data-lucide="sparkles" class="text-white w-4 h-4"></i>
+                    </div>
+                    <span class="font-semibold text-xl tracking-tight text-white">Koma Zmani Kurdi</span>
+                </div>
+                <p class="text-white/50 text-sm max-w-sm leading-relaxed">
+                    Preserving and building the future of Kurdish language technology through community-driven data collection, validation, and curation.
+                </p>
+            </div>
+            <div>
+                <h4 class="text-white font-medium mb-4">Modules</h4>
+                <ul class="space-y-3 text-sm text-white/50">
+                    <li><button onclick="navigateTo('forum')" class="hover:text-white transition-colors">Q&A Forum</button></li>
+                    <li><button onclick="navigateTo('correct')" class="hover:text-white transition-colors">Sentence Correction</button></li>
+                    <li><button onclick="navigateTo('parallel')" class="hover:text-white transition-colors">Parallel Texts</button></li>
+                    <li><button onclick="navigateTo('validate')" class="hover:text-white transition-colors">Validation</button></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-medium mb-4">Community</h4>
+                <ul class="space-y-3 text-sm text-white/50">
+                    <li><button onclick="navigateTo('dashboard')" class="hover:text-white transition-colors">Leaderboard</button></li>
+                    <li><button onclick="navigateTo('profile')" class="hover:text-white transition-colors">My Profile</button></li>
+                    <li><button class="hover:text-white transition-colors">Guidelines</button></li>
+                    <li><button class="hover:text-white transition-colors">About the Mission</button></li>
+                </ul>
+            </div>
+        </div>
+        <div class="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/10 text-xs text-white/40">
+            <p>&copy; 2026 Koma Zmani Kurdi. All rights reserved.</p>
+            <div class="flex gap-6 mt-4 md:mt-0">
+                <button class="hover:text-white transition-colors">Privacy</button>
+                <button class="hover:text-white transition-colors">Terms</button>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- JavaScript Logic -->
+<script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // --------------------------------------------------------
+    // NAVIGATION & ROUTING LOGIC
+    // --------------------------------------------------------
+    function navigateTo(pageId) {
+        // Hide all pages
+        document.querySelectorAll('.page-section').forEach(page => {
+            page.classList.remove('active');
+        });
+
+        // Show target page
+        const targetPage = document.getElementById('page-' + pageId);
+        if (targetPage) {
+            targetPage.classList.add('active');
+        }
+
+        // Update Navbar styles
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            if (btn.getAttribute('data-target') === pageId ||
+                (btn.getAttribute('data-target') === 'contribute' && ['correct', 'parallel', 'validate'].includes(pageId))) {
+                btn.classList.remove('text-white/60');
+                btn.classList.add('text-white');
+            } else {
+                btn.classList.add('text-white/60');
+                btn.classList.remove('text-white');
+            }
+        });
+
+        // Scroll to top
+        window.scrollTo(0, 0);
+
+        // Re-trigger intersection observers for the new page
+        setTimeout(setupScrollReveals, 100);
+    }
+
+    // Navbar Scroll Effect
+    window.addEventListener('scroll', () => {
+        const navbar = document.getElementById('navbar');
+        if (window.scrollY > 20) {
+            navbar.classList.add('bg-[#0B0B0F]/80', 'backdrop-blur-xl', 'border-b', 'border-white/5');
+            navbar.classList.remove('bg-transparent');
+        } else {
+            navbar.classList.remove('bg-[#0B0B0F]/80', 'backdrop-blur-xl', 'border-b', 'border-white/5');
+            navbar.classList.add('bg-transparent');
+        }
+    });
+
+    // --------------------------------------------------------
+    // SCROLL REVEAL ANIMATIONS (Intersection Observer)
+    // --------------------------------------------------------
+    function setupScrollReveals() {
+        // Reset revealed elements on the active page to allow re-animating if desired,
+        // or we can just observe elements that haven't been revealed yet.
+        const revealElements = document.querySelectorAll('.page-section.active .reveal-up, .page-section.active .reveal-left, .page-section.active .reveal-right');
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const delay = entry.target.getAttribute('data-delay') || 0;
+                    entry.target.style.transitionDelay = `${delay}ms`;
+                    entry.target.classList.add('revealed');
+                    observer.unobserve(entry.target); // Only animate once per navigation
+                }
+            });
+        }, { threshold: 0.1 });
+
+        revealElements.forEach(el => {
+            el.classList.remove('revealed'); // Reset state
+            observer.observe(el);
+        });
+    }
+
+    // --------------------------------------------------------
+    // GENERATE DYNAMIC CONTENT (Dashboard Charts)
+    // --------------------------------------------------------
+    function generateDashboardData() {
+        // 1. Heatmap (Dashboard Page)
+        const heatmapContainer = document.getElementById('heatmap-container');
+        if (heatmapContainer) {
+            let heatmapHTML = '';
+            for (let i = 0; i < 30; i++) {
+                const height = Math.floor(Math.random() * 80) + 20;
+                const isHigh = height > 70;
+                const colorClass = isHigh ? 'bg-[#6C63FF] opacity-80' : 'bg-white/20 opacity-50';
+                heatmapHTML += `
+                        <div class="flex-1 flex flex-col justify-end group cursor-pointer">
+                            <div class="w-full rounded-t-sm transition-all duration-500 group-hover:opacity-100 ${colorClass}" style="height: ${height}%"></div>
+                        </div>
+                    `;
+            }
+            heatmapContainer.innerHTML = heatmapHTML;
+        }
+
+        // 2. Profile GitHub-style Graph
+        const graphContainer = document.getElementById('github-graph-container');
+        if (graphContainer) {
+            let graphHTML = '';
+            for (let i = 0; i < 180; i++) {
+                const intensity = Math.random();
+                let colorClass = 'bg-white/5';
+                if (intensity > 0.9) colorClass = 'bg-[#6C63FF]';
+                else if (intensity > 0.7) colorClass = 'bg-[#6C63FF]/70';
+                else if (intensity > 0.4) colorClass = 'bg-[#6C63FF]/40';
+                else if (intensity > 0.2) colorClass = 'bg-[#6C63FF]/20';
+
+                graphHTML += `<div class="w-3 h-3 rounded-sm ${colorClass} hover:ring-1 hover:ring-white transition-all cursor-pointer"></div>`;
+            }
+            graphContainer.innerHTML = graphHTML;
+        }
+    }
+
+    // Initialize on load
+    document.addEventListener('DOMContentLoaded', () => {
+        generateDashboardData();
+        setupScrollReveals();
+    });
+
+</script>
+</body>
+</html>

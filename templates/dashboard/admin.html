@@ -1,119 +1,164 @@
 {% extends "base.html" %}
-{% block title %}
-    Admin Dashboard — Koma Zmanî Kurdî
-{% endblock title %}
+{% block title %}Admin Dashboard — Koma Zmanî Kurdî{% endblock title %}
 {% block content %}
-    <div class="container page-container">
-        <div class="page-header">
+    <div class="max-w-7xl mx-auto px-6 pt-16 pb-20">
+        <!-- Header -->
+        <div class="reveal-up flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-12 pb-6 border-b border-white/10">
             <div>
-                <h1>⚡ Admin Dashboard</h1>
-                <p>Full platform management and oversight</p>
+                <h1 class="text-3xl font-outfit font-bold text-white flex items-center gap-2">
+                    <i data-lucide="zap" class="text-red-400 w-7 h-7"></i> Admin Dashboard
+                </h1>
+                <p class="text-white/50 text-sm font-sans mt-0.5">High-level site management, data exports, audit logs, and user roles.</p>
             </div>
-            <div class="page-header-actions">
-                <a href="{% url 'moderator_dashboard' %}" class="btn btn-ghost">Moderator Panel</a>
-                <a href="/admin/" class="btn btn-outline">Django Admin</a>
-            </div>
-        </div>
-        <!-- System Stats -->
-        <div class="stats-row">
-            <div class="stat-card-sm primary">
-                <strong>{{ total_users }}</strong><span>Total Users</span>
-            </div>
-            <div class="stat-card-sm">
-                <strong>{{ active_users }}</strong><span>Active Users</span>
-            </div>
-            <div class="stat-card-sm">
-                <strong>{{ total_questions }}</strong><span>Questions</span>
-            </div>
-            <div class="stat-card-sm">
-                <strong>{{ total_answers }}</strong><span>Answers</span>
-            </div>
-            <div class="stat-card-sm">
-                <strong>{{ total_corrections }}</strong><span>Corrections</span>
-            </div>
-            <div class="stat-card-sm">
-                <strong>{{ total_parallel }}</strong><span>Parallel Texts</span>
-            </div>
-            <div class="stat-card-sm">
-                <strong>{{ total_judgments }}</strong><span>Sentence Flagging</span>
+            <div class="flex items-center gap-3">
+                <a href="{% url 'moderator_dashboard' %}" class="px-5 py-2.5 rounded-full bg-white/5 text-white/80 border border-white/10 text-xs font-semibold hover:bg-white/10 transition-colors">
+                    Moderator Panel
+                </a>
+                <a href="{% url 'admin:index' %}" class="px-5 py-2.5 rounded-full bg-[#6C63FF] text-white text-xs font-semibold hover:scale-105 transition-transform shadow-[0_0_30px_rgba(108,99,255,0.3)]">
+                    Django Admin
+                </a>
             </div>
         </div>
-        <!-- Role Distribution -->
-        <section class="dash-card">
-            <h3>Role Distribution</h3>
-            <div class="role-dist">
-                <div class="role-item">
-                    <span class="role-badge role-normal_user">Normal Users</span>
-                    <strong>{{ role_distribution.normal_user }}</strong>
-                </div>
-                <div class="role-item">
-                    <span class="role-badge role-moderator">Moderators</span>
-                    <strong>{{ role_distribution.moderator }}</strong>
-                </div>
-                <div class="role-item">
-                    <span class="role-badge role-admin">Admins</span>
-                    <strong>{{ role_distribution.admin }}</strong>
+
+        <!-- System Stats Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 mb-12 reveal-up">
+            <div class="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                <span class="text-2xl font-outfit font-bold text-white mb-1 block">{{ total_users }}</span>
+                <span class="text-2xs uppercase text-white/40 tracking-wider font-semibold font-outfit">Total Users</span>
+            </div>
+            <div class="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                <span class="text-2xl font-outfit font-bold text-emerald-400 mb-1 block">{{ active_users }}</span>
+                <span class="text-2xs uppercase text-white/40 tracking-wider font-semibold font-outfit">Active Users</span>
+            </div>
+            <div class="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                <span class="text-2xl font-outfit font-bold text-white mb-1 block">{{ total_questions }}</span>
+                <span class="text-2xs uppercase text-white/40 tracking-wider font-semibold font-outfit">Questions</span>
+            </div>
+            <div class="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                <span class="text-2xl font-outfit font-bold text-white mb-1 block">{{ total_answers }}</span>
+                <span class="text-2xs uppercase text-white/40 tracking-wider font-semibold font-outfit">Answers</span>
+            </div>
+            <div class="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                <span class="text-2xl font-outfit font-bold text-white mb-1 block">{{ total_corrections }}</span>
+                <span class="text-2xs uppercase text-white/40 tracking-wider font-semibold font-outfit">Corrections</span>
+            </div>
+            <div class="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                <span class="text-2xl font-outfit font-bold text-white mb-1 block">{{ total_parallel }}</span>
+                <span class="text-2xs uppercase text-white/40 tracking-wider font-semibold font-outfit">Parallel</span>
+            </div>
+            <div class="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                <span class="text-2xl font-outfit font-bold text-white mb-1 block">{{ total_judgments }}</span>
+                <span class="text-2xs uppercase text-white/40 tracking-wider font-semibold font-outfit">Flagging</span>
+            </div>
+        </div>
+
+        <!-- Role distribution & exports -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+            <!-- Role distribution -->
+            <div class="reveal-up p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-md" data-delay="100">
+                <h3 class="text-lg font-outfit font-bold text-white mb-6 flex items-center gap-2 border-b border-white/5 pb-4">
+                    <i data-lucide="users" class="w-5 h-5 text-[#4DA8FF]"></i> Role Distribution
+                </h3>
+                <div class="space-y-6">
+                    <div class="flex justify-between items-center">
+                        <span class="px-3 py-1 rounded-full bg-[#4DA8FF]/10 border border-[#4DA8FF]/20 text-xs text-[#4DA8FF] font-semibold">Normal Users</span>
+                        <span class="text-xl font-outfit font-bold text-white">{{ role_distribution.normal_user }}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-400 font-semibold">Moderators</span>
+                        <span class="text-xl font-outfit font-bold text-white">{{ role_distribution.moderator }}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-xs text-red-400 font-semibold">Admins</span>
+                        <span class="text-xl font-outfit font-bold text-white">{{ role_distribution.admin }}</span>
+                    </div>
                 </div>
             </div>
-        </section>
-        <!-- Export Links -->
-        <section class="dash-card">
-            <h3>📥 Data Exports</h3>
-            <p class="form-hint">Download all contribution data for NLP pipeline use. Excludes private credentials.</p>
-            <div class="export-grid">
-                <div class="export-item">
-                    <strong>Corrections</strong>
-                    <a href="{% url 'export_corrections_csv' %}"
-                       class="btn btn-outline btn-sm">CSV</a>
-                    <a href="{% url 'export_corrections_json' %}"
-                       class="btn btn-outline btn-sm">JSON</a>
-                </div>
-                <div class="export-item">
-                    <strong>Parallel Texts</strong>
-                    <a href="{% url 'export_parallel_csv' %}" class="btn btn-outline btn-sm">CSV</a>
-                    <a href="{% url 'export_parallel_json' %}"
-                       class="btn btn-outline btn-sm">JSON</a>
-                </div>
-                <div class="export-item">
-                    <strong>Sentence Flagging</strong>
-                    <a href="{% url 'export_judgments_csv' %}"
-                       class="btn btn-outline btn-sm">CSV</a>
-                    <a href="{% url 'export_judgments_json' %}"
-                       class="btn btn-outline btn-sm">JSON</a>
+
+            <!-- Export list -->
+            <div class="reveal-up lg:col-span-2 p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-md" data-delay="150">
+                <h3 class="text-lg font-outfit font-bold text-white mb-6 flex items-center gap-2 border-b border-white/5 pb-4">
+                    <i data-lucide="download" class="w-5 h-5 text-[#A78BFA]"></i> Data Exports
+                </h3>
+                <p class="text-xs text-white/40 mb-6 font-sans">Download aggregated linguistic datasets for training models and downstream pipelines.</p>
+                
+                <div class="space-y-4">
+                    <!-- Corrections -->
+                    <div class="flex justify-between items-center p-4 rounded-xl bg-white/5 border border-white/5">
+                        <span class="text-sm font-semibold text-white">Sentence Corrections</span>
+                        <div class="flex gap-2">
+                            <a href="{% url 'export_corrections_csv' %}" class="px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-white transition-colors">CSV</a>
+                            <a href="{% url 'export_corrections_json' %}" class="px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-white transition-colors">JSON</a>
+                        </div>
+                    </div>
+                    <!-- Parallel -->
+                    <div class="flex justify-between items-center p-4 rounded-xl bg-white/5 border border-white/5">
+                        <span class="text-sm font-semibold text-white">Parallel Texts</span>
+                        <div class="flex gap-2">
+                            <a href="{% url 'export_parallel_csv' %}" class="px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-white transition-colors">CSV</a>
+                            <a href="{% url 'export_parallel_json' %}" class="px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-white transition-colors">JSON</a>
+                        </div>
+                    </div>
+                    <!-- Flagging -->
+                    <div class="flex justify-between items-center p-4 rounded-xl bg-white/5 border border-white/5">
+                        <span class="text-sm font-semibold text-white">Sentence Flagging</span>
+                        <div class="flex gap-2">
+                            <a href="{% url 'export_judgments_csv' %}" class="px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-white transition-colors">CSV</a>
+                            <a href="{% url 'export_judgments_json' %}" class="px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-white transition-colors">JSON</a>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </section>
-        <div class="dashboard-grid dashboard-grid-2">
-            <section class="dash-card">
-                <h3>Recent Users</h3>
+        </div>
+
+        <!-- Lists of recent users and audit logs -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 reveal-up" data-delay="200">
+            <!-- Recent Users -->
+            <div class="p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-md">
+                <h3 class="text-lg font-outfit font-bold text-white mb-6 flex items-center gap-2 border-b border-white/5 pb-4">
+                    <i data-lucide="user-plus" class="w-5 h-5 text-[#7CFFB2]"></i> Recent Users
+                </h3>
                 {% if recent_users %}
-                    <ul class="activity-list">
+                    <ul class="space-y-4">
                         {% for u in recent_users %}
-                            <li>
-                                <span>{{ u.username }} <span class="role-badge role-{{ u.role }} role-xs">{{ u.get_role_display }}</span></span>
-                                <span class="activity-date">{{ u.date_joined|date:"M d, Y" }}</span>
+                            <li class="flex justify-between items-center gap-4 text-sm font-sans">
+                                <span class="text-white/80 font-medium">
+                                    {{ u.username }} 
+                                    <span class="ml-1.5 px-2 py-0.5 rounded-full text-3xs font-semibold uppercase tracking-wider
+                                        {% if u.role == 'admin' %}bg-red-500/10 border border-red-500/25 text-red-400{% elif u.role == 'moderator' %}bg-emerald-500/10 border border-emerald-500/25 text-emerald-400{% else %}bg-[#4DA8FF]/10 border border-[#4DA8FF]/20 text-[#4DA8FF]{% endif %}">
+                                        {{ u.get_role_display }}
+                                    </span>
+                                </span>
+                                <span class="text-2xs text-white/30 shrink-0 font-sans">{{ u.date_joined|date:"M d, Y" }}</span>
                             </li>
                         {% endfor %}
                     </ul>
                 {% else %}
-                    <p class="empty-state">No users yet.</p>
+                    <p class="text-sm text-white/30 italic font-sans py-4">No users found.</p>
                 {% endif %}
-            </section>
-            <section class="dash-card">
-                <h3>Audit Log</h3>
+            </div>
+
+            <!-- Audit Log -->
+            <div class="p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-md">
+                <h3 class="text-lg font-outfit font-bold text-white mb-6 flex items-center gap-2 border-b border-white/5 pb-4">
+                    <i data-lucide="clipboard" class="w-5 h-5 text-white/60"></i> Platform Audit Log
+                </h3>
                 {% if audit_logs %}
-                    <ul class="activity-list">
+                    <ul class="space-y-4">
                         {% for log in audit_logs %}
-                            <li>
-                                <span>{{ log.performed_by.username|default:"—" }}: {{ log.action_type|title }} ({{ log.target_type }})</span>
-                                <span class="activity-date">{{ log.created_at|date:"M d" }}</span>
+                            <li class="flex justify-between items-start gap-4 text-sm font-sans">
+                                <span class="text-white/80 font-light truncate">
+                                    <strong class="font-semibold text-white/90">{{ log.performed_by.username|default:"—" }}</strong>: 
+                                    {{ log.action_type|title }} ({{ log.target_type }})
+                                </span>
+                                <span class="text-2xs text-white/30 shrink-0 font-sans mt-0.5">{{ log.created_at|date:"M d" }}</span>
                             </li>
                         {% endfor %}
                     </ul>
                 {% else %}
-                    <p class="empty-state">No audit logs yet.</p>
+                    <p class="text-sm text-white/30 italic font-sans py-4">No audit logs registered.</p>
                 {% endif %}
-            </section>
+            </div>
         </div>
     </div>
 {% endblock content %}

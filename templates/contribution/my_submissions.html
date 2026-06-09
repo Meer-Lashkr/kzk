@@ -1,126 +1,155 @@
 {% extends "base.html" %}
-{% block title %}
-    My Submissions — Koma Zmanî Kurdî
-{% endblock title %}
+{% block title %}My Submissions — Koma Zmanî Kurdî{% endblock title %}
 {% block content %}
-    <div class="container page-container">
-        <div class="page-header">
-            <h1>My Submissions</h1>
-            <a href="{% url 'contribute_home' %}" class="btn btn-outline">+ New Contribution</a>
+    <div class="max-w-7xl mx-auto px-6 pt-16 pb-20">
+        <!-- Page Header -->
+        <div class="reveal-up flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-12">
+            <div>
+                <h1 class="text-4xl font-outfit font-bold text-white">My Submissions</h1>
+                <p class="text-sm text-white/50 font-sans mt-0.5">Track your individual contribution metrics and status.</p>
+            </div>
+            <a href="{% url 'contribute_home' %}" class="px-6 py-3 rounded-full bg-[#6C63FF] text-white font-semibold hover:scale-105 active:scale-95 transition-transform shadow-[0_0_30px_rgba(108,99,255,0.3)]">
+                + New Contribution
+            </a>
         </div>
-        <div class="submission-stats">
-            <div class="stat-mini">
-                <strong>{{ corrections.count }}</strong><span>Corrections</span>
+
+        <!-- Submission Stats -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-16 reveal-up">
+            <div class="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                <span class="text-3xl font-outfit font-bold text-white mb-1 block">{{ corrections.count }}</span>
+                <span class="text-xs uppercase text-white/40 tracking-wider font-semibold font-outfit">Corrections</span>
             </div>
-            <div class="stat-mini">
-                <strong>{{ parallel_texts.count }}</strong><span>Parallel Texts</span>
+            <div class="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                <span class="text-3xl font-outfit font-bold text-white mb-1 block">{{ parallel_texts.count }}</span>
+                <span class="text-xs uppercase text-white/40 tracking-wider font-semibold font-outfit">Parallel Texts</span>
             </div>
-            <div class="stat-mini">
-                <strong>{{ judgments.count }}</strong><span>Sentence Flagging</span>
+            <div class="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                <span class="text-3xl font-outfit font-bold text-white mb-1 block">{{ judgments.count }}</span>
+                <span class="text-xs uppercase text-white/40 tracking-wider font-semibold font-outfit">Flagged Sentences</span>
             </div>
-            <div class="stat-mini">
-                <strong>{{ total }}</strong><span>Total</span>
+            <div class="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md bg-gradient-to-tr from-[#6C63FF]/10 to-transparent">
+                <span class="text-3xl font-outfit font-bold text-[#4DA8FF] mb-1 block">{{ total }}</span>
+                <span class="text-xs uppercase text-white/40 tracking-wider font-semibold font-outfit">Total Submitted</span>
             </div>
         </div>
-        <section class="submission-section">
-            <h2>✏️ Corrections ({{ corrections.count }})</h2>
+
+        <!-- Table: Corrections -->
+        <section class="mb-16 reveal-up">
+            <h2 class="text-xl font-outfit font-bold text-white mb-6 flex items-center gap-2">
+                <i data-lucide="edit-2" class="w-5 h-5 text-[#4DA8FF]"></i> Sentences Corrected ({{ corrections.count }})
+            </h2>
             {% if corrections %}
-                <div class="table-wrap">
-                    <table class="data-table">
-                        <thead>
+                <div class="overflow-x-auto rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm">
+                    <table class="w-full border-collapse text-left text-sm text-white/80">
+                        <thead class="bg-white/5 border-b border-white/10 text-xs font-semibold uppercase tracking-wider text-white/40">
                             <tr>
-                                <th>Incorrect</th>
-                                <th>Corrected</th>
-                                <th>Dialect</th>
-                                <th>Date</th>
+                                <th class="px-6 py-4">Incorrect Sentence</th>
+                                <th class="px-6 py-4">Corrected Sentence</th>
+                                <th class="px-6 py-4">Dialect</th>
+                                <th class="px-6 py-4">Submitted Date</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="divide-y divide-white/5">
                             {% for c in corrections %}
-                                <tr>
-                                    <td>{{ c.incorrect_text|truncatechars:60 }}</td>
-                                    <td>{{ c.corrected_text|truncatechars:60 }}</td>
-                                    <td>
-                                        <span class="tag tag-sm">{{ c.get_language_variant_display }}</span>
+                                <tr class="hover:bg-white/5 transition-colors">
+                                    <td class="px-6 py-4 font-sans font-light max-w-xs truncate">{{ c.incorrect_text }}</td>
+                                    <td class="px-6 py-4 font-sans font-light max-w-xs truncate text-white">{{ c.corrected_text }}</td>
+                                    <td class="px-6 py-4">
+                                        <span class="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-white/60">{{ c.get_language_variant_display }}</span>
                                     </td>
-                                    <td>{{ c.created_at|date:"M d, Y" }}</td>
+                                    <td class="px-6 py-4 text-xs text-white/40">{{ c.created_at|date:"M d, Y" }}</td>
                                 </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
             {% else %}
-                <p class="empty-state">
-                    No corrections submitted yet. <a href="{% url 'correct_this' %}">Start now →</a>
-                </p>
+                <div class="text-center p-12 rounded-2xl border border-dashed border-white/10 bg-white/5">
+                    <p class="text-sm text-white/45 mb-4">No sentence corrections submitted yet.</p>
+                    <a href="{% url 'correct_this' %}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-[#4DA8FF] hover:underline">Start correcting <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+                </div>
             {% endif %}
         </section>
-        <section class="submission-section">
-            <h2>🔀 Parallel Texts ({{ parallel_texts.count }})</h2>
+
+        <!-- Table: Parallel Texts -->
+        <section class="mb-16 reveal-up">
+            <h2 class="text-xl font-outfit font-bold text-white mb-6 flex items-center gap-2">
+                <i data-lucide="layout" class="w-5 h-5 text-[#A78BFA]"></i> Parallel Texts ({{ parallel_texts.count }})
+            </h2>
             {% if parallel_texts %}
-                <div class="table-wrap">
-                    <table class="data-table">
-                        <thead>
+                <div class="overflow-x-auto rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm">
+                    <table class="w-full border-collapse text-left text-sm text-white/80">
+                        <thead class="bg-white/5 border-b border-white/10 text-xs font-semibold uppercase tracking-wider text-white/40">
                             <tr>
-                                <th>Source</th>
-                                <th>Target</th>
-                                <th>Languages</th>
-                                <th>Date</th>
+                                <th class="px-6 py-4">Source Text</th>
+                                <th class="px-6 py-4">Target Text</th>
+                                <th class="px-6 py-4">Translation Path</th>
+                                <th class="px-6 py-4">Submitted Date</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="divide-y divide-white/5">
                             {% for p in parallel_texts %}
-                                <tr>
-                                    <td>{{ p.source_text|truncatechars:60 }}</td>
-                                    <td>{{ p.target_text|truncatechars:60 }}</td>
-                                    <td>
-                                        <span class="tag tag-sm">{{ p.source_language }} → {{ p.target_language }}</span>
+                                <tr class="hover:bg-white/5 transition-colors">
+                                    <td class="px-6 py-4 font-sans font-light max-w-xs truncate">{{ p.source_text }}</td>
+                                    <td class="px-6 py-4 font-sans font-light max-w-xs truncate text-white">{{ p.target_text }}</td>
+                                    <td class="px-6 py-4">
+                                        <span class="px-2.5 py-1 rounded-full bg-[#A78BFA]/10 border border-[#A78BFA]/20 text-xs text-[#A78BFA] font-medium">{{ p.source_language }} &rarr; {{ p.target_language }}</span>
                                     </td>
-                                    <td>{{ p.created_at|date:"M d, Y" }}</td>
+                                    <td class="px-6 py-4 text-xs text-white/40">{{ p.created_at|date:"M d, Y" }}</td>
                                 </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
             {% else %}
-                <p class="empty-state">
-                    No parallel texts submitted yet. <a href="{% url 'parallel_text' %}">Start now →</a>
-                </p>
+                <div class="text-center p-12 rounded-2xl border border-dashed border-white/10 bg-white/5">
+                    <p class="text-sm text-white/45 mb-4">No parallel texts submitted yet.</p>
+                    <a href="{% url 'parallel_text' %}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-[#4DA8FF] hover:underline">Start translating <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+                </div>
             {% endif %}
         </section>
-        <section class="submission-section">
-            <h2>🚩 Sentence Flagging ({{ judgments.count }})</h2>
+
+        <!-- Table: Flagged Sentences -->
+        <section class="reveal-up">
+            <h2 class="text-xl font-outfit font-bold text-white mb-6 flex items-center gap-2">
+                <i data-lucide="flag" class="w-5 h-5 text-[#7CFFB2]"></i> Flagged Sentences ({{ judgments.count }})
+            </h2>
             {% if judgments %}
-                <div class="table-wrap">
-                    <table class="data-table">
-                        <thead>
+                <div class="overflow-x-auto rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm">
+                    <table class="w-full border-collapse text-left text-sm text-white/80">
+                        <thead class="bg-white/5 border-b border-white/10 text-xs font-semibold uppercase tracking-wider text-white/40">
                             <tr>
-                                <th>Sentence</th>
-                                <th>Judgment</th>
-                                <th>Dialect</th>
-                                <th>Date</th>
+                                <th class="px-6 py-4">Sentence</th>
+                                <th class="px-6 py-4">Judgment</th>
+                                <th class="px-6 py-4">Dialect</th>
+                                <th class="px-6 py-4">Submitted Date</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="divide-y divide-white/5">
                             {% for j in judgments %}
-                                <tr>
-                                    <td>{{ j.sentence_text|truncatechars:80 }}</td>
-                                    <td>
-                                        <span class="badge badge-{{ j.binary_label }}">{{ j.binary_label|capfirst }}</span>
+                                <tr class="hover:bg-white/5 transition-colors">
+                                    <td class="px-6 py-4 font-sans font-light max-w-md truncate text-white">{{ j.sentence_text }}</td>
+                                    <td class="px-6 py-4">
+                                        {% if j.binary_label == 'correct' or j.binary_label == 'yes' %}
+                                            <span class="px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-xs text-emerald-400 font-medium">Correct</span>
+                                        {% else %}
+                                            <span class="px-2.5 py-1 rounded-full bg-rose-500/10 border border-rose-500/25 text-xs text-rose-400 font-medium">Incorrect</span>
+                                        {% endif %}
                                     </td>
-                                    <td>
-                                        <span class="tag tag-sm">{{ j.get_language_variant_display }}</span>
+                                    <td class="px-6 py-4">
+                                        <span class="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-white/60">{{ j.get_language_variant_display }}</span>
                                     </td>
-                                    <td>{{ j.created_at|date:"M d, Y" }}</td>
+                                    <td class="px-6 py-4 text-xs text-white/40">{{ j.created_at|date:"M d, Y" }}</td>
                                 </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
             {% else %}
-                <p class="empty-state">
-                    No sentence flags submitted yet. <a href="{% url 'is_this_correct' %}">Start now →</a>
-                </p>
+                <div class="text-center p-12 rounded-2xl border border-dashed border-white/10 bg-white/5">
+                    <p class="text-sm text-white/45 mb-4">No sentence flags submitted yet.</p>
+                    <a href="{% url 'is_this_correct' %}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-[#4DA8FF] hover:underline">Start flagging <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+                </div>
             {% endif %}
         </section>
     </div>

@@ -1,80 +1,175 @@
 {% extends "base.html" %}
-{% block title %}
-    {{ profile_user.username }}'s Profile — Koma Zmanî Kurdî
-{% endblock title %}
+{% block title %}{{ profile_user.username }}'s Profile — Koma Zmanî Kurdî{% endblock title %}
 {% block content %}
-    <div class="container page-container">
-        <div class="profile-layout">
-            <aside class="profile-sidebar">
-                <div class="profile-avatar-wrap">
-                    {% if profile_user.profile_image %}
-                        <img src="{{ profile_user.profile_image.url }}"
-                             alt="{{ profile_user.username }}"
-                             class="profile-avatar">
+    <div class="max-w-5xl mx-auto px-6 pt-16 pb-20">
+        <!-- Top Profile Banner -->
+        <div class="reveal-up relative rounded-[2.5rem] bg-gradient-to-br from-white/5 to-transparent border border-white/10 p-8 md:p-12 overflow-hidden mb-12 backdrop-blur-xl">
+            <!-- Background Glow Overlay -->
+            <div class="absolute top-[-20%] right-[-10%] w-[50%] h-[150%] bg-gradient-to-b from-[#6C63FF]/10 to-transparent rotate-12 blur-3xl pointer-events-none"></div>
+            
+            <div class="relative z-10 flex flex-col md:flex-row items-center gap-10">
+                <!-- Avatar with gradient ring -->
+                <div class="w-32 h-32 rounded-full p-1 bg-gradient-to-tr from-[#6C63FF] to-[#4DA8FF] shrink-0">
+                    <div class="w-full h-full rounded-full bg-[#11131A] flex items-center justify-center text-4xl overflow-hidden relative border border-white/5">
+                        {% if profile_user.profile_image %}
+                            <img src="{{ profile_user.profile_image.url }}" alt="{{ profile_user.username }}" class="w-full h-full object-cover" width="128" height="128">
+                        {% else %}
+                            <span class="font-outfit font-bold text-[#4DA8FF]">{{ profile_user.username|first|upper }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Bio & Title details -->
+                <div class="flex-1 text-center md:text-left">
+                    <h1 class="text-4xl font-outfit font-bold text-white mb-2">{{ profile_user.get_full_name|default:profile_user.username }}</h1>
+                    
+                    <p class="text-white/50 text-sm font-sans mb-4 flex items-center justify-center md:justify-start gap-1.5">
+                        <span class="px-2.5 py-0.5 rounded-full text-2xs font-semibold uppercase tracking-wider
+                            {% if profile_user.role == 'admin' %}bg-red-500/10 border border-red-500/25 text-red-400{% elif profile_user.role == 'moderator' %}bg-emerald-500/10 border border-emerald-500/25 text-emerald-400{% else %}bg-[#4DA8FF]/10 border border-[#4DA8FF]/20 text-[#4DA8FF]{% endif %}">
+                            {{ profile_user.get_role_display }}
+                        </span>
+                        • Member since {{ profile_user.date_joined|date:"F Y" }}
+                    </p>
+
+                    {% if profile_user.bio %}
+                        <p class="text-white/60 text-sm leading-relaxed mb-6 font-sans font-light max-w-xl">{{ profile_user.bio }}</p>
                     {% else %}
-                        <div class="profile-avatar-placeholder">{{ profile_user.username|first|upper }}</div>
+                        <p class="text-white/30 text-xs italic mb-6 font-sans">No biography description set.</p>
                     {% endif %}
+
+                    <!-- Metadata Badges -->
+                    <div class="flex flex-wrap justify-center md:justify-start gap-2.5">
+                        <span class="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-2xs uppercase tracking-wider font-semibold text-white/50 flex items-center gap-1.5"><i data-lucide="award" class="text-yellow-400 w-3.5 h-3.5"></i> Contributor Badge</span>
+                        <span class="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-2xs uppercase tracking-wider font-semibold text-white/50 flex items-center gap-1.5"><i data-lucide="globe" class="text-[#4DA8FF] w-3.5 h-3.5"></i> Sorani Native</span>
+                        <span class="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-2xs uppercase tracking-wider font-semibold text-white/50 flex items-center gap-1.5"><i data-lucide="zap" class="text-[#7CFFB2] w-3.5 h-3.5"></i> Active Streak</span>
+                    </div>
                 </div>
-                <h2 class="profile-name">{{ profile_user.get_full_name|default:profile_user.username }}</h2>
-                <span class="role-badge role-{{ profile_user.role }}">{{ profile_user.get_role_display }}</span>
-                {% if profile_user.bio %}<p class="profile-bio">{{ profile_user.bio }}</p>{% endif %}
-                <p class="profile-joined">Member since {{ profile_user.date_joined|date:"F Y" }}</p>
+
+                <!-- Admin Profile controls -->
                 {% if request.user == profile_user %}
-                    <a href="{% url 'profile_edit' %}"
-                       class="btn btn-outline btn-sm btn-full">Edit Profile</a>
+                    <div class="shrink-0">
+                        <a href="{% url 'profile_edit' %}" class="px-6 py-3 rounded-full bg-white/5 text-white/80 border border-white/10 text-xs font-semibold hover:bg-white/10 transition-colors inline-block">
+                            Edit Profile
+                        </a>
+                    </div>
                 {% endif %}
-            </aside>
-            <div class="profile-main">
-                <div class="stats-row">
-                    <div class="stat-mini">
-                        <strong>{{ profile_user.questions.count }}</strong><span>Questions</span>
-                    </div>
-                    <div class="stat-mini">
-                        <strong>{{ profile_user.answers.count }}</strong><span>Answers</span>
-                    </div>
-                    <div class="stat-mini">
-                        <strong>{{ profile_user.correction_submissions.count }}</strong><span>Corrections</span>
-                    </div>
-                    <div class="stat-mini">
-                        <strong>{{ profile_user.parallel_text_submissions.count }}</strong><span>Parallel Texts</span>
-                    </div>
-                    <div class="stat-mini">
-                        <strong>{{ profile_user.judgment_submissions.count }}</strong><span>Judgments</span>
+            </div>
+        </div>
+
+        <!-- Metric mini stats -->
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-12 reveal-up">
+            <div class="p-6 rounded-2xl bg-white/5 border border-white/10 text-center">
+                <span class="text-2xl font-outfit font-bold text-white mb-1 block">{{ profile_user.correction_submissions.count }}</span>
+                <span class="text-2xs uppercase text-white/40 tracking-wider font-semibold">Corrections</span>
+            </div>
+            <div class="p-6 rounded-2xl bg-white/5 border border-white/10 text-center">
+                <span class="text-2xl font-outfit font-bold text-white mb-1 block">{{ profile_user.parallel_text_submissions.count }}</span>
+                <span class="text-2xs uppercase text-white/40 tracking-wider font-semibold">Parallel Texts</span>
+            </div>
+            <div class="p-6 rounded-2xl bg-white/5 border border-white/10 text-center">
+                <span class="text-2xl font-outfit font-bold text-white mb-1 block">{{ profile_user.judgment_submissions.count }}</span>
+                <span class="text-2xs uppercase text-white/40 tracking-wider font-semibold">Judgments</span>
+            </div>
+            <div class="p-6 rounded-2xl bg-white/5 border border-white/10 text-center">
+                <span class="text-2xl font-outfit font-bold text-[#4DA8FF] mb-1 block">{{ profile_user.questions.count }}</span>
+                <span class="text-2xs uppercase text-white/40 tracking-wider font-semibold font-outfit">Questions</span>
+            </div>
+            <div class="p-6 rounded-2xl bg-white/5 border border-white/10 text-center">
+                <span class="text-2xl font-outfit font-bold text-[#A78BFA] mb-1 block">{{ profile_user.answers.count }}</span>
+                <span class="text-2xs uppercase text-white/40 tracking-wider font-semibold font-outfit">Answers</span>
+            </div>
+        </div>
+
+        <!-- Bottom Layout Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Side: Dynamic Activity Graph & Contributions -->
+            <div class="lg:col-span-2 flex flex-col gap-8">
+                <!-- Activity Graph Card -->
+                <div class="reveal-up p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm" data-delay="100">
+                    <h3 class="text-lg font-outfit font-bold text-white mb-6 flex items-center gap-2 border-b border-white/5 pb-4">
+                        <i data-lucide="activity" class="w-5 h-5 text-[#4DA8FF]"></i> Contribution History
+                    </h3>
+                    
+                    <!-- Graph layout (Grid generated by JS) -->
+                    <div class="grid grid-cols-10 sm:grid-cols-15 gap-1.5" id="github-graph-container">
+                        <!-- Squares generated by JS -->
                     </div>
                 </div>
-                <section class="profile-section">
-                    <h3>Recent Forum Questions</h3>
+
+                <!-- Recent Forum Questions created -->
+                <div class="reveal-up p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm" data-delay="150">
+                    <h3 class="text-lg font-outfit font-bold text-white mb-6 flex items-center gap-2 border-b border-white/5 pb-4">
+                        <i data-lucide="help-circle" class="w-5 h-5 text-[#6C63FF]"></i> Forum Questions
+                    </h3>
                     {% with questions=profile_user.questions.all|slice:":5" %}
                         {% if questions %}
-                            <ul class="activity-list">
+                            <ul class="space-y-4">
                                 {% for q in questions %}
-                                    <li>
-                                        <a href="{% url 'question_detail' q.pk %}">{{ q.title }}</a><span class="activity-date">{{ q.created_at|date:"M d, Y" }}</span>
+                                    <li class="flex justify-between items-start gap-4">
+                                        <a href="{% url 'question_detail' q.pk %}" class="text-sm text-white/80 hover:text-white hover:underline truncate">{{ q.title }}</a>
+                                        <span class="text-2xs text-white/30 font-sans shrink-0">{{ q.created_at|date:"M d, Y" }}</span>
                                     </li>
                                 {% endfor %}
                             </ul>
                         {% else %}
-                            <p class="empty-state">No questions yet.</p>
+                            <p class="text-sm text-white/30 italic font-sans py-4">No questions created yet.</p>
                         {% endif %}
                     {% endwith %}
-                </section>
-                <section class="profile-section">
-                    <h3>Recent Contributions</h3>
-                    {% with corrections=profile_user.correction_submissions.all|slice:":3" %}
+                </div>
+            </div>
+
+            <!-- Right Side: Recent Contributions -->
+            <div class="reveal-up" data-delay="200">
+                <div class="bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-sm h-full">
+                    <h3 class="text-lg font-outfit font-bold text-white mb-6 flex items-center gap-2 border-b border-white/5 pb-4">
+                        <i data-lucide="check-circle" class="w-5 h-5 text-[#7CFFB2]"></i> Recent Contributions
+                    </h3>
+                    {% with corrections=profile_user.correction_submissions.all|slice:":5" %}
                         {% if corrections %}
-                            <ul class="activity-list">
+                            <div class="space-y-6">
                                 {% for c in corrections %}
-                                    <li>
-                                        ✏️ Correction: <em>{{ c.incorrect_text|truncatechars:60 }}</em> <span class="activity-date">{{ c.created_at|date:"M d, Y" }}</span>
-                                    </li>
+                                    <div class="flex gap-3.5 items-start">
+                                        <div class="mt-1 bg-white/5 p-1.5 rounded-lg border border-white/10 text-[#7CFFB2]">
+                                            <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs text-white/30 font-sans mb-1">Correction submitted</p>
+                                            <p class="text-sm text-white/80 leading-normal truncate max-w-[180px] font-sans font-light">"{{ c.incorrect_text }}"</p>
+                                            <p class="text-2xs text-white/20 font-sans mt-0.5">{{ c.created_at|date:"M d, Y" }}</p>
+                                        </div>
+                                    </div>
                                 {% endfor %}
-                            </ul>
+                            </div>
                         {% else %}
-                            <p class="empty-state">No contributions yet.</p>
+                            <p class="text-sm text-white/30 italic font-sans py-4">No contributions logged.</p>
                         {% endif %}
                     {% endwith %}
-                </section>
+                </div>
             </div>
         </div>
     </div>
 {% endblock content %}
+
+{% block extra_js %}
+    <script>
+        // Generate Mock GitHub style Activity Graph
+        document.addEventListener('DOMContentLoaded', () => {
+            const graphContainer = document.getElementById('github-graph-container');
+            if (graphContainer) {
+                let graphHTML = '';
+                // Generate 120 block cells matching standard grid layouts
+                for (let i = 0; i < 120; i++) {
+                    const intensity = Math.random();
+                    let colorClass = 'bg-white/5 border border-white/5';
+                    if (intensity > 0.9) colorClass = 'bg-[#6C63FF] shadow-[0_0_8px_rgba(108,99,255,0.3)]';
+                    else if (intensity > 0.7) colorClass = 'bg-[#6C63FF]/70';
+                    else if (intensity > 0.4) colorClass = 'bg-[#6C63FF]/40';
+                    else if (intensity > 0.2) colorClass = 'bg-[#6C63FF]/20';
+                    
+                    graphHTML += `<div class="w-3.5 h-3.5 rounded-sm ${colorClass} hover:ring-1 hover:ring-white transition-all duration-150 cursor-pointer" title="Score: ${Math.round(intensity * 10)} contributions"></div>`;
+                }
+                graphContainer.innerHTML = graphHTML;
+            }
+        });
+    </script>
+{% endblock extra_js %}

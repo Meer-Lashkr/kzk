@@ -1,36 +1,68 @@
 {% extends "base.html" %}
-{% block title %}
-    Settings — Koma Zmanî Kurdî
-{% endblock title %}
+{% block title %}Settings — Koma Zmanî Kurdî{% endblock title %}
 {% block content %}
-    <div class="container page-container">
-        <h1 class="page-title">Account Settings</h1>
-        <div class="settings-layout">
-            <div class="settings-card">
-                <h3>Account</h3>
-                <ul class="settings-links">
-                    <li>
-                        <a href="{% url 'profile_edit' %}">✏️ Edit Profile</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'change_password' %}">🔒 Change Password</a>
-                    </li>
-                </ul>
+    <div class="max-w-4xl mx-auto px-6 pt-16 pb-20">
+        <!-- Header -->
+        <div class="reveal-up mb-12 border-b border-white/10 pb-6">
+            <h1 class="text-4xl font-outfit font-bold text-white flex items-center gap-2">
+                <i data-lucide="settings" class="text-white/60 w-7 h-7"></i> Account Settings
+            </h1>
+            <p class="text-white/50 text-sm font-sans mt-0.5">Manage details of your credential keys, configurations, and permissions.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 reveal-up">
+            <!-- Account & Security card -->
+            <div class="p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-md flex flex-col justify-between">
+                <div>
+                    <h3 class="text-lg font-outfit font-bold text-white mb-6 flex items-center gap-2 border-b border-white/5 pb-4">
+                        <i data-lucide="shield" class="w-5 h-5 text-[#4DA8FF]"></i> Security & Profile
+                    </h3>
+                    <ul class="space-y-4">
+                        <li>
+                            <a href="{% url 'profile_edit' %}" class="flex items-center gap-2 text-sm text-white/80 hover:text-white transition-colors">
+                                <i data-lucide="edit-3" class="w-4 h-4 text-white/45"></i> Edit Profile Biography
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'change_password' %}" class="flex items-center gap-2 text-sm text-white/80 hover:text-white transition-colors">
+                                <i data-lucide="key" class="w-4 h-4 text-white/45"></i> Change Password
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <div class="settings-card">
-                <h3>Your Role</h3>
-                <p>
-                    You are currently a <strong>{{ request.user.get_role_display }}</strong>.
-                </p>
-                {% if not request.user.is_moderator %}
-                    <p class="form-hint">Contribute quality data to be considered for a moderator role.</p>
-                {% endif %}
+
+            <!-- Role status info card -->
+            <div class="p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-md flex flex-col justify-between">
+                <div>
+                    <h3 class="text-lg font-outfit font-bold text-white mb-6 flex items-center gap-2 border-b border-white/5 pb-4">
+                        <i data-lucide="award" class="w-5 h-5 text-[#7CFFB2]"></i> Platform Role Status
+                    </h3>
+                    <p class="text-sm text-white/80 leading-relaxed font-sans mb-4">
+                        Your account is currently flagged as: 
+                        <span class="ml-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#7CFFB2]/10 border border-[#7CFFB2]/20 text-[#7CFFB2] inline-block capitalize">
+                            {{ request.user.get_role_display }}
+                        </span>
+                    </p>
+                    {% if not request.user.is_moderator %}
+                        <p class="text-xs text-white/30 font-sans leading-relaxed">Contribute high-quality sentence corrections and translations consistently to be considered for moderator upgrades.</p>
+                    {% endif %}
+                </div>
             </div>
-            <div class="settings-card danger-zone">
-                <h3>Danger Zone</h3>
-                <form method="post" action="{% url 'logout' %}">
+
+            <!-- Danger Zone Card -->
+            <div class="p-8 rounded-3xl border border-rose-500/20 bg-rose-500/5 backdrop-blur-md md:col-span-2 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+                <div>
+                    <h3 class="text-lg font-outfit font-bold text-rose-400 mb-2 flex items-center gap-2">
+                        <i data-lucide="alert-triangle" class="w-5 h-5"></i> Danger Zone
+                    </h3>
+                    <p class="text-xs text-rose-200/50 max-w-md font-sans">Submit a logout request to end your current session. All contributions are cached.</p>
+                </div>
+                <form method="post" action="{% url 'logout' %}" class="m-0 w-full sm:w-auto shrink-0">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">Log Out</button>
+                    <button type="submit" class="w-full sm:w-auto px-6 py-3 rounded-full bg-rose-500 hover:bg-rose-600 text-[#0B0B0F] font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer">
+                        Log Out Session
+                    </button>
                 </form>
             </div>
         </div>

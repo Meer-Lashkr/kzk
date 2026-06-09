@@ -1,638 +1,344 @@
-{% extends 'base.html' %}
-{% block title %}Validation — Koma Zmanî Kurdî{% endblock %}
-{% block meta_description %}Help validate Kurdish linguistic data by reviewing submissions and voting on their correctness.{% endblock %}
-
-{% block extra_css %}
-<style>
-/* ── Validation page layout ── */
-.validation-page {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 2.5rem 1.5rem;
-    display: grid;
-    grid-template-columns: 1fr 320px;
-    gap: 2rem;
-    align-items: start;
-}
-@media (max-width: 900px) {
-    .validation-page { grid-template-columns: 1fr; }
-    .validation-sidebar { order: -1; }
-}
-
-/* ── Hero banner ── */
-.validation-hero {
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a78bfa 100%);
-    border-radius: 16px;
-    padding: 2rem 2.5rem;
-    color: #fff;
-    margin-bottom: 1.5rem;
-    position: relative;
-    overflow: hidden;
-}
-.validation-hero::before {
-    content: '✓';
-    position: absolute;
-    right: 2rem; top: 50%;
-    transform: translateY(-50%);
-    font-size: 8rem;
-    opacity: 0.08;
-    font-weight: 900;
-    pointer-events: none;
-}
-.validation-hero h1 {
-    font-size: 1.8rem;
-    font-weight: 800;
-    margin-bottom: 0.4rem;
-    color: #fff;
-}
-.validation-hero p {
-    color: rgba(255,255,255,0.85);
-    font-size: 1rem;
-    margin: 0;
-}
-
-/* ── Voting card ── */
-.vote-card {
-    background: #fff;
-    border: 1px solid #e5e7eb;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 4px 24px rgba(99,102,241,0.10);
-    transition: box-shadow 0.3s;
-}
-.vote-card-header {
-    padding: 1.25rem 1.75rem;
-    border-bottom: 1px solid #f3f4f6;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-.data-type-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.3rem 0.85rem;
-    border-radius: 20px;
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.4px;
-    text-transform: uppercase;
-}
-.chip-correction   { background: #ede9fe; color: #5b21b6; }
-.chip-parallel_text { background: #d1fae5; color: #065f46; }
-.chip-flagged_data { background: #fef3c7; color: #92400e; }
-.vote-card-meta {
-    margin-left: auto;
-    font-size: 0.8rem;
-    color: #9ca3af;
-}
-
-/* ── Data display ── */
-.vote-content {
-    padding: 1.75rem;
-}
-.data-field {
-    margin-bottom: 1.25rem;
-}
-.data-field:last-child { margin-bottom: 0; }
-.data-field-label {
-    font-size: 0.72rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.6px;
-    color: #9ca3af;
-    margin-bottom: 0.4rem;
-}
-.data-field-value {
-    background: #f8fafc;
-    border: 1px solid #e5e7eb;
-    border-radius: 10px;
-    padding: 0.85rem 1rem;
-    font-size: 1rem;
-    color: #1e1b4b;
-    line-height: 1.7;
-    direction: auto;
-}
-.data-arrow {
-    text-align: center;
-    color: #6366f1;
-    font-size: 1.4rem;
-    margin: 0.5rem 0;
-}
-
-/* ── Question prompt ── */
-.vote-question {
-    padding: 1.25rem 1.75rem;
-    border-top: 1px solid #f3f4f6;
-    background: #fafbff;
-}
-.vote-question-text {
-    text-align: center;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #1e1b4b;
-    margin-bottom: 1.25rem;
-}
-.vote-question-text span {
-    display: inline-block;
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-/* ── Vote buttons ── */
-.vote-buttons {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-}
-.vote-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.4rem;
-    padding: 1.25rem;
-    border-radius: 12px;
-    font-size: 1rem;
-    font-weight: 700;
-    border: 2.5px solid transparent;
-    cursor: pointer;
-    transition: all 0.2s;
-    letter-spacing: 0.5px;
-    font-family: inherit;
-}
-.vote-btn-icon { font-size: 2rem; }
-.vote-btn-yes {
-    background: #f0fdf4;
-    color: #15803d;
-    border-color: #bbf7d0;
-}
-.vote-btn-yes:hover {
-    background: #16a34a;
-    color: #fff;
-    border-color: #16a34a;
-    transform: translateY(-3px);
-    box-shadow: 0 8px 24px rgba(22,163,74,0.25);
-}
-.vote-btn-no {
-    background: #fef2f2;
-    color: #b91c1c;
-    border-color: #fecaca;
-}
-.vote-btn-no:hover {
-    background: #dc2626;
-    color: #fff;
-    border-color: #dc2626;
-    transform: translateY(-3px);
-    box-shadow: 0 8px 24px rgba(220,38,38,0.25);
-}
-.vote-btn-neutral {
-    background: #f3f4f6;
-    color: #4b5563;
-    border-color: #e5e7eb;
-}
-.vote-btn-neutral:hover {
-    background: #6b7280;
-    color: #fff;
-    border-color: #6b7280;
-    transform: translateY(-3px);
-    box-shadow: 0 8px 24px rgba(107,114,128,0.25);
-}
-
-/* ── Progress bar ── */
-.vote-progress {
-    padding: 1rem 1.75rem;
-    border-top: 1px solid #f3f4f6;
-}
-.progress-label {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.8rem;
-    color: #6b7280;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-}
-.progress-bar-wrap {
-    background: #f3f4f6;
-    border-radius: 999px;
-    height: 6px;
-    overflow: hidden;
-}
-.progress-bar-fill {
-    height: 100%;
-    border-radius: 999px;
-    background: linear-gradient(90deg, #6366f1, #8b5cf6);
-    transition: width 0.6s ease;
-}
-
-/* ── Success state ── */
-.vote-result-card {
-    background: #fff;
-    border: 1px solid #e5e7eb;
-    border-radius: 16px;
-    padding: 3rem 2rem;
-    text-align: center;
-    box-shadow: 0 4px 24px rgba(99,102,241,0.10);
-    display: none; /* shown via JS */
-}
-.vote-result-card.visible { display: block; }
-.result-icon {
-    font-size: 4rem;
-    margin-bottom: 1rem;
-    display: block;
-}
-.vote-result-card h2 {
-    font-size: 1.5rem;
-    font-weight: 800;
-    margin-bottom: 0.5rem;
-    color: #1e1b4b;
-}
-.vote-result-card p {
-    color: #6b7280;
-    margin-bottom: 1.75rem;
-}
-
-/* ── Empty state ── */
-.validation-empty {
-    background: #fff;
-    border: 1px dashed #e5e7eb;
-    border-radius: 16px;
-    padding: 4rem 2rem;
-    text-align: center;
-}
-.validation-empty .empty-icon { font-size: 4rem; margin-bottom: 1rem; display: block; }
-.validation-empty h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem; }
-.validation-empty p { color: #6b7280; margin-bottom: 1.75rem; }
-
-/* ── Sidebar stats ── */
-.validation-sidebar {}
-.sidebar-card {
-    background: #fff;
-    border: 1px solid #e5e7eb;
-    border-radius: 16px;
-    padding: 1.5rem;
-    margin-bottom: 1.25rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
-.sidebar-card h3 {
-    font-size: 0.85rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: #9ca3af;
-    margin-bottom: 1rem;
-}
-.stat-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid #f3f4f6;
-    font-size: 0.9rem;
-}
-.stat-row:last-child { border-bottom: none; }
-.stat-row-label { color: #374151; font-weight: 500; }
-.stat-row-value { font-weight: 700; color: #6366f1; }
-.stat-row-value.green { color: #16a34a; }
-.stat-row-value.red { color: #dc2626; }
-.stat-row-value.amber { color: #d97706; }
-.stat-row-value.muted { color: #9ca3af; }
-
-.your-impact {
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-    border-radius: 16px;
-    padding: 1.5rem;
-    color: #fff;
-    text-align: center;
-}
-.your-impact .impact-count {
-    font-size: 3rem;
-    font-weight: 900;
-    line-height: 1;
-    margin-bottom: 0.3rem;
-}
-.your-impact p { color: rgba(255,255,255,0.85); font-size: 0.9rem; margin: 0; }
-
-/* ── Loading spinner ── */
-.spinner {
-    display: inline-block;
-    width: 20px; height: 20px;
-    border: 3px solid #e5e7eb;
-    border-top-color: #6366f1;
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    vertical-align: middle;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-</style>
-{% endblock %}
+{% extends "base.html" %}
+{% block title %}Validation — Koma Zmanî Kurdî{% endblock title %}
+{% block meta_description %}
+    Help validate Kurdish linguistic data by reviewing submissions and voting on their correctness.
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+{% endblock meta_description %}
 
 {% block content %}
-<div class="validation-page">
-
-    <!-- ── Main column ─────────────────────────────────────── -->
-    <div class="validation-main">
-
-        <!-- Hero -->
-        <div class="validation-hero">
-            <h1>✅ Data Validation</h1>
-            <p>Review Kurdish linguistic data and help the community decide what's correct.</p>
-        </div>
-
-        <!-- Voting card (shown when item exists) -->
-        {% if item %}
-        <div class="vote-card" id="voteCard">
-            <div class="vote-card-header">
-                {% if item.data_type == 'correction' %}
-                    <span class="data-type-chip chip-correction">✏️ Correction</span>
-                {% elif item.data_type == 'parallel_text' %}
-                    <span class="data-type-chip chip-parallel_text">🔀 Parallel Text</span>
-                {% else %}
-                    <span class="data-type-chip chip-flagged_data">🚩 Flagged Data</span>
-                {% endif %}
-                <span class="vote-card-meta">
-                    {{ item.total_votes }} / {{ item.required_votes }} votes
-                </span>
+    <div class="max-w-7xl mx-auto px-6 pt-16 pb-20 grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        
+        <!-- Main Column: Validation Card -->
+        <div class="lg:col-span-2 flex flex-col gap-8">
+            <!-- Hero banner -->
+            <div class="reveal-up p-8 rounded-3xl bg-gradient-to-br from-[#6C63FF]/20 to-transparent border border-white/10 relative overflow-hidden backdrop-blur-xl">
+                <div class="absolute -right-4 -bottom-4 opacity-5 pointer-events-none">
+                    <i data-lucide="check-square" class="w-40 h-40 text-white"></i>
+                </div>
+                <div class="relative z-10">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#7CFFB2]/10 border border-[#7CFFB2]/20 text-[#7CFFB2] text-xs font-semibold mb-4 font-outfit">
+                        <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
+                        <span>Validation Queue</span>
+                    </div>
+                    <h1 class="text-3xl font-outfit font-bold text-white mb-2">Data Validation</h1>
+                    <p class="text-sm text-white/50 font-sans font-light">Review Kurdish linguistic submissions and vote to maintain high data quality.</p>
+                </div>
             </div>
 
-            <div class="vote-content">
-                {% if item.data_type == 'correction' %}
-                    <div class="data-field">
-                        <div class="data-field-label">Incorrect Sentence</div>
-                        <div class="data-field-value">{{ item.content.incorrect_sentence }}</div>
-                    </div>
-                    <div class="data-arrow">↓</div>
-                    <div class="data-field">
-                        <div class="data-field-label">Corrected Sentence</div>
-                        <div class="data-field-value">{{ item.content.correct_sentence }}</div>
-                    </div>
+            <!-- Validation Queue Card -->
+            {% if item %}
+                <div class="reveal-up bg-white/5 border border-white/10 rounded-[2rem] p-8 md:p-12 backdrop-blur-xl shadow-2xl relative overflow-hidden group" id="voteCard">
+                    <!-- Ambient Glow inside Card -->
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-white/5 rounded-full filter blur-[100px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none"></div>
 
-                {% elif item.data_type == 'parallel_text' %}
-                    <div class="data-field">
-                        <div class="data-field-label">{{ item.content.source_language }}</div>
-                        <div class="data-field-value">{{ item.content.source_text }}</div>
-                    </div>
-                    <div class="data-arrow">⇄</div>
-                    <div class="data-field">
-                        <div class="data-field-label">{{ item.content.target_language }}</div>
-                        <div class="data-field-value">{{ item.content.target_text }}</div>
-                    </div>
-
-                {% else %}{# flagged_data #}
-                    <div class="data-field">
-                        <div class="data-field-label">Sentence</div>
-                        <div class="data-field-value">{{ item.content.sentence }}</div>
-                    </div>
-                    <div class="data-field">
-                        <div class="data-field-label">Original Label</div>
-                        <div class="data-field-value">
-                            {% if item.content.original_label == 'correct' %}
-                                ✅ Marked as correct
+                    <div class="relative z-10 flex flex-col h-full justify-between">
+                        <!-- Top Metadata / Badges -->
+                        <div class="flex justify-between items-center mb-8 pb-4 border-b border-white/5">
+                            {% if item.data_type == 'correction' %}
+                                <span class="px-3 py-1.5 rounded-full bg-[#4DA8FF]/10 border border-[#4DA8FF]/20 text-[#4DA8FF] text-xs font-bold font-outfit flex items-center gap-1.5"><i data-lucide="edit-2" class="w-3.5 h-3.5"></i> Correction</span>
+                            {% elif item.data_type == 'parallel_text' %}
+                                <span class="px-3 py-1.5 rounded-full bg-[#A78BFA]/10 border border-[#A78BFA]/20 text-[#A78BFA] text-xs font-bold font-outfit flex items-center gap-1.5"><i data-lucide="layout" class="w-3.5 h-3.5"></i> Parallel Text</span>
                             {% else %}
-                                ❌ Marked as incorrect
+                                <span class="px-3 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-xs font-bold font-outfit flex items-center gap-1.5"><i data-lucide="flag" class="w-3.5 h-3.5"></i> Flagged Data</span>
+                            {% endif %}
+                            
+                            <span class="text-xs text-white/40 font-sans" id="voteCounter">{{ item.total_votes }} / {{ item.required_votes }} community votes</span>
+                        </div>
+
+                        <!-- Data Presentation -->
+                        <div class="space-y-8 mb-12 flex-grow">
+                            {% if item.data_type == 'correction' %}
+                                <div class="text-center">
+                                    <span class="text-xs font-semibold text-white/40 uppercase tracking-wider block mb-2 font-outfit">Incorrect Sentence</span>
+                                    <p class="text-lg md:text-xl text-white/60 font-sans font-light leading-relaxed">"{{ item.content.incorrect_sentence }}"</p>
+                                </div>
+                                <div class="flex justify-center text-white/20">
+                                    <i data-lucide="chevron-down" class="w-6 h-6"></i>
+                                </div>
+                                <div class="text-center">
+                                    <span class="text-xs font-semibold text-[#4DA8FF] uppercase tracking-wider block mb-2 font-outfit">Corrected Sentence</span>
+                                    <p class="text-2xl md:text-3xl font-medium text-white leading-relaxed font-sans">"{{ item.content.correct_sentence }}"</p>
+                                </div>
+
+                            {% elif item.data_type == 'parallel_text' %}
+                                <div class="text-center">
+                                    <span class="text-xs font-semibold text-white/40 uppercase tracking-wider block mb-2 font-outfit">Source text ({{ item.content.source_language }})</span>
+                                    <p class="text-lg md:text-xl text-white/60 font-sans font-light leading-relaxed">"{{ item.content.source_text }}"</p>
+                                </div>
+                                <div class="flex justify-center text-white/20">
+                                    <i data-lucide="arrow-right-left" class="w-5 h-5"></i>
+                                </div>
+                                <div class="text-center">
+                                    <span class="text-xs font-semibold text-[#A78BFA] uppercase tracking-wider block mb-2 font-outfit">Target Translation ({{ item.content.target_language }})</span>
+                                    <p class="text-2xl md:text-3xl font-medium text-white leading-relaxed font-sans">"{{ item.content.target_text }}"</p>
+                                </div>
+
+                            {% else %}
+                                <div class="text-center">
+                                    <span class="text-xs font-semibold text-white/40 uppercase tracking-wider block mb-2 font-outfit">Flagged Kurdish Sentence</span>
+                                    <p class="text-2xl md:text-3xl font-medium text-white leading-relaxed font-sans">"{{ item.content.sentence }}"</p>
+                                </div>
+                                <div class="text-center bg-white/5 border border-white/5 rounded-2xl p-4 max-w-sm mx-auto">
+                                    <span class="text-xs font-semibold text-white/40 uppercase tracking-wider block mb-1 font-outfit">Community Flag Label</span>
+                                    <span class="text-sm font-semibold {% if item.content.original_label == 'correct' %}text-emerald-400{% else %}text-rose-400{% endif %}">
+                                        {% if item.content.original_label == 'correct' %}
+                                            <i data-lucide="check-circle" class="w-4 h-4 inline mr-1"></i> Marked as Correct
+                                        {% else %}
+                                            <i data-lucide="alert-triangle" class="w-4 h-4 inline mr-1"></i> Marked as Incorrect
+                                        {% endif %}
+                                    </span>
+                                </div>
                             {% endif %}
                         </div>
+
+                        <!-- 3-Button voting structure matching template layout -->
+                        <div class="border-t border-white/5 pt-8">
+                            <p class="text-center text-base font-semibold text-white/60 mb-6 font-outfit">Is this linguistic pair correct and natural?</p>
+                            
+                            <div class="flex items-center justify-center gap-6 md:gap-8 mb-8" id="voteButtons">
+                                <!-- NO Button: Rose Red Round -->
+                                <button class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 flex flex-col items-center justify-center hover:bg-rose-500 hover:text-[#0B0B0F] hover:scale-110 active:scale-95 transition-all shadow-[0_0_20px_rgba(239,68,68,0.1)] focus:outline-none"
+                                        onclick="submitVote({{ item.id }}, 'no')"
+                                        id="btnNo"
+                                        title="Vote NO (Incorrect)">
+                                    <i data-lucide="thumbs-down" class="w-6 h-6 md:w-8 md:h-8"></i>
+                                </button>
+                                
+                                <!-- SKIP Button: Glass Pill -->
+                                <button class="px-6 py-3 rounded-full bg-white/5 border border-white/10 text-white/50 hover:bg-white/10 hover:text-white transition-all active:scale-95 text-xs font-bold uppercase tracking-widest font-outfit focus:outline-none"
+                                        onclick="loadNextItem()"
+                                        id="btnSkip">
+                                    Skip
+                                </button>
+                                
+                                <!-- YES Button: Emerald Green Round -->
+                                <button class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-[#7CFFB2]/10 border border-[#7CFFB2]/20 text-[#7CFFB2] flex flex-col items-center justify-center hover:bg-[#7CFFB2] hover:text-[#0B0B0F] hover:scale-110 active:scale-95 transition-all shadow-[0_0_30px_rgba(124,255,178,0.15)] focus:outline-none"
+                                        onclick="submitVote({{ item.id }}, 'yes')"
+                                        id="btnYes"
+                                        title="Vote YES (Correct)">
+                                    <i data-lucide="thumbs-up" class="w-6 h-6 md:w-8 md:h-8"></i>
+                                </button>
+                            </div>
+
+                            <!-- Vote Progress Bar -->
+                            <div class="max-w-md mx-auto">
+                                <div class="flex justify-between items-center text-xs text-white/40 mb-2 font-sans">
+                                    <span>Vote Progress</span>
+                                    <span id="progressText">{{ item.total_votes }} / {{ item.required_votes }}</span>
+                                </div>
+                                <div class="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-[#7CFFB2] to-[#4DA8FF] rounded-full transition-all duration-500"
+                                         id="progressBar"
+                                         style="width: {% widthratio item.total_votes item.required_votes 100 %}%"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                {% endif %}
-            </div>
-
-            <!-- Question + Buttons -->
-            <div class="vote-question">
-                <p class="vote-question-text">
-                    <span>Is this data correct?</span>
-                </p>
-                <div class="vote-buttons" id="voteButtons">
-                    <button class="vote-btn vote-btn-yes"
-                            onclick="submitVote({{ item.id }}, 'yes')"
-                            id="btnYes">
-                        <span class="vote-btn-icon">👍</span>
-                        YES
-                    </button>
-                    <button class="vote-btn vote-btn-neutral"
-                            onclick="submitVote({{ item.id }}, 'neutral')"
-                            id="btnNeutral">
-                        <span class="vote-btn-icon">➖</span>
-                        NEUTRAL
-                    </button>
-                    <button class="vote-btn vote-btn-no"
-                            onclick="submitVote({{ item.id }}, 'no')"
-                            id="btnNo">
-                        <span class="vote-btn-icon">👎</span>
-                        NO
-                    </button>
                 </div>
-            </div>
 
-            <!-- Vote progress -->
-            <div class="vote-progress">
-                <div class="progress-label">
-                    <span>Votes collected</span>
-                    <span id="progressText">{{ item.total_votes }} / {{ item.required_votes }}</span>
-                </div>
-                <div class="progress-bar-wrap">
-                    {% with pct=item.total_votes|floatformat:0 req=item.required_votes %}
-                    <div class="progress-bar-fill"
-                         style="width: {% widthratio item.total_votes item.required_votes 100 %}%"
-                         id="progressBar">
+                <!-- Thank-you Result Card -->
+                <div class="reveal-up bg-white/5 border border-white/10 rounded-[2rem] p-12 text-center backdrop-blur-xl shadow-2xl relative overflow-hidden hidden" id="voteResult">
+                    <div id="resultIconContainer" class="w-20 h-20 rounded-full bg-[#7CFFB2]/10 border border-[#7CFFB2]/20 flex items-center justify-center mx-auto mb-6 text-[#7CFFB2]">
+                        <i data-lucide="award" class="w-10 h-10" id="resultIcon"></i>
                     </div>
-                    {% endwith %}
+                    <h2 class="text-2xl font-outfit font-bold text-white mb-2" id="resultTitle">Thank you for your help!</h2>
+                    <p class="text-sm text-white/50 max-w-sm mx-auto mb-8 font-sans" id="resultMsg">Your judgment has been successfully submitted to the consensus engine.</p>
+                    <button class="px-8 py-3.5 rounded-full bg-gradient-to-r from-[#4DA8FF] to-[#6C63FF] text-white font-semibold hover:scale-105 active:scale-95 transition-all shadow-[0_0_30px_rgba(77,168,255,0.3)] focus:outline-none"
+                            id="nextItemBtn"
+                            onclick="loadNextItem()">
+                        Load Next Item →
+                    </button>
+                </div>
+            {% else %}
+                <!-- Empty State -->
+                <div class="reveal-up bg-white/5 border border-dashed border-white/10 rounded-[2rem] p-16 text-center backdrop-blur-xl">
+                    <div class="w-20 h-20 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-6 text-white/40">
+                        <i data-lucide="sparkles" class="w-10 h-10"></i>
+                    </div>
+                    <h2 class="text-2xl font-outfit font-bold text-white mb-2">You're all caught up!</h2>
+                    <p class="text-sm text-white/40 max-w-md mx-auto mb-8 font-sans font-light">There are no pending submissions waiting for your validation judgment. Check back later or help out by submitting raw contributions!</p>
+                    <a href="{% url 'contribute_home' %}" class="px-8 py-3.5 rounded-full bg-white text-[#0B0B0F] font-semibold hover:scale-105 active:scale-95 transition-transform text-center shadow-[0_0_30px_rgba(255,255,255,0.15)] inline-block">
+                        Contribute Data
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Sidebar Column -->
+        <div class="flex flex-col gap-6">
+            <!-- User Impact count -->
+            <div class="reveal-up bg-gradient-to-br from-[#6C63FF] to-[#4DA8FF] rounded-3xl p-8 text-center text-white shadow-2xl relative overflow-hidden">
+                <div class="absolute -right-6 -bottom-6 opacity-10 pointer-events-none">
+                    <i data-lucide="user" class="w-32 h-32"></i>
+                </div>
+                <div class="relative z-10">
+                    <span class="text-5xl font-outfit font-bold tracking-tighter block mb-2">{{ stats.user_votes }}</span>
+                    <span class="text-xs font-semibold uppercase tracking-wider text-white/80 font-outfit">Sentences Validated By You</span>
                 </div>
             </div>
-        </div>
 
-        <!-- Thank-you card (shown after vote, hidden initially) -->
-        <div class="vote-result-card" id="voteResult">
-            <span class="result-icon" id="resultIcon">🎉</span>
-            <h2 id="resultTitle">Thank you for your evaluation!</h2>
-            <p id="resultMsg">Your vote has been recorded.</p>
-            <button class="btn btn-primary btn-lg" id="nextItemBtn" onclick="loadNextItem()">
-                Next Item →
-            </button>
-        </div>
-
-        {% else %}
-        <!-- Empty state -->
-        <div class="validation-empty" id="voteCard">
-            <span class="empty-icon">🏆</span>
-            <h2>You're all caught up!</h2>
-            <p>There are no pending items left for you to validate right now.<br>
-               Check back later as new data is contributed.</p>
-            <a href="{% url 'contribute_home' %}" class="btn btn-primary">
-                Contribute More Data
-            </a>
-        </div>
-        {% endif %}
-
-    </div><!-- /main -->
-
-    <!-- ── Sidebar ──────────────────────────────────────────── -->
-    <aside class="validation-sidebar">
-
-        <!-- Your impact -->
-        <div class="your-impact">
-            <div class="impact-count">{{ stats.user_votes }}</div>
-            <p>evaluations you've submitted</p>
-        </div>
-
-        <!-- Queue stats -->
-        <div class="sidebar-card" style="margin-top:1.25rem;">
-            <h3>📊 Queue Overview</h3>
-            <div class="stat-row">
-                <span class="stat-row-label">Total Items</span>
-                <span class="stat-row-value muted">{{ stats.total }}</span>
-            </div>
-            <div class="stat-row">
-                <span class="stat-row-label">Pending</span>
-                <span class="stat-row-value">{{ stats.pending }}</span>
-            </div>
-            <div class="stat-row">
-                <span class="stat-row-label">Accepted</span>
-                <span class="stat-row-value green">{{ stats.accepted }}</span>
-            </div>
-            <div class="stat-row">
-                <span class="stat-row-label">Rejected</span>
-                <span class="stat-row-value red">{{ stats.rejected }}</span>
-            </div>
-            <div class="stat-row">
-                <span class="stat-row-label">Needs Moderation</span>
-                <span class="stat-row-value amber">{{ stats.needs_moderation }}</span>
-            </div>
-        </div>
-
-        <!-- How it works -->
-        <div class="sidebar-card">
-            <h3>ℹ️ How It Works</h3>
-            <div style="display:flex;flex-direction:column;gap:0.75rem;font-size:0.88rem;color:#4b5563;">
-                <div>
-                    <strong style="color:#1e1b4b;">1. Read the data</strong><br>
-                    Review the Kurdish text entry carefully.
-                </div>
-                <div>
-                    <strong style="color:#1e1b4b;">2. Vote YES, NO, or NEUTRAL</strong><br>
-                    Is the data linguistically correct?
-                </div>
-                <div>
-                    <strong style="color:#1e1b4b;">3. Collective decision</strong><br>
-                    After 20 votes, the system automatically accepts or rejects the entry.
-                </div>
-                <div>
-                    <strong style="color:#1e1b4b;">4. Close calls</strong><br>
-                    If the vote is close, a moderator reviews manually.
+            <!-- Queue stats overview -->
+            <div class="reveal-up bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-md">
+                <h3 class="text-sm font-semibold text-white/40 uppercase tracking-wider mb-4 font-outfit flex items-center gap-1.5"><i data-lucide="bar-chart-2" class="w-4 h-4"></i> Queue Overview</h3>
+                <div class="divide-y divide-white/5">
+                    <div class="flex justify-between py-3 text-sm">
+                        <span class="text-white/60">Total Items in System</span>
+                        <span class="font-semibold text-white">{{ stats.total }}</span>
+                    </div>
+                    <div class="flex justify-between py-3 text-sm">
+                        <span class="text-white/60">Pending Validation</span>
+                        <span class="font-semibold text-[#4DA8FF]">{{ stats.pending }}</span>
+                    </div>
+                    <div class="flex justify-between py-3 text-sm">
+                        <span class="text-white/60">Accepted Datasets</span>
+                        <span class="font-semibold text-emerald-400">{{ stats.accepted }}</span>
+                    </div>
+                    <div class="flex justify-between py-3 text-sm">
+                        <span class="text-white/60">Rejected Items</span>
+                        <span class="font-semibold text-rose-400">{{ stats.rejected }}</span>
+                    </div>
+                    <div class="flex justify-between py-3 text-sm">
+                        <span class="text-white/60">Awaiting Moderator Review</span>
+                        <span class="font-semibold text-amber-400">{{ stats.needs_moderation }}</span>
+                    </div>
                 </div>
             </div>
+
+            <!-- Guidelines summary -->
+            <div class="reveal-up bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-md">
+                <h3 class="text-sm font-semibold text-white/40 uppercase tracking-wider mb-4 font-outfit flex items-center gap-1.5"><i data-lucide="info" class="w-4 h-4"></i> How Validation Works</h3>
+                <div class="space-y-4 text-xs font-sans text-white/50 leading-relaxed font-light">
+                    <div>
+                        <strong class="text-white/80 block mb-0.5">1. Inspect the translation pair</strong>
+                        Carefully check dialect vocabulary spelling, morphology, and phrase coherence.
+                    </div>
+                    <div>
+                        <strong class="text-white/80 block mb-0.5">2. Cast a vote</strong>
+                        Select green thumb (YES) if it is fully correct, or red thumb (NO) if it contains errors. Skip if unsure.
+                    </div>
+                    <div>
+                        <strong class="text-white/80 block mb-0.5">3. Consensus calculation</strong>
+                        When an item reaches required votes (e.g. 20), consensus automatically categorizes it.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Moderator Panel Access -->
+            {% if user.is_moderator %}
+                <div class="reveal-up border border-orange-500/25 bg-orange-500/5 rounded-3xl p-6 backdrop-blur-md">
+                    <h3 class="text-sm font-semibold text-orange-400 uppercase tracking-wider mb-2 font-outfit flex items-center gap-1.5"><i data-lucide="shield" class="w-4 h-4"></i> Moderator Review Needed</h3>
+                    <p class="text-xs text-orange-200/50 mb-4 font-sans font-light">{{ stats.needs_moderation }} item(s) currently await manual decision resolution.</p>
+                    <a href="{% url 'moderation_list' %}" class="w-full text-center px-4 py-2.5 rounded-xl border border-orange-500/30 bg-orange-500/10 text-orange-300 text-xs font-bold hover:bg-orange-500/20 hover:text-white transition-all inline-block focus:outline-none">
+                        Open Review Panel
+                    </a>
+                </div>
+            {% endif %}
         </div>
-
-        {% if user.is_moderator %}
-        <div class="sidebar-card" style="border-color:#fde68a;background:#fffbeb;">
-            <h3 style="color:#92400e;">🛡️ Moderation</h3>
-            <p style="font-size:0.88rem;color:#78350f;margin-bottom:1rem;">
-                {{ stats.needs_moderation }} item(s) are waiting for your decision.
-            </p>
-            <a href="{% url 'moderation_list' %}" class="btn btn-outline btn-full"
-               style="border-color:#f59e0b;color:#d97706;">
-                Open Moderator Dashboard
-            </a>
-        </div>
-        {% endif %}
-
-    </aside>
-</div>
-
-{% csrf_token %}
-{% endblock %}
+    </div>
+    {% csrf_token %}
+{% endblock content %}
 
 {% block extra_js %}
-<script>
-const SUBMIT_URL = "{% url 'validation_submit' %}";
-const NEXT_URL   = "{% url 'validation_next' %}";
-const csrfToken  = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    <script>
+        const SUBMIT_URL = "{% url 'validation_submit' %}";
+        const csrfToken  = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
-function setButtonsDisabled(disabled) {
-    const yes = document.getElementById('btnYes');
-    const no  = document.getElementById('btnNo');
-    const neutral = document.getElementById('btnNeutral');
-    if (yes) yes.disabled = disabled;
-    if (no)  no.disabled  = disabled;
-    if (neutral) neutral.disabled = disabled;
-}
-
-async function submitVote(itemId, response) {
-    setButtonsDisabled(true);
-
-    const formData = new FormData();
-    formData.append('item_id', itemId);
-    formData.append('response', response);
-    formData.append('csrfmiddlewaretoken', csrfToken);
-
-    try {
-        const res = await fetch(SUBMIT_URL, { method: 'POST', body: formData });
-        const data = await res.json();
-
-        if (!res.ok || data.error) {
-            alert(data.error || 'Something went wrong. Please try again.');
-            setButtonsDisabled(false);
-            return;
+        function setButtonsDisabled(disabled) {
+            const yes = document.getElementById('btnYes');
+            const no  = document.getElementById('btnNo');
+            const skip = document.getElementById('btnSkip');
+            if (yes) yes.disabled = disabled;
+            if (no)  no.disabled  = disabled;
+            if (skip) skip.disabled = disabled;
         }
 
-        // Update progress bar
-        const bar = document.getElementById('progressBar');
-        const txt = document.getElementById('progressText');
-        if (bar && txt) {
-            const pct = Math.min(100, (data.total_votes / {{ item.required_votes|default:20 }}) * 100);
-            bar.style.width = pct + '%';
-            txt.textContent = data.total_votes + ' / {{ item.required_votes|default:20 }}';
+        async function submitVote(itemId, response) {
+            setButtonsDisabled(true);
+
+            const formData = new FormData();
+            formData.append('item_id', itemId);
+            formData.append('response', response);
+            formData.append('csrfmiddlewaretoken', csrfToken);
+
+            try {
+                const res = await fetch(SUBMIT_URL, { method: 'POST', body: formData });
+                const data = await res.json();
+
+                if (!res.ok || data.error) {
+                    alert(data.error || 'Something went wrong. Please try again.');
+                    setButtonsDisabled(false);
+                    return;
+                }
+
+                // Update progress bar UI smoothly
+                const bar = document.getElementById('progressBar');
+                const txt = document.getElementById('progressText');
+                if (bar && txt) {
+                    const requiredVotes = {% if item %}{{ item.required_votes|default:20 }}{% else %}20{% endif %};
+                    const pct = Math.min(100, (data.total_votes / requiredVotes) * 100);
+                    bar.style.width = pct + '%';
+                    txt.textContent = data.total_votes + ' / ' + requiredVotes;
+                }
+
+                // Transition to result summary card
+                showResult(response, data.status);
+
+            } catch (err) {
+                console.error(err);
+                alert('Network error. Please try again.');
+                setButtonsDisabled(false);
+            }
         }
 
-        // Show result card
-        showResult(response, data.status);
+        function showResult(response, status) {
+            const voteCard   = document.getElementById('voteCard');
+            const resultCard = document.getElementById('voteResult');
+            const container  = document.getElementById('resultIconContainer');
+            const title = document.getElementById('resultTitle');
+            const msg   = document.getElementById('resultMsg');
 
-    } catch (err) {
-        console.error(err);
-        alert('Network error. Please try again.');
-        setButtonsDisabled(false);
-    }
-}
+            if (voteCard)   voteCard.classList.add('hidden');
+            if (resultCard) resultCard.classList.remove('hidden');
 
-function showResult(response, status) {
-    const voteCard   = document.getElementById('voteCard');
-    const resultCard = document.getElementById('voteResult');
-    const icon  = document.getElementById('resultIcon');
-    const title = document.getElementById('resultTitle');
-    const msg   = document.getElementById('resultMsg');
+            if (response === 'yes') {
+                if (container) {
+                    container.innerHTML = '<i data-lucide="thumbs-up" class="w-10 h-10 text-emerald-400" id="resultIcon"></i>';
+                }
+                title.textContent = 'You voted YES!';
+            } else {
+                if (container) {
+                    container.innerHTML = '<i data-lucide="thumbs-down" class="w-10 h-10 text-rose-400" id="resultIcon"></i>';
+                }
+                title.textContent = 'You voted NO!';
+            }
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
 
-    if (voteCard)   voteCard.style.display = 'none';
-    if (resultCard) resultCard.classList.add('visible');
+            const statusMessages = {
+                accepted:         'This item has reached consensus and is now marked as accepted.',
+                rejected:         'This item has reached consensus and is now marked as rejected.',
+                needs_moderation: 'This item had conflicting votes and is sent to moderator review.',
+                pending:          'Your validation judgment was recorded successfully.',
+            };
+            msg.textContent = statusMessages[status] || 'Your validation judgment was recorded successfully.';
+        }
 
-    if (response === 'yes') {
-        icon.textContent  = '👍';
-        title.textContent = 'You voted YES!';
-    } else if (response === 'no') {
-        icon.textContent  = '👎';
-        title.textContent = 'You voted NO!';
-    } else {
-        icon.textContent  = '➖';
-        title.textContent = 'You voted NEUTRAL!';
-    }
-
-    const statusMessages = {
-        accepted:         'This item has now been accepted by the community.',
-        rejected:         'This item has been rejected by the community.',
-        needs_moderation: 'This item will be reviewed by a moderator.',
-        pending:          'Your vote has been recorded.',
-    };
-    msg.textContent = statusMessages[status] || 'Your vote has been recorded.';
-}
-
-async function loadNextItem() {
-    const btn = document.getElementById('nextItemBtn');
-    if (btn) {
-        btn.disabled = true;
-        btn.innerHTML = '<span class="spinner"></span> Loading…';
-    }
-    // Full page reload — simplest and most reliable approach
-    window.location.href = "{% url 'validation_home' %}";
-}
-</script>
-{% endblock %}
+        async function loadNextItem() {
+            const btn = document.getElementById('nextItemBtn');
+            const skipBtn = document.getElementById('btnSkip');
+            
+            if (btn && !btn.classList.contains('hidden')) {
+                btn.disabled = true;
+                btn.innerHTML = '<span class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin inline-block mr-2 align-middle"></span> Loading…';
+            }
+            if (skipBtn) {
+                skipBtn.disabled = true;
+                skipBtn.innerHTML = 'Wait…';
+            }
+            window.location.href = "{% url 'validation_home' %}?t=" + new Date().getTime();
+        }
+    </script>
+{% endblock extra_js %}

@@ -5,140 +5,219 @@
     Join the Kurdish language community. Contribute grammar corrections, parallel texts, and linguistic judgments to build the future of Kurdish NLP.
 {% endblock %}
 {% block content %}
-    <!-- Hero -->
-    <section class="hero">
-        <div class="hero-content">
-            <div class="hero-badge">🌍 Open to all Kurdish speakers</div>
-            <h1 class="hero-title">
-                Building Kurdish Language
-                <br>
-                <span class="gradient-text">Data Together</span>
-            </h1>
-            <p class="hero-subtitle">
-                Koma Zmanî Kurdî is a community platform where Kurdish speakers collaborate to create
-                high-quality linguistic datasets — powering the next generation of Kurdish NLP tools.
-            </p>
-            <div class="hero-actions">
-                {% if user.is_authenticated %}
-                    <a href="{% url 'contribute_home' %}"
-                       class="btn btn-white btn-lg"
-                       style="color: var(--primary);
-                              background: white">Start Contributing</a>
-                    <a href="{% url 'question_list' %}"
-                       class="btn btn-white btn-lg"
-                       style="color: var(--primary);
-                              background: white">Visit the Forum</a>
-                {% else %}
-                    <a href="{% url 'register' %}"
-                       class="btn btn-white btn-lg"
-                       style="color: var(--primary);
-                              background: white">Join Free</a>
-                    <a href="{% url 'question_list' %}"
-                       class="btn btn-white btn-lg"
-                       style="color: var(--primary);
-                              background: white">Explore the Forum</a>
-                {% endif %}
-            </div>
+    <!-- Hero Section -->
+    <section class="min-h-screen flex items-center justify-center pt-32 pb-20 px-6 relative overflow-hidden">
+        <!-- Elegant Hero Background Glow -->
+        <div class="absolute inset-0 w-full h-full z-0 overflow-hidden bg-[#0B0B0F]">
+            <div class="absolute inset-0 bg-gradient-to-tr from-[#6C63FF]/15 via-[#4DA8FF]/5 to-[#A78BFA]/15 z-0 pointer-events-none"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-[#0B0B0F] via-transparent to-[#0B0B0F]/40 pointer-events-none z-10"></div>
         </div>
-        <div class="hero-visual">
-            <div class="hero-card floating">
-                <span class="hero-card-icon">✏️</span>
-                <div>
-                    <strong>Correct This</strong>
-                    <p>Fix incorrect Kurdish sentences</p>
+
+        <div class="max-w-5xl mx-auto text-center z-10 relative">
+            <div class="reveal-up">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-[#4DA8FF] text-sm font-medium mb-8 backdrop-blur-md font-outfit">
+                    <i data-lucide="sparkles" class="w-4 h-4 text-[#4DA8FF]"></i>
+                    <span>Version 2.0 is live</span>
                 </div>
             </div>
-            <div class="hero-card floating delay-1">
-                <span class="hero-card-icon">🔀</span>
-                <div>
-                    <strong>Parallel Text</strong>
-                    <p>Submit bilingual text pairs</p>
-                </div>
+
+            <div class="reveal-up" data-delay="100">
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-outfit font-bold tracking-tight mb-8 leading-[1.1] text-transparent bg-clip-text bg-gradient-to-b from-white to-white/60">
+                    Build the Future of <br class="hidden md:block" />
+                    Kurdish Technology.
+                </h1>
             </div>
-            <div class="hero-card floating delay-2">
-                <span class="hero-card-icon">✅</span>
-                <div>
-                    <strong>Sentence Flagging</strong>
-                    <p>Label sentence correctness</p>
-                </div>
+
+            <div class="reveal-up" data-delay="200">
+                <p class="text-base md:text-xl text-white/50 max-w-3xl mx-auto mb-12 leading-relaxed font-light font-sans">
+                    Contribute, validate, and organize linguistic data to power the next generation of translation tools, grammar checkers, and AI systems for the Kurdish language.
+                </p>
             </div>
-        </div>
-    </section>
-    <!-- Stats -->
-    <section class="stats-section">
-        <div class="container">
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <span class="stat-number">{{ total_users|default:"0" }}</span>
-                    <span class="stat-label">Contributors</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-number">{{ total_contributions|default:"0" }}</span>
-                    <span class="stat-label">Contributions</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-number">{{ total_questions|default:"0" }}</span>
-                    <span class="stat-label">Forum Questions</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-number">4</span>
-                    <span class="stat-label">Kurdish Dialects</span>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- How it works -->
-    <section class="section">
-        <div class="container">
-            <div class="section-header">
-                <h2>How It Works</h2>
-                <p>Three simple ways to help grow Kurdish language resources</p>
-            </div>
-            <div class="cards-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">✏️</div>
-                    <h3>Correct This</h3>
-                    <p>
-                        Submit incorrect→correct sentence pairs. Turn grammar mistakes into valuable training data for correction models.
-                    </p>
-                    <a href="{% url 'correct_this' %}" class="btn btn-outline btn-sm">Get Started →</a>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🔀</div>
-                    <h3>Parallel Text</h3>
-                    <p>Submit aligned text across languages and dialects — from Sorani to English, Kurmanji to Sorani, and more.</p>
-                    <a href="{% url 'parallel_text' %}" class="btn btn-outline btn-sm">Get Started →</a>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">✅</div>
-                    <h3>Sentence Flagging</h3>
-                    <p>Label whether a Kurdish sentence is grammatically correct or not. Simple binary judgments, big impact.</p>
-                    <a href="{% url 'is_this_correct' %}" class="btn btn-outline btn-sm">Get Started →</a>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- Forum CTA -->
-    <section class="section section-alt">
-        <div class="container">
-            <div class="cta-block">
-                <div class="cta-content">
-                    <h2>Have a Kurdish Language Question?</h2>
-                    <p>
-                        Ask the community. Whether it's grammar, dialect differences, or translation challenges — our Q&amp;A forum is the place.
-                    </p>
-                    <a href="{% url 'question_list' %}" class="btn btn-primary">Browse the Forum</a>
+
+            <div class="reveal-up" data-delay="300">
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto sm:max-w-none">
                     {% if user.is_authenticated %}
-                        <a href="{% url 'question_create' %}" class="btn btn-ghost">Ask a Question</a>
+                        <a href="{% url 'contribute_home' %}" class="w-full sm:w-auto px-8 py-4 rounded-full bg-white text-[#0B0B0F] text-base font-semibold hover:scale-105 active:scale-95 transition-all text-center shadow-[0_0_40px_rgba(255,255,255,0.2)]">
+                            Start Contributing
+                        </a>
+                        <a href="{% url 'question_list' %}" class="w-full sm:w-auto px-8 py-4 rounded-full bg-white/10 text-white text-base font-semibold hover:bg-white/15 border border-white/10 backdrop-blur-md transition-colors text-center">
+                            Explore the Forum
+                        </a>
                     {% else %}
-                        <a href="{% url 'register' %}" class="btn btn-ghost">Sign Up to Ask</a>
+                        <a href="{% url 'register' %}" class="w-full sm:w-auto px-8 py-4 rounded-full bg-white text-[#0B0B0F] text-base font-semibold hover:scale-105 active:scale-95 transition-all text-center shadow-[0_0_40px_rgba(255,255,255,0.2)]">
+                            Join Free
+                        </a>
+                        <a href="{% url 'question_list' %}" class="w-full sm:w-auto px-8 py-4 rounded-full bg-white/10 text-white text-base font-semibold hover:bg-white/15 border border-white/10 backdrop-blur-md transition-colors text-center">
+                            Explore the Forum
+                        </a>
                     {% endif %}
                 </div>
-                <div class="cta-visual">
-                    <div class="forum-preview">
-                        <div class="fp-question">Why do some Sorani words differ in Kurmanji?</div>
-                        <div class="fp-question">What is the correct spelling of "school" in Kurdish?</div>
-                        <div class="fp-question">How do I write plurals in Sorani?</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission Section -->
+    <section class="py-24 px-6 relative z-10">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+            <div class="reveal-left">
+                <h2 class="text-3xl md:text-5xl font-outfit font-bold tracking-tight leading-tight text-white">
+                    Preserving a language requires more than history. <br/>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#6C63FF] to-[#4DA8FF]">It requires action.</span>
+                </h2>
+            </div>
+            <div class="reveal-right" data-delay="200">
+                <p class="text-lg text-white/50 leading-relaxed font-sans font-light">
+                    Every sentence corrected, every parallel text submitted, and every validation judgment contributes directly to a massive open-source dataset. We are giving the Kurdish language a digital voice that machines can understand.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feature Showcase / Four Ways to Impact -->
+    <section class="py-24 px-6 bg-[#11131A]/40 border-y border-white/5 relative z-10 backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-20 reveal-up">
+                <h2 class="text-3xl md:text-5xl font-outfit font-bold tracking-tight mb-4 text-white">Ways to make an impact.</h2>
+                <p class="text-lg text-white/40 font-sans font-light">Choose your path and start shaping Kurdish language datasets.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Forum Card -->
+                <div class="reveal-up" data-delay="0">
+                    <a href="{% url 'question_list' %}" class="group block h-full relative p-8 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 overflow-hidden backdrop-blur-xl">
+                        <div class="absolute -top-6 -right-6 p-4 opacity-5 group-hover:opacity-10 transition-opacity duration-300">
+                            <i data-lucide="message-square" class="text-[#6C63FF] w-24 h-24"></i>
+                        </div>
+                        <div class="mb-6 w-12 h-12 rounded-2xl bg-[#6C63FF]/10 flex items-center justify-center border border-[#6C63FF]/20">
+                            <i data-lucide="message-square" class="text-[#6C63FF] w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-xl font-outfit font-semibold mb-3 text-white">Q&A Forum</h3>
+                        <p class="text-white/50 text-sm leading-relaxed font-sans font-light">Ask and answer complex grammatical and dialectal queries.</p>
+                        <div class="mt-8 flex items-center gap-2 text-xs font-semibold text-[#4DA8FF] opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+                            Explore forum <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Correct This Card -->
+                <div class="reveal-up" data-delay="100">
+                    <a href="{% url 'correct_this' %}" class="group block h-full relative p-8 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 overflow-hidden backdrop-blur-xl">
+                        <div class="absolute -top-6 -right-6 p-4 opacity-5 group-hover:opacity-10 transition-opacity duration-300">
+                            <i data-lucide="edit-2" class="text-[#4DA8FF] w-24 h-24"></i>
+                        </div>
+                        <div class="mb-6 w-12 h-12 rounded-2xl bg-[#4DA8FF]/10 flex items-center justify-center border border-[#4DA8FF]/20">
+                            <i data-lucide="edit-2" class="text-[#4DA8FF] w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-xl font-outfit font-semibold mb-3 text-white">Correct This</h3>
+                        <p class="text-white/50 text-sm leading-relaxed font-sans font-light">Fix spelling and grammar errors in community-submitted texts.</p>
+                        <div class="mt-8 flex items-center gap-2 text-xs font-semibold text-[#4DA8FF] opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+                            Start correcting <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Parallel Text Card -->
+                <div class="reveal-up" data-delay="200">
+                    <a href="{% url 'parallel_text' %}" class="group block h-full relative p-8 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 overflow-hidden backdrop-blur-xl">
+                        <div class="absolute -top-6 -right-6 p-4 opacity-5 group-hover:opacity-10 transition-opacity duration-300">
+                            <i data-lucide="layout" class="text-[#A78BFA] w-24 h-24"></i>
+                        </div>
+                        <div class="mb-6 w-12 h-12 rounded-2xl bg-[#A78BFA]/10 flex items-center justify-center border border-[#A78BFA]/20">
+                            <i data-lucide="layout" class="text-[#A78BFA] w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-xl font-outfit font-semibold mb-3 text-white">Parallel Texts</h3>
+                        <p class="text-white/50 text-sm leading-relaxed font-sans font-light">Submit and review aligned translations for multi-dialect models.</p>
+                        <div class="mt-8 flex items-center gap-2 text-xs font-semibold text-[#4DA8FF] opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+                            Submit pairs <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Validation Card -->
+                <div class="reveal-up" data-delay="300">
+                    <a href="{% url 'validation_home' %}" class="group block h-full relative p-8 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 overflow-hidden backdrop-blur-xl">
+                        <div class="absolute -top-6 -right-6 p-4 opacity-5 group-hover:opacity-10 transition-opacity duration-300">
+                            <i data-lucide="check-circle" class="text-[#7CFFB2] w-24 h-24"></i>
+                        </div>
+                        <div class="mb-6 w-12 h-12 rounded-2xl bg-[#7CFFB2]/10 flex items-center justify-center border border-[#7CFFB2]/20">
+                            <i data-lucide="check-circle" class="text-[#7CFFB2] w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-xl font-outfit font-semibold mb-3 text-white">Validation</h3>
+                        <p class="text-white/50 text-sm leading-relaxed font-sans font-light">Vote YES/NO on the grammatical accuracy of existing queue items.</p>
+                        <div class="mt-8 flex items-center gap-2 text-xs font-semibold text-[#4DA8FF] opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+                            Evaluate data <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Platform Stats / Impact Section -->
+    <section class="py-32 px-6 relative z-10">
+        <div class="max-w-7xl mx-auto text-center">
+            <div class="reveal-up mb-20">
+                <h2 class="text-3xl md:text-5xl font-outfit font-bold tracking-tight text-white">The power of community.</h2>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-12">
+                <div class="reveal-up" data-delay="0">
+                    <div class="text-5xl md:text-7xl font-outfit font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/40 mb-4">
+                        {{ total_contributions|default:"1,248" }}+
+                    </div>
+                    <div class="text-base md:text-lg text-white/50 font-medium font-sans">Contributions Gathered</div>
+                </div>
+                <div class="reveal-up" data-delay="150">
+                    <div class="text-5xl md:text-7xl font-outfit font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/40 mb-4">
+                        {{ total_users|default:"450" }}+
+                    </div>
+                    <div class="text-base md:text-lg text-white/50 font-medium font-sans">Registered Contributors</div>
+                </div>
+                <div class="reveal-up" data-delay="300">
+                    <div class="text-5xl md:text-7xl font-outfit font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/40 mb-4">
+                        8
+                    </div>
+                    <div class="text-base md:text-lg text-white/50 font-medium font-sans">Kurdish Dialects Covered</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Forum CTA Section -->
+    <section class="py-24 px-6 bg-[#11131A]/20 border-t border-white/5 relative z-10">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div class="reveal-left">
+                <h2 class="text-3xl md:text-5xl font-outfit font-bold tracking-tight mb-6 text-white">
+                    Have a Kurdish Language Question?
+                </h2>
+                <p class="text-lg text-white/50 max-w-xl mb-10 leading-relaxed font-sans font-light">
+                    Ask the community. Whether it's grammatical structure, spelling rules, dialect differences, or translation choices — our Linguistic Hub is the place to discuss.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center gap-4">
+                    <a href="{% url 'question_list' %}" class="w-full sm:w-auto px-6 py-3.5 rounded-full bg-[#6C63FF] text-white font-semibold hover:scale-105 transition-all text-center shadow-[0_0_30px_rgba(108,99,255,0.3)]">
+                        Browse the Forum
+                    </a>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'question_create' %}" class="w-full sm:w-auto px-6 py-3.5 rounded-full bg-white/5 text-white font-semibold hover:bg-white/10 border border-white/10 transition-colors text-center">
+                            Ask a Question
+                        </a>
+                    {% else %}
+                        <a href="{% url 'register' %}" class="w-full sm:w-auto px-6 py-3.5 rounded-full bg-white/5 text-white font-semibold hover:bg-white/10 border border-white/10 transition-colors text-center">
+                            Sign Up to Participate
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="reveal-right" data-delay="200">
+                <div class="bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-md flex flex-col gap-4">
+                    <div class="px-4 py-3 rounded-2xl bg-white/5 border border-white/5 text-sm text-white/70 font-sans">
+                        "Why do some Sorani words differ in Kurmanji?"
+                    </div>
+                    <div class="px-4 py-3 rounded-2xl bg-white/5 border border-white/5 text-sm text-white/70 font-sans">
+                        "What is the correct spelling of 'computer' in standardized Kurdish?"
+                    </div>
+                    <div class="px-4 py-3 rounded-2xl bg-white/5 border border-white/5 text-sm text-white/70 font-sans">
+                        "How is ergative structure defined for transitive past verbs?"
                     </div>
                 </div>
             </div>

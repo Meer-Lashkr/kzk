@@ -1,101 +1,140 @@
 {% extends "base.html" %}
 {% block title %}Moderator Dashboard — Koma Zmanî Kurdî{% endblock title %}
 {% block content %}
-    <div class="container page-container">
-        <div class="page-header">
+    <div class="max-w-7xl mx-auto px-6 pt-16 pb-20">
+        <!-- Header -->
+        <div class="reveal-up flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12 pb-6 border-b border-white/10">
             <div>
-                <h1>🛡️ Moderator Dashboard</h1>
-                <p>Review and manage community content</p>
+                <div class="flex items-center gap-3 mb-2">
+                    <i data-lucide="shield-check" class="text-orange-400 w-7 h-7"></i>
+                    <h1 class="text-3xl font-outfit font-bold text-white tracking-tight">Review Center</h1>
+                </div>
+                <p class="text-white/50 text-sm font-sans font-light">Moderate user content, check conflict validations, and monitor actions.</p>
             </div>
-            <a href="{% url 'user_dashboard' %}" class="btn btn-ghost">My Dashboard</a>
+            <a href="{% url 'user_dashboard' %}" class="px-5 py-2.5 rounded-full bg-white/5 text-white/80 border border-white/10 text-xs font-semibold hover:bg-white/10 transition-colors">
+                My Dashboard
+            </a>
         </div>
-        <div class="stats-row">
-            <div class="stat-card-sm">
-                <strong>{{ total_corrections }}</strong><span>Total Corrections</span>
+
+        <!-- Stats row -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12 reveal-up">
+            <div class="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                <span class="text-3xl font-outfit font-bold text-white mb-1 block">{{ total_corrections }}</span>
+                <span class="text-xs uppercase text-white/40 tracking-wider font-semibold font-outfit">Total Corrections</span>
             </div>
-            <div class="stat-card-sm">
-                <strong>{{ total_parallel }}</strong><span>Parallel Texts</span>
+            <div class="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                <span class="text-3xl font-outfit font-bold text-white mb-1 block">{{ total_parallel }}</span>
+                <span class="text-xs uppercase text-white/40 tracking-wider font-semibold font-outfit">Parallel Texts</span>
             </div>
-            <div class="stat-card-sm">
-                <strong>{{ total_judgments }}</strong><span>Sentence Flagging</span>
+            <div class="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                <span class="text-3xl font-outfit font-bold text-white mb-1 block">{{ total_judgments }}</span>
+                <span class="text-xs uppercase text-white/40 tracking-wider font-semibold font-outfit">Flagged Sentences</span>
             </div>
         </div>
-        <div class="dashboard-grid dashboard-grid-2">
-            <section class="dash-card">
-                <h3>Recent Corrections</h3>
+
+        <!-- Dashboard lists grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 reveal-up" data-delay="100">
+            <!-- Recent Corrections -->
+            <div class="p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-md">
+                <h3 class="text-lg font-outfit font-bold text-white mb-6 flex items-center gap-2 border-b border-white/5 pb-4">
+                    <i data-lucide="edit-2" class="w-5 h-5 text-[#4DA8FF]"></i> Recent Corrections
+                </h3>
                 {% if recent_corrections %}
-                    <ul class="activity-list">
+                    <ul class="space-y-4">
                         {% for c in recent_corrections %}
-                            <li>
-                                <span>{{ c.incorrect_text|truncatechars:50 }}</span>
-                                <span class="activity-date">by {{ c.submitted_by.username|default:"—" }} · {{ c.created_at|date:"M d" }}</span>
+                            <li class="flex justify-between items-start gap-4 text-sm font-sans">
+                                <span class="text-white/80 truncate font-light">✏️ {{ c.incorrect_text }} → {{ c.corrected_text }}</span>
+                                <span class="text-2xs text-white/30 shrink-0">by {{ c.submitted_by.username|default:"—" }} · {{ c.created_at|date:"M d" }}</span>
                             </li>
                         {% endfor %}
                     </ul>
                 {% else %}
-                    <p class="empty-state">No corrections yet.</p>
+                    <p class="text-sm text-white/30 italic font-sans py-4">No corrections submitted yet.</p>
                 {% endif %}
-            </section>
-            <section class="dash-card">
-                <h3>Recent Parallel Texts</h3>
+            </div>
+
+            <!-- Recent Parallel Texts -->
+            <div class="p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-md">
+                <h3 class="text-lg font-outfit font-bold text-white mb-6 flex items-center gap-2 border-b border-white/5 pb-4">
+                    <i data-lucide="layout" class="w-5 h-5 text-[#A78BFA]"></i> Recent Parallel Texts
+                </h3>
                 {% if recent_parallel %}
-                    <ul class="activity-list">
+                    <ul class="space-y-4">
                         {% for p in recent_parallel %}
-                            <li>
-                                <span>{{ p.source_text|truncatechars:50 }}</span>
-                                <span class="activity-date">by {{ p.submitted_by.username|default:"—" }} · {{ p.created_at|date:"M d" }}</span>
+                            <li class="flex justify-between items-start gap-4 text-sm font-sans">
+                                <span class="text-white/80 truncate font-light">🔀 {{ p.source_text }} → {{ p.target_text }}</span>
+                                <span class="text-2xs text-white/30 shrink-0">by {{ p.submitted_by.username|default:"—" }} · {{ p.created_at|date:"M d" }}</span>
                             </li>
                         {% endfor %}
                     </ul>
                 {% else %}
-                    <p class="empty-state">No parallel texts yet.</p>
+                    <p class="text-sm text-white/30 italic font-sans py-4">No parallel texts submitted yet.</p>
                 {% endif %}
-            </section>
-            <section class="dash-card">
-                <h3>Recent Forum Questions</h3>
+            </div>
+
+            <!-- Recent Forum Questions -->
+            <div class="p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-md">
+                <h3 class="text-lg font-outfit font-bold text-white mb-6 flex items-center gap-2 border-b border-white/5 pb-4">
+                    <i data-lucide="message-square" class="w-5 h-5 text-[#6C63FF]"></i> Recent Questions
+                </h3>
                 {% if recent_questions %}
-                    <ul class="activity-list">
+                    <ul class="space-y-4">
                         {% for q in recent_questions %}
-                            <li>
-                                <a href="{% url 'question_detail' q.pk %}">{{ q.title|truncatechars:55 }}</a>
-                                <span class="activity-date">{{ q.created_at|date:"M d" }}</span>
+                            <li class="flex justify-between items-start gap-4 text-sm font-sans">
+                                <a href="{% url 'question_detail' q.pk %}" class="text-white/80 hover:text-white hover:underline truncate">{{ q.title }}</a>
+                                <span class="text-2xs text-white/30 shrink-0">{{ q.created_at|date:"M d" }}</span>
                             </li>
                         {% endfor %}
                     </ul>
                 {% else %}
-                    <p class="empty-state">No questions yet.</p>
+                    <p class="text-sm text-white/30 italic font-sans py-4">No questions created yet.</p>
                 {% endif %}
-            </section>
-            <section class="dash-card">
-                <h3>Recent Platform Activity</h3>
+            </div>
+
+            <!-- Recent Platform Activity -->
+            <div class="p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-md">
+                <h3 class="text-lg font-outfit font-bold text-white mb-6 flex items-center gap-2 border-b border-white/5 pb-4">
+                    <i data-lucide="activity" class="w-5 h-5 text-white/60"></i> Recent Platform Activity
+                </h3>
                 {% if recent_activity %}
-                    <ul class="activity-list">
+                    <ul class="space-y-4">
                         {% for log in recent_activity %}
-                            <li>
-                                <span>{{ log.user.username|default:"—" }}: {{ log.action_type|title }}</span>
-                                <span class="activity-date">{{ log.created_at|date:"M d" }}</span>
+                            <li class="flex justify-between items-center gap-4 text-sm font-sans">
+                                <span class="text-white/80 truncate font-light">{{ log.user.username|default:"—" }} · {{ log.action_type|title }}</span>
+                                <span class="text-2xs text-white/30 shrink-0">{{ log.created_at|date:"M d" }}</span>
                             </li>
                         {% endfor %}
                     </ul>
                 {% else %}
-                    <p class="empty-state">No recent activity.</p>
+                    <p class="text-sm text-white/30 italic font-sans py-4">No activity logs recorded.</p>
                 {% endif %}
-            </section>
-            <section class="dash-card">
-                <h3>🚩 Recent Sentence Flagging</h3>
+            </div>
+
+            <!-- Recent Sentence Flagging -->
+            <div class="p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-md lg:col-span-2">
+                <h3 class="text-lg font-outfit font-bold text-white mb-6 flex items-center gap-2 border-b border-white/5 pb-4">
+                    <i data-lucide="flag" class="w-5 h-5 text-[#7CFFB2]"></i> Recent Flagged Sentences
+                </h3>
                 {% if recent_judgments %}
-                    <ul class="activity-list">
+                    <ul class="space-y-4">
                         {% for j in recent_judgments %}
-                            <li>
-                                <span>{{ j.sentence_text|truncatechars:50 }} — <span class="badge badge-{{ j.binary_label }}">{{ j.binary_label|capfirst }}</span></span>
-                                <span class="activity-date">by {{ j.submitted_by.username|default:"—" }} · {{ j.created_at|date:"M d" }}</span>
+                            <li class="flex justify-between items-center gap-4 text-sm font-sans">
+                                <div class="flex items-center gap-2 min-w-0">
+                                    <span class="text-white/80 truncate font-light">🚩 {{ j.sentence_text }}</span>
+                                    {% if j.binary_label == 'correct' or j.binary_label == 'yes' %}
+                                        <span class="px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-2xs text-emerald-400 font-semibold uppercase shrink-0">Correct</span>
+                                    {% else %}
+                                        <span class="px-2 py-0.5 rounded-full bg-rose-500/10 border border-rose-500/20 text-2xs text-rose-400 font-semibold uppercase shrink-0">Incorrect</span>
+                                    {% endif %}
+                                </div>
+                                <span class="text-2xs text-white/30 shrink-0">by {{ j.submitted_by.username|default:"—" }} · {{ j.created_at|date:"M d" }}</span>
                             </li>
                         {% endfor %}
                     </ul>
                 {% else %}
-                    <p class="empty-state">No sentence flags yet.</p>
+                    <p class="text-sm text-white/30 italic font-sans py-4">No sentence flags registered.</p>
                 {% endif %}
-            </section>
+            </div>
         </div>
     </div>
 {% endblock content %}

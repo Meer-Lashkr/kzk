@@ -10,6 +10,9 @@ from django.conf import settings as django_settings
 from .forms import RegistrationForm, ForgotPasswordForm, ResetPasswordForm, ProfileEditForm
 from .models import User, PasswordResetToken
 from accounts.models import ActivityLog
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
 
 
 def register(request):
@@ -20,14 +23,52 @@ def register(request):
         if form.is_valid():
             user = form.save(commit=False)
             user.role = 'normal_user'
+            user.is_active = False
             user.save()
             ActivityLog.objects.create(user=user, action_type='register')
-            login(request, user)
-            messages.success(request, f"Welcome, {user.username}! Your account has been created.")
-            return redirect('home')
+            
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            token = default_token_generator.make_token(user)
+            activation_link = request.build_absolute_uri(f"/accounts/activate/{uid}/{token}/")
+            
+            send_mail(
+                subject="Koma Zmanî Kurdî — Verify your email",
+                message=f"Hello {user.username},\n\nPlease verify your email address to complete your registration by clicking the link below:\n{activation_link}\n\nIf you did not sign up for an account, please ignore this email.",
+                from_email=django_settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[user.email],
+                fail_silently=False,
+            )
+            
+            messages.success(request, "Registration successful! Please check your email to verify your account.")
+            return redirect('check_email')
     else:
         form = RegistrationForm()
     return render(request, 'registration/register.html', {'form': form})
+
+def check_email(request):
+    if request.user.is_authenticated:
+        return redirect('home')
+    return render(request, 'registration/check_email.html')
+
+
+def activate_account(request, uidb64, token):
+    if request.user.is_authenticated:
+        return redirect('home')
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and default_token_generator.check_token(user, token):
+        user.is_active = True
+        user.save()
+        login(request, user)
+        messages.success(request, "Your email has been verified. Welcome to Koma Zmanî Kurdî!")
+        return redirect('home')
+    else:
+        messages.error(request, "The activation link was invalid or has expired.")
+        return redirect('login')
 
 
 @login_required

@@ -50,7 +50,7 @@ class ValidationItem(models.Model):
     confidence_score = models.FloatField(default=0.0)
 
     # Number of votes required before an automatic decision is made.
-    required_votes = models.PositiveIntegerField(default=20)
+    required_votes = models.PositiveIntegerField(default=6)
 
     validated_by = models.CharField(
         max_length=30,

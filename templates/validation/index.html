@@ -220,7 +220,7 @@
                     </div>
                     <div>
                         <strong class="text-white/80 block mb-0.5">3. Consensus calculation</strong>
-                        When an item reaches required votes (e.g. 20), consensus automatically categorizes it.
+                        When an item reaches required votes (e.g. 6), consensus automatically categorizes it.
                     </div>
                 </div>
             </div>
@@ -276,7 +276,7 @@
                 const bar = document.getElementById('progressBar');
                 const txt = document.getElementById('progressText');
                 if (bar && txt) {
-                    const requiredVotes = {% if item %}{{ item.required_votes|default:20 }}{% else %}20{% endif %};
+                    const requiredVotes = {% if item %}{{ item.required_votes|default:6 }}{% else %}6{% endif %};
                     const pct = Math.min(100, (data.total_votes / requiredVotes) * 100);
                     bar.style.width = pct + '%';
                     txt.textContent = data.total_votes + ' / ' + requiredVotes;
